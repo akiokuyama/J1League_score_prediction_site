@@ -20,10 +20,22 @@ import joblib
 import pandas as pd
 
 
+def _read_sources_csv(path: Path) -> pd.DataFrame | None:
+    if not path.exists() or path.stat().st_size == 0:
+        return None
+    try:
+        sources = pd.read_csv(path)
+    except pd.errors.EmptyDataError:
+        return None
+    if sources.empty:
+        return None
+    return sources
+
+
 def write_source_report(path: Path, output_path: Path) -> dict[str, object]:
-    if not path.exists():
+    sources = _read_sources_csv(path)
+    if sources is None:
         return {"path": str(output_path), "rows": 0}
-    sources = pd.read_csv(path)
     rows = []
     for col in sources.columns:
         counts = sources[col].value_counts(dropna=False).to_dict()
@@ -72,7 +84,7 @@ def main() -> int:
         PROJECT_ROOT / "Data" / "features" / "upcoming_features_2026_special_source_report.csv",
     )
     sources_path = PROJECT_ROOT / "Data" / "features" / "upcoming_features_2026_special_sources.csv"
-    sources_df = pd.read_csv(sources_path) if sources_path.exists() else None
+    sources_df = _read_sources_csv(sources_path)
     snapshot = save_upcoming_feature_snapshot(upcoming_df, sources=sources_df, season_key=args.season_key)
     print(
         json.dumps(

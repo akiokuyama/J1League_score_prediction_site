@@ -151,6 +151,16 @@ def _apply_current_formations(row: dict[str, Any], home: str, away: str, formati
         row["Away_Formation"] = formations[away]
 
 
+def _write_empty_upcoming_outputs(
+    output_path: str | Path,
+    sources_output_path: str | Path,
+) -> pd.DataFrame:
+    df = pd.DataFrame(columns=IDENTITY_COLUMNS)
+    safe_write_csv(df, output_path)
+    safe_write_csv(pd.DataFrame(columns=IDENTITY_COLUMNS), sources_output_path)
+    return df
+
+
 def build_upcoming_features(
     *,
     matches_path: str | Path = "Data/processed/matches_2026_special_clean.csv",
@@ -164,15 +174,11 @@ def build_upcoming_features(
     if not matches_file.is_absolute():
         matches_file = PROJECT_ROOT / matches_file
     if not matches_file.exists():
-        df = pd.DataFrame(columns=IDENTITY_COLUMNS)
-        safe_write_csv(df, output_path)
-        return df
+        return _write_empty_upcoming_outputs(output_path, sources_output_path)
 
     matches = pd.read_csv(matches_file)
     if matches.empty:
-        df = pd.DataFrame(columns=IDENTITY_COLUMNS)
-        safe_write_csv(df, output_path)
-        return df
+        return _write_empty_upcoming_outputs(output_path, sources_output_path)
 
     if only_unplayed and "status" in matches.columns:
         matches = matches[matches["status"].astype(str).isin(["unplayed", "postponed_or_tbd"])]
@@ -180,6 +186,8 @@ def build_upcoming_features(
         known_home = ~matches["home_team"].astype(str).isin(["tbd", "未定", "nan", ""])
         known_away = ~matches["away_team"].astype(str).isin(["tbd", "未定", "nan", ""])
         matches = matches[known_home & known_away]
+    if matches.empty:
+        return _write_empty_upcoming_outputs(output_path, sources_output_path)
 
     history_file = Path(history_path)
     if not history_file.is_absolute():

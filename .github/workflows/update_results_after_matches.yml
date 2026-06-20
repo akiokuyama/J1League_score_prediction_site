@@ -2,8 +2,9 @@ name: Update Results After Matches
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 22 * * 0"  # Mon 07:00 JST
+  # Paused: season ended. Re-enable when next season starts.
+  # schedule:
+  #   - cron: "0 22 * * 0"  # Mon 07:00 JST
 
 permissions:
   contents: write
