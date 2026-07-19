@@ -1,113 +1,22 @@
-# Point-in-Time 学習データ整備レポート
+# Point-in-Time 学習データ整備レポート（初期実装履歴）
 
-## 目的
+この資料は、2026特別リーグの途中時点でPoint-in-Timeデータ保存を導入した際の履歴である。シーズン終了後にデータ件数、時点判定、補完方式、モデル評価を全面的に見直したため、現在の仕様と結果は [`../season_2026_27_model_preparation.md`](../season_2026_27_model_preparation.md) を正本とする。
 
-2026_special、つまり2026年特別シーズンのJ1百年構想リーグは、今後始まる通常の2026年シーズンと区別して扱う。
-前半戦の週次特徴量スナップショットを保存していなかったため、シーズン終了後の再学習では以下の方針を取る。
+## 初期実装で導入したもの
 
-- 前半戦など、予測時点の特徴量スナップショットが存在しない試合はフォールバック特徴量を使う
-- 今後の週次更新以降は、予測時点の特徴量を保存し、シーズン終了後の学習に使えるようにする
-- 試合結果は目的変数として後から結合し、特徴量保存時点では結果を使わない
-- 保存用のシーズン識別子は `2026_special` とする
-- 学習データ上の `Season` 列は `2026_special` とする
+- 次節予測用特徴量と取得時刻のスナップショット保存
+- `2026_special` という通常年と区別したシーズン識別子
+- 終了済み試合へ目的変数を後から結合する学習データ生成
+- 再学習時の評価シーズン指定
 
-## 追加した仕組み
+## シーズン終了後に変更したもの
 
-### 1. 週次特徴量スナップショット
+- スナップショットの有効判定を、試合日単位ではなくキックオフ時刻より前へ厳格化した。
+- 実績観客数と収容率を学習・推論から除外した。
+- 順位、Rank Delta、勝点、Elo、直近成績、緊急度、休養日を試合前状態から再構築した。
+- xGは試合平均、AGI/KAGIは指数のまま使用し、節数による除算を廃止した。
+- フォーメーションを当季の過去試合での最頻値とした。
+- 有効スナップショット21試合、集計推定による再構築179試合、合計200試合へ更新した。
+- 通常年と特別リーグを結合したモデルを本番、通常年のみをシャドーとして採用した。
 
-`scripts/make_upcoming_features.py` の実行時に、次節予測用特徴量を以下へ保存する。
-
-- `Data/features/snapshots/upcoming_features_2026_special_asof_YYYYMMDD_HHMMSS.csv`
-- `Data/features/snapshots/upcoming_features_2026_special_sources_asof_YYYYMMDD_HHMMSS.csv`
-- `Data/features/snapshots/upcoming_features_2026_special_asof_YYYYMMDD_HHMMSS.json`
-
-特徴量CSVには以下の列を追加する。
-
-- `feature_as_of`
-- `season_key`
-- `feature_snapshot_source`
-
-### 2. シーズン終了後の再学習用データセット
-
-`scripts/build_point_in_time_training_dataset.py` を追加した。
-
-このスクリプトは、終了済み試合に対して以下の優先順位で特徴量を選ぶ。
-
-1. 同じ `match_id` のスナップショットがある場合は、試合日以前に保存された最新スナップショットを使う
-2. スナップショットがない場合は、`Data/features/match_features_2026_special.csv` のフォールバック特徴量を使う
-3. 試合結果を目的変数として結合する
-
-出力ファイル:
-
-- `Data/features/training_dataset_2026_special_point_in_time.csv`
-- `Data/features/training_dataset_with_2026_special_point_in_time.csv`
-- `Data/features/training_dataset_2026_special_point_in_time_sources.csv`
-- `Data/features/training_dataset_2026_special_point_in_time_report.json`
-
-### 3. 再学習時の評価シーズン指定
-
-`scripts/retrain_models_no_weather.py` に `--test-season` を追加した。
-
-2026年特別シーズン終了後は、以下のように実行できる。
-
-```bash
-python scripts/build_point_in_time_training_dataset.py
-python scripts/retrain_models_no_weather.py \
-  --dataset Data/features/training_dataset_with_2026_special_point_in_time.csv \
-  --output-dir Models/point_in_time_2026_special \
-  --test-season 2026_special
-```
-
-正式反映する場合のみ `--activate` を付ける。
-
-## 現時点の生成結果
-
-2026年5月24日時点で生成した結果:
-
-- finished matches: 171
-- season key: `2026_special`
-- season label: `2026_special`
-- Season column value: `2026_special`
-- training rows: 171
-- snapshot rows: 0
-- fallback rows: 171
-- skipped rows: 0
-- combined rows: 1923
-- snapshot files: 1
-
-現時点では、前半戦のスナップショットが存在しないため、終了済み171試合はすべて `fallback_rebuilt` 扱い。
-今後の週次更新でスナップショットが増えると、シーズン終了後に同じスクリプトを再実行した際、該当試合は `snapshot` 扱いになる。
-
-## 確認結果
-
-再学習用CSVの読み込み確認:
-
-- `Data/features/training_dataset_2026_special_point_in_time.csv`: 171行、155列
-- `Data/features/training_dataset_with_2026_special_point_in_time.csv`: 1923行、155列
-- ダミー展開後の特徴量数: 158
-- 目的変数欠損: 0
-- 特徴量欠損: 0
-
-一時出力先での再学習確認:
-
-```bash
-python scripts/retrain_models_no_weather.py \
-  --dataset Data/features/training_dataset_with_2026_special_point_in_time.csv \
-  --output-dir /private/tmp/soccer_score_app_point_in_time_model_check \
-  --test-season 2026_special
-```
-
-結果:
-
-- feature_count: 158
-- train_rows: 1752
-- test_rows: 171
-- home_mae: 0.9086
-- away_mae: 0.9018
-- result_accuracy: 0.3801
-- final_score_emr: 0.1345
-
-## 注意点
-
-現時点の2026_specialデータは前半戦スナップショットがないため、厳密なpoint-in-time学習としては不完全。
-ただし、今後の試合分については週次更新時にスナップショットを保存できるため、シーズン終了後には「前半はフォールバック、後半はスナップショット」という再学習データを作成できる。
+初期実装時の数値や `fallback_rebuilt` 方式は、現行運用には使用しない。

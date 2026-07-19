@@ -194,6 +194,27 @@ Data/features/upcoming_features_2026_special.csv
 Data/manual/market_values_2026_special.csv
 ```
 
+## 再学習時のデータ時点
+
+2026年特別シーズンを再学習に加える場合は、必ず以下を実行します。
+
+```bash
+python scripts/rebuild_historical_training_dataset.py
+python scripts/build_point_in_time_training_dataset.py \
+  --reference-dataset Data/features/training_dataset_2021_2025_point_in_time.csv \
+  --strategy snapshot_with_aggregate_estimate
+python scripts/retrain_models_no_weather.py \
+  --dataset Data/features/training_dataset_with_2026_special_point_in_time.csv \
+  --output-dir Models/reviewed_2026_special_v1 \
+  --test-season 2026_special \
+  --test-start-date 2026-05-01 \
+  --model-version reviewed_2026_special_v1
+```
+
+再学習用データは試合前スナップショットを優先し、動的特徴量はその時点までの試合結果から再構築します。スナップショットがない過去のxG、AGI、KAGIは集計推定値として出所を記録します。xGは試合平均、AGI/KAGIは指数であり、節数では割りません。実績観客数と収容率は学習・推論から除外します。評価を確認して正式反映する場合だけ、再学習コマンドへ `--activate` を追加します。
+
+現在の本番モデルは、通常J1と2026特別リーグを含む `reviewed_2026_special_v1` です。通常J1のみの `Models/reviewed_point_in_time_normal_v1/` は、新シーズン中の比較用シャドーモデルとして保持します。詳しい判断記録は `docs/reports/season_2026_27_model_preparation.md` を参照してください。
+
 ## 予測データの考え方
 
 - `latest_predictions.json` は次節予測です。
