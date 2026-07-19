@@ -74,7 +74,7 @@ def save_upcoming_feature_snapshot(
         "created_at": datetime.now(ZoneInfo("Asia/Tokyo")).isoformat(timespec="seconds"),
         "feature_as_of": timestamp,
         "season_key": season_key,
-        "season_label": "2026_special",
+        "season_label": season_key,
         "features_path": _display_path(features_path),
         "sources_path": _display_path(sources_path) if sources_path else None,
         "rows": int(len(feature_frame)),

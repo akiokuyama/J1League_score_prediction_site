@@ -1,0 +1,52 @@
+{
+  "input": "Data/ML_dataset.csv",
+  "output": "Data/features/training_dataset_2021_2025_point_in_time.csv",
+  "rows": 1752,
+  "seasons": [
+    "2021",
+    "2022",
+    "2023",
+    "2024",
+    "2025"
+  ],
+  "excluded_post_match_features": [
+    "Attendance",
+    "Stadium_Fill_Rate"
+  ],
+  "historical_xg_agi_kagi_policy": "season_aggregate_estimate_when_snapshot_unavailable",
+  "source_counts": {
+    "Attendance": {
+      "excluded_post_match_feature": 1752
+    },
+    "Stadium_Fill_Rate": {
+      "excluded_post_match_feature": 1752
+    },
+    "Home_Rank_Delta_3": {
+      "reconstructed_pre_match_results": 1752
+    },
+    "Away_Rank_Delta_3": {
+      "reconstructed_pre_match_results": 1752
+    },
+    "Home_Urgency_Score": {
+      "reconstructed_pre_match_results": 1752
+    },
+    "Away_Urgency_Score": {
+      "reconstructed_pre_match_results": 1752
+    },
+    "Home_Formation": {
+      "historical_pre_match_modal_formation": 1752
+    },
+    "Away_Formation": {
+      "historical_pre_match_modal_formation": 1752
+    },
+    "Home_Rolling_xG": {
+      "historical_final_snapshot_estimate_restored_unit": 1752
+    },
+    "Home_AGI": {
+      "historical_final_snapshot_estimate_restored_unit": 1752
+    },
+    "Home_KAGI": {
+      "historical_final_snapshot_estimate_restored_unit": 1752
+    }
+  }
+}

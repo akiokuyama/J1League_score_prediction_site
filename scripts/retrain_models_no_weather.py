@@ -27,8 +27,18 @@ from src.models.train_score_models import (
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="天候なしモデルを再学習します")
     parser.add_argument("--dataset", default="Data/ML_dataset.csv")
-    parser.add_argument("--output-dir", default="Models/weather_removed_v1")
+    parser.add_argument("--output-dir", default="Models/point_in_time_2026_special_v1")
     parser.add_argument("--test-season", default="2025", help="評価用に取り分けるシーズン。例: 2025, 2026_special")
+    parser.add_argument(
+        "--test-start-date",
+        help="指定時は同一シーズンのこの日以降を時系列ホールドアウトとして評価します。",
+    )
+    parser.add_argument(
+        "--exclude-test-season-history",
+        action="store_true",
+        help="時系列評価でテストシーズンの分割日前データも学習から除外します。",
+    )
+    parser.add_argument("--model-version", default="point_in_time_2026_special_v1")
     parser.add_argument("--activate", action="store_true", help="既存モデルをバックアップ後に正式反映する")
     return parser.parse_args()
 
@@ -36,10 +46,16 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     try:
-        eval_result = train_and_evaluate(args.dataset, exclude_weather=True, test_season=args.test_season)
+        eval_result = train_and_evaluate(
+            args.dataset,
+            exclude_weather=True,
+            test_season=args.test_season,
+            test_start_date=args.test_start_date,
+            include_test_season_history=not args.exclude_test_season_history,
+        )
         full_result = train_full_models(args.dataset, exclude_weather=True)
         metadata = model_metadata(
-            version="weather_removed_v1",
+            version=args.model_version,
             dataset_path=args.dataset,
             evaluation={
                 "train_rows": eval_result.train_rows,
@@ -48,7 +64,14 @@ def main() -> int:
             },
             feature_count=len(full_result.feature_names),
             test_season=args.test_season,
+            test_start_date=args.test_start_date,
         )
+        metadata["feature_lineage"] = {
+            "policy": "point_in_time_or_reconstructed_pre_match",
+            "historical_football_lab_without_snapshot": "final_snapshot_estimate_restored_unit",
+            "realised_attendance": "excluded",
+            "test_season_history_included": not args.exclude_test_season_history,
+        }
         save_models(full_result, args.output_dir, metadata)
 
         output = {

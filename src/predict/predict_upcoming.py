@@ -63,15 +63,24 @@ def select_prediction_targets(
 def predict_upcoming_matches(
     features_df: pd.DataFrame,
     model_dir: str | Path | None = None,
-    season: str = SEASON,
-    league: str = LEAGUE,
-    competition: str = COMPETITION,
-    category: str = CATEGORY,
+    season: str | None = None,
+    league: str | None = None,
+    competition: str | None = None,
+    category: str | None = None,
+    feature_source: str | None = None,
+    scorer_candidates_path: str | Path = "Data/processed/player_stats_2026_special_clean.csv",
 ) -> dict[str, Any]:
     matches: list[dict[str, Any]] = []
     skipped: list[dict[str, Any]] = []
     warnings: list[str] = []
-    scorer_candidates = load_scorer_candidates()
+    scorer_candidates = load_scorer_candidates(scorer_candidates_path)
+    metadata = {
+        "season": season or _metadata_value(features_df, "season", SEASON),
+        "league": league or _metadata_value(features_df, "league", LEAGUE),
+        "competition": competition or _metadata_value(features_df, "competition", COMPETITION),
+        "category": category or _metadata_value(features_df, "category", CATEGORY),
+    }
+    model_version = _model_version(model_dir)
 
     for idx, row in features_df.iterrows():
         try:
@@ -100,20 +109,36 @@ def predict_upcoming_matches(
 
     return {
         "last_updated": datetime.now(ZoneInfo("Asia/Tokyo")).isoformat(timespec="seconds"),
-        "season": season,
-        "league": league,
-        "competition": competition,
-        "category": category,
+        **metadata,
         "matchweek": int(features_df["section"].dropna().astype(float).min()) if "section" in features_df.columns and not features_df.empty and not features_df["section"].dropna().empty else None,
-        "model_version": "weather_removed_v1",
+        "model_version": model_version,
         "feature_policy": {"exclude_weather": True},
         "matches": matches,
         "skipped_matches": skipped,
         "warnings": warnings,
         "data_sources": {
-            "features": "Data/features/upcoming_features_2026_special.csv",
+            "features": feature_source or "Data/features/upcoming_features_2026_special.csv",
         },
     }
+
+
+def _metadata_value(features_df: pd.DataFrame, column: str, fallback: str) -> str:
+    if column not in features_df.columns:
+        return fallback
+    values = features_df[column].dropna().astype(str)
+    return values.iloc[0] if not values.empty else fallback
+
+
+def _model_version(model_dir: str | Path | None) -> str:
+    directory = Path(model_dir) if model_dir is not None else Path(__file__).resolve().parents[2] / "Models"
+    metadata_path = directory / "model_metadata.json"
+    if not metadata_path.exists():
+        return directory.name or "unknown"
+    try:
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return directory.name or "unknown"
+    return str(metadata.get("model_version") or directory.name or "unknown")
 
 
 def write_predictions_safely(

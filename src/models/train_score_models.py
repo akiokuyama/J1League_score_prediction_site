@@ -40,6 +40,11 @@ DROP_COLS_BASE = [
     "Away_Goals",
     "Goal_Diff",
     "Match_Result",
+    # These values are only known after kick-off.  Capacity can remain as a
+    # venue attribute, but realised attendance and its derivative must never
+    # be training or inference features.
+    "Attendance",
+    "Stadium_Fill_Rate",
 ]
 
 CAT_COLS_WITH_WEATHER = [
@@ -62,6 +67,7 @@ FEATURE_POLICY = {
     "forbidden_feature_prefixes": ["Weather_"],
     "goal_pattern_policy": "use_previous_season_prev_features_only",
     "team_style_policy": "use_previous_season_prev_features_only",
+    "post_match_features_excluded": ["Attendance", "Stadium_Fill_Rate"],
 }
 
 
@@ -154,6 +160,8 @@ def train_and_evaluate(
     *,
     exclude_weather: bool = True,
     test_season: str | int = 2025,
+    test_start_date: str | None = None,
+    include_test_season_history: bool = True,
 ) -> TrainResult:
     X, y_goals, y_result, y_diff, df = build_training_frame(dataset_path, exclude_weather=exclude_weather)
     test_label = season_label(test_season)
@@ -163,7 +171,17 @@ def train_and_evaluate(
     test_mask = season_labels == test_label
     if not test_mask.any():
         test_mask = season_years == test_year
-    train_mask = season_years < test_year
+    if test_start_date:
+        dates = pd.to_datetime(df.get("Date"), errors="coerce")
+        split_date = pd.Timestamp(test_start_date)
+        test_mask = test_mask & (dates >= split_date)
+        train_mask = season_years < test_year
+        if include_test_season_history:
+            train_mask = train_mask | ((season_labels == test_label) & (dates < split_date))
+    else:
+        train_mask = season_years < test_year
+    if not train_mask.any() or not test_mask.any():
+        raise ValueError("学習用または評価用の行がありません。test season/date を確認してください。")
     params = default_model_params()
 
     X_train, X_test = X[train_mask], X[test_mask]
@@ -249,6 +267,7 @@ def model_metadata(
     evaluation: dict[str, Any],
     feature_count: int,
     test_season: str | int = 2025,
+    test_start_date: str | None = None,
 ) -> dict[str, Any]:
     now = datetime.now(ZoneInfo("Asia/Tokyo")).isoformat(timespec="seconds")
     return {
@@ -257,10 +276,17 @@ def model_metadata(
         "dataset_path": str(dataset_path),
         "feature_count": int(feature_count),
         "exclude_weather": True,
-        "training_split": {
-            "train": f"year(Season) < {season_year(test_season)}",
-            "test": f"Season == {season_label(test_season)}",
-        },
+        "training_split": (
+            {
+                "train": f"year(Season) < {season_year(test_season)} or (Season == {season_label(test_season)} and Date < {test_start_date})",
+                "test": f"Season == {season_label(test_season)} and Date >= {test_start_date}",
+            }
+            if test_start_date
+            else {
+                "train": f"year(Season) < {season_year(test_season)}",
+                "test": f"Season == {season_label(test_season)}",
+            }
+        ),
         "evaluation": evaluation,
     }
 

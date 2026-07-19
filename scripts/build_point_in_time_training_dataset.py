@@ -1,4 +1,10 @@
-"""Build a 2026_special point-in-time training dataset from saved feature snapshots."""
+"""Build a leakage-safe 2026_special training dataset.
+
+Saved pre-match snapshots are used when available.  Dynamic values for every
+completed match are reconstructed from results available before kick-off.
+The raw completed-match feature frame is never copied into training rows;
+approved season estimates are opt-in and recorded in the source manifest.
+"""
 
 from __future__ import annotations
 
@@ -15,11 +21,27 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.data.scraping import safe_write_csv
+from src.features.point_in_time import (
+    TARGET_COLUMNS,
+    align_legacy_model_units,
+    load_legacy_aggregate_priors,
+    rebuild_pre_match_features,
+)
 from src.features.snapshots import SNAPSHOT_DIR, load_feature_snapshots
 
 
-TARGET_COLUMNS = ["Score", "Home_Goals", "Away_Goals", "Goal_Diff", "Match_Result"]
 KNOWN_TBD_VALUES = {"", "nan", "none", "tbd", "未定"}
+SNAPSHOT_OVERRIDE_COLUMNS = {
+    "Home_Market_Value", "Away_Market_Value", "Market_Value_Diff",
+    "Home_Rolling_xG", "Away_Rolling_xG",
+    "Home_AGI", "Home_KAGI", "Away_AGI", "Away_KAGI",
+    "Home_Formation", "Away_Formation",
+    "is_Mirror_Game",
+    "Home_DF_count", "Home_MF_count", "Home_FW_count",
+    "Away_DF_count", "Away_MF_count", "Away_FW_count",
+    "Home_Midfield_Advantage", "Defense_Margin_Home", "Defense_Margin_Away",
+    "Backline_Matchup",
+}
 
 
 def parse_args() -> argparse.Namespace:
@@ -35,8 +57,30 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--season-name", default="2026_special", help="学習データのSeason列に保存する値")
     parser.add_argument("--reference-dataset", default="Data/ML_dataset.csv")
     parser.add_argument("--matches", default="Data/processed/matches_2026_special_clean.csv")
-    parser.add_argument("--fallback-features", default="Data/features/match_features_2026_special.csv")
+    parser.add_argument(
+        "--fallback-features",
+        default="Data/features/match_features_2026_special.csv",
+        help="互換性のために受け付けます。リーク防止のため通常実行では使いません。",
+    )
     parser.add_argument("--snapshot-dir", default="Data/features/snapshots")
+    parser.add_argument(
+        "--strategy",
+        choices=["strict", "snapshot_with_aggregate_estimate", "legacy_aggregate"],
+        default="strict",
+        help=(
+            "strict は保存済み試合前情報のみ、snapshot_with_aggregate_estimate は"
+            "スナップショットを優先し欠損だけシーズン集計推定、legacy_aggregate は全行を集計推定。"
+        ),
+    )
+    parser.add_argument(
+        "--aggregate-normalization-divisor",
+        type=float,
+        default=38.0,
+        help=(
+            "後方互換のためだけに残している非推奨オプション。"
+            "xGは試合平均、AGI/KAGIは指数なので現在は除算しません。"
+        ),
+    )
     parser.add_argument("--output", default="Data/features/training_dataset_2026_special_point_in_time.csv")
     parser.add_argument(
         "--combined-output",
@@ -95,10 +139,22 @@ def _latest_snapshot_for_match(snapshots: pd.DataFrame, match: pd.Series) -> pd.
         return None
     match_date = _match_date_key(match["match_date"])
     if "feature_as_of" in candidates.columns and match_date:
-        candidates["_snapshot_date"] = candidates["feature_as_of"].map(_snapshot_date_key)
-        allowed = candidates[candidates["_snapshot_date"] <= match_date]
+        kickoff_time = str(match.get("kickoff_time", "00:00") or "00:00")
+        match_at = pd.to_datetime(
+            f"{match.get('match_date')} {kickoff_time}", errors="coerce"
+        )
+        candidates["_snapshot_at"] = pd.to_datetime(
+            candidates["feature_as_of"].astype(str), format="%Y%m%d_%H%M%S", errors="coerce"
+        )
+        if pd.notna(match_at):
+            allowed = candidates[candidates["_snapshot_at"] < match_at]
+        else:
+            candidates["_snapshot_date"] = candidates["feature_as_of"].map(_snapshot_date_key)
+            allowed = candidates[candidates["_snapshot_date"] < match_date]
         if not allowed.empty:
             candidates = allowed
+        else:
+            return None
     sort_col = "feature_as_of" if "feature_as_of" in candidates.columns else "match_id"
     return candidates.sort_values(sort_col).iloc[-1]
 
@@ -123,12 +179,23 @@ def build_point_in_time_training_dataset(
     season_key: str = "2026_special",
     season_label: str = "2026_special",
     season_name: str = "2026_special",
+    strategy: str = "strict",
+    aggregate_normalization_divisor: float = 38.0,
 ) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
     reference = pd.read_csv(_resolve(reference_dataset))
     reference_columns = reference.columns.tolist()
     matches = pd.read_csv(_resolve(matches_path))
-    fallback = pd.read_csv(_resolve(fallback_features_path))
-    snapshots = load_feature_snapshots(_resolve(snapshot_dir), season_key=season_key)
+    # Do not read or use the season-end fallback frame here.  It includes
+    # values that may only have become available after a match was played.
+    # Keep the argument so existing manual invocations remain compatible.
+    del fallback_features_path
+    if strategy not in {"strict", "snapshot_with_aggregate_estimate", "legacy_aggregate"}:
+        raise ValueError(f"未知のstrategyです: {strategy}")
+    snapshots = (
+        load_feature_snapshots(_resolve(snapshot_dir), season_key=season_key)
+        if strategy in {"strict", "snapshot_with_aggregate_estimate"}
+        else pd.DataFrame()
+    )
 
     finished = matches[
         (matches["season"].astype(str) == str(season))
@@ -139,12 +206,25 @@ def build_point_in_time_training_dataset(
         & matches["away_team"].map(_is_known_team)
     ].copy()
 
-    fallback_by_match = {
-        str(row["match_id"]): row
-        for _, row in fallback.dropna(subset=["match_id"]).iterrows()
-        if "match_id" in fallback.columns
+    aggregate_priors = (
+        load_legacy_aggregate_priors(
+            finished,
+            project_root=PROJECT_ROOT,
+            normalization_divisor=aggregate_normalization_divisor,
+        )
+        if strategy in {"snapshot_with_aggregate_estimate", "legacy_aggregate"}
+        else None
+    )
+    rebuilt = rebuild_pre_match_features(
+        finished,
+        reference,
+        season_name=season_name,
+        legacy_aggregate_priors=aggregate_priors,
+    )
+    rebuilt_by_match = {
+        str(match_id): (rebuilt.features.iloc[index], rebuilt.sources.iloc[index])
+        for index, match_id in enumerate(finished.sort_values(["match_date", "kickoff_time", "match_id"])["match_id"].astype(str))
     }
-
     rows: list[dict[str, Any]] = []
     source_rows: list[dict[str, Any]] = []
     skipped: list[str] = []
@@ -153,7 +233,16 @@ def build_point_in_time_training_dataset(
         targets = _actual_targets(match)
         snapshot = _latest_snapshot_for_match(snapshots, match)
         if snapshot is not None:
-            row = _row_from_source(snapshot, reference_columns, targets)
+            rebuilt_row = rebuilt_by_match.get(match_id)
+            if rebuilt_row is None:
+                skipped.append(match_id)
+                continue
+            feature_row, provenance = rebuilt_row
+            row = _row_from_source(feature_row, reference_columns, targets)
+            aligned_snapshot = align_legacy_model_units(snapshot)
+            for column in SNAPSHOT_OVERRIDE_COLUMNS:
+                if column in row and column in aligned_snapshot.index and pd.notna(aligned_snapshot[column]):
+                    row[column] = aligned_snapshot[column]
             if "Season" in row:
                 row["Season"] = season_name
             rows.append(row)
@@ -162,7 +251,7 @@ def build_point_in_time_training_dataset(
                     "match_id": match_id,
                     "section": int(match["section"]),
                     "match_date": match["match_date"],
-                    "feature_source": "snapshot",
+                    "feature_source": "snapshot_overlay_on_reconstructed_pre_match",
                     "feature_as_of": snapshot.get("feature_as_of"),
                     "feature_snapshot_path": snapshot.get("feature_snapshot_path"),
                     "fallback_reason": "",
@@ -170,9 +259,10 @@ def build_point_in_time_training_dataset(
             )
             continue
 
-        fallback_row = fallback_by_match.get(match_id)
-        if fallback_row is not None:
-            row = _row_from_source(fallback_row, reference_columns, targets)
+        rebuilt_row = rebuilt_by_match.get(match_id)
+        if rebuilt_row is not None:
+            feature_row, provenance = rebuilt_row
+            row = _row_from_source(feature_row, reference_columns, targets)
             if "Season" in row:
                 row["Season"] = season_name
             rows.append(row)
@@ -181,10 +271,17 @@ def build_point_in_time_training_dataset(
                     "match_id": match_id,
                     "section": int(match["section"]),
                     "match_date": match["match_date"],
-                    "feature_source": "fallback_rebuilt",
+                    "feature_source": (
+                        "aggregate_estimate_reconstructed"
+                        if strategy in {"snapshot_with_aggregate_estimate", "legacy_aggregate"}
+                        else "reconstructed_pre_match"
+                    ),
                     "feature_as_of": "",
                     "feature_snapshot_path": "",
-                    "fallback_reason": "no_point_in_time_snapshot",
+                    "fallback_reason": "",
+                    "provenance_summary": json.dumps(
+                        pd.Series(provenance).value_counts().to_dict(), ensure_ascii=False, sort_keys=True
+                    ),
                 }
             )
             continue
@@ -198,14 +295,23 @@ def build_point_in_time_training_dataset(
         "season_key": season_key,
         "season_label": season_label,
         "season_name": season_name,
+        "strategy": strategy,
+        "aggregate_normalization_divisor": None,
+        "football_lab_unit_policy": "expected_goals_rate_and_agi_kagi_index_as_published",
         "finished_matches": int(len(finished)),
         "training_rows": int(len(dataset)),
-        "snapshot_rows": int((source_frame["feature_source"] == "snapshot").sum()) if not source_frame.empty else 0,
-        "fallback_rows": int((source_frame["feature_source"] == "fallback_rebuilt").sum()) if not source_frame.empty else 0,
+        "snapshot_rows": int((source_frame["feature_source"] == "snapshot_overlay_on_reconstructed_pre_match").sum()) if not source_frame.empty else 0,
+        "reconstructed_rows": int(source_frame["feature_source"].isin(["reconstructed_pre_match", "aggregate_estimate_reconstructed"]).sum()) if not source_frame.empty else 0,
+        "aggregate_estimate_rows": int((source_frame["feature_source"] == "aggregate_estimate_reconstructed").sum()) if not source_frame.empty else 0,
+        "fallback_rows": 0,
         "skipped_rows": int(len(skipped)),
         "skipped_match_ids": skipped,
         "reference_columns": int(len(reference_columns)),
-        "snapshot_files": int(len(list(Path(_resolve(snapshot_dir)).glob(f"upcoming_features_{season_key}_asof_*.csv"))) if _resolve(snapshot_dir).exists() else 0),
+        "snapshot_files": (
+            int(len(list(Path(_resolve(snapshot_dir)).glob(f"upcoming_features_{season_key}_asof_*.csv"))))
+            if strategy in {"strict", "snapshot_with_aggregate_estimate"} and _resolve(snapshot_dir).exists()
+            else 0
+        ),
     }
     return dataset, source_frame, report
 
@@ -221,6 +327,8 @@ def main() -> int:
         season_key=args.season_key,
         season_label=args.season_label,
         season_name=args.season_name,
+        strategy=args.strategy,
+        aggregate_normalization_divisor=args.aggregate_normalization_divisor,
     )
     safe_write_csv(dataset, _resolve(args.output))
     reference = pd.read_csv(_resolve(args.reference_dataset))

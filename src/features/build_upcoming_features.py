@@ -81,7 +81,13 @@ def _load_market_values(path: str | Path = "Data/processed/market_values_2026_sp
     if "team" not in df.columns or "market_value" not in df.columns:
         return {}
     values = df.dropna(subset=["team", "market_value"])
-    return {str(row["team"]): float(row["market_value"]) for _, row in values.iterrows()}
+    normalized: dict[str, float] = {}
+    for _, row in values.iterrows():
+        value = float(row["market_value"])
+        # ML_dataset stores Transfermarkt values in EUR millions.  The current
+        # scraper stores raw EUR, so align the unit before model inference.
+        normalized[str(row["team"])] = value / 1_000_000 if value >= 1_000 else value
+    return normalized
 
 
 def _load_football_lab_values() -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
@@ -106,6 +112,7 @@ def _load_football_lab_values() -> tuple[dict[str, float], dict[str, float], dic
         if "team" in df.columns and "期待値" in df.columns:
             attacking = df[df.get("table_index", 0) == 0] if "table_index" in df.columns else df
             for _, row in attacking.dropna(subset=["team", "期待値"]).iterrows():
+                # Football Lab publishes expected goals as a per-match rate.
                 expected[str(row["team"])] = float(row["期待値"])
 
     return agi, kagi, expected
@@ -211,6 +218,10 @@ def build_upcoming_features(
                 sources[col] = "fallback_league_median"
             else:
                 sources[col] = "fallback_mode"
+        for col in ["Attendance", "Stadium_Fill_Rate"]:
+            if col in row:
+                row[col] = 0.0
+                sources[col] = "excluded_post_match_feature"
         _apply_team_side_values(row, history, home, "Home")
         if not history[history["Home"].astype(str) == home].empty:
             for col in history.columns:
@@ -233,11 +244,11 @@ def build_upcoming_features(
             "Away_Rolling_xG",
         ]:
             if col in row:
-                sources[col] = "actual_2026_special"
+                sources[col] = "football_lab_latest_pre_match_snapshot"
         _apply_current_formations(row, home, away, formations)
         for col in ["Home_Formation", "Away_Formation"]:
             if col in row:
-                sources[col] = "actual_2026_special"
+                sources[col] = "current_season_modal_formation_snapshot"
         row.update(
             {
                 "Season": str(match.get("season", "2026_special") or "2026_special"),
@@ -258,7 +269,7 @@ def build_upcoming_features(
         )
         for col in ["Season", "Section", "Date", "Home", "Away", "Score", "Home_Goals", "Away_Goals", "Goal_Diff", "Match_Result"]:
             sources[col] = "actual_schedule" if col in ["Season", "Section", "Date", "Home", "Away"] else "prediction_placeholder"
-        sources["Backline_Matchup"] = "actual_2026_special_derived"
+        sources["Backline_Matchup"] = "derived_from_modal_formation_snapshot"
         _recompute_simple_diffs(row)
         for col in ["Rank_Diff", "Elo_Diff", "Market_Value_Diff"]:
             if col in row:

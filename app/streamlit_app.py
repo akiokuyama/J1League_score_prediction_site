@@ -42,7 +42,7 @@ from src.data.team_master import to_display_name  # noqa: E402
 
 
 st.set_page_config(
-    page_title="J1試合予想AI｜Jリーグのスコア予測・勝敗予想",
+    page_title="Jリーグ試合予想AI｜スコア予測・勝敗予想",
     page_icon="⚽",
     layout="centered",
     initial_sidebar_state="collapsed",
@@ -395,6 +395,7 @@ def _target_matchweek_text(data: dict[str, Any], all_unplayed: dict[str, Any] | 
 
 def render_header(data: dict[str, Any], past_data: dict[str, Any] | None = None, all_unplayed: dict[str, Any] | None = None) -> None:
     season = data.get("season", "-")
+    competition = data.get("competition") or (all_unplayed or {}).get("competition") or "Jリーグ"
     updated_value = _latest_update_value(
         data.get("last_updated"),
         (all_unplayed or {}).get("last_updated"),
@@ -405,8 +406,8 @@ def render_header(data: dict[str, Any], past_data: dict[str, Any] | None = None,
     st.markdown(
         f"""
         <div class="app-header">
-          <h1 class="app-title">J1試合予想AI</h1>
-          <div class="muted">J1百年構想リーグのスコア予測・勝敗確率・得点者候補を確認できます。Jリーグの試合予想、スコア予測、勝敗予想、得点者候補をAIモデルで算出しています。</div>
+          <h1 class="app-title">Jリーグ試合予想AI</h1>
+          <div class="muted">{escape(str(competition))}のスコア予測・勝敗確率・得点者候補を確認できます。試合予想、スコア予測、勝敗予想、得点者候補をAIモデルで算出しています。</div>
           <div class="header-meta">
             <div class="meta-chip">シーズン：{escape(str(season))}</div>
             <div class="meta-chip">対象節：{escape(str(matchweek_text))}</div>

@@ -47,3 +47,35 @@ def test_all_unplayed_writes_separate_predictions(tmp_path: Path) -> None:
     assert data["matches"]
     assert data.get("warnings") == []
     assert data.get("skipped_matches") == []
+
+
+def test_shadow_model_writes_to_separate_output(tmp_path: Path) -> None:
+    output_dir = tmp_path / "primary"
+    output_path = output_dir / "latest.json"
+    shadow_path = tmp_path / "shadow" / "latest.json"
+    result = subprocess.run(
+        [
+            sys.executable,
+            "scripts/run_prediction.py",
+            "--mode",
+            "next_section",
+            "--output-dir",
+            str(output_dir),
+            "--output",
+            str(output_path),
+            "--shadow-model-dir",
+            "Models/weather_removed_v1",
+            "--shadow-output",
+            str(shadow_path),
+        ],
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr or result.stdout
+    assert output_path.exists()
+    assert shadow_path.exists()
+    primary = json.loads(output_path.read_text(encoding="utf-8"))
+    shadow = json.loads(shadow_path.read_text(encoding="utf-8"))
+    assert len(primary["matches"]) == len(shadow["matches"])
