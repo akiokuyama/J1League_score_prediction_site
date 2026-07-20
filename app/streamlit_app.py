@@ -38,6 +38,7 @@ from app.utils.load_predictions import (  # noqa: E402
     load_latest_predictions,
     load_past_prediction_results,
 )
+from app.utils.team_logos import team_matchup_html  # noqa: E402
 from src.data.team_master import to_display_name  # noqa: E402
 
 
@@ -182,7 +183,69 @@ def inject_css() -> None:
             box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
             transform: translateY(-1px);
         }
-        .teams { font-size: 1.06rem; font-weight: 800; margin: .45rem 0 .65rem; }
+        .teams { margin: .65rem 0 .75rem; }
+        .team-matchup {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+            align-items: center;
+            gap: 12px;
+        }
+        .team-identity {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+        }
+        .team-identity--home {
+            justify-content: flex-end;
+            text-align: right;
+        }
+        .team-identity--away {
+            justify-content: flex-start;
+            text-align: left;
+        }
+        .team-copy { min-width: 0; }
+        .team-name {
+            display: block;
+            font-size: 1rem;
+            font-weight: 850;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+        .team-side-label {
+            display: block;
+            margin-top: 3px;
+            color: color-mix(in srgb, var(--text-color) 58%, transparent);
+            font-size: .64rem;
+            font-weight: 750;
+            letter-spacing: .08em;
+        }
+        .versus {
+            color: color-mix(in srgb, var(--text-color) 58%, transparent);
+            font-size: .72rem;
+            font-weight: 850;
+            letter-spacing: .05em;
+        }
+        .team-logo {
+            display: inline-block;
+            flex: 0 0 40px;
+            width: 40px;
+            height: 40px;
+            background-image: url("https://www.jleague.jp/img/common/2026_27/team_emb_l.webp");
+            background-repeat: no-repeat;
+            background-size: 400px 240px;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .18));
+        }
+        .team-logo--fallback {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(128, 128, 128, .25);
+            border-radius: 50%;
+            background: var(--background-color);
+            font-size: 1.35rem;
+            filter: none;
+        }
         .score-row {
             display: flex;
             align-items: center;
@@ -483,7 +546,7 @@ def render_match_card(match: dict[str, Any]) -> None:
     match_id = str(match.get("match_id") or id(match))
     home = display_team(match.get("home_team"))
     away = display_team(match.get("away_team"))
-    matchup = format_matchup(home, away)
+    matchup = team_matchup_html(match.get("home_team"), match.get("away_team"), home, away)
     score = format_score(match.get("predicted_score"))
     meta = format_match_meta(match)
     href = build_detail_href(match_id)
@@ -505,7 +568,7 @@ def render_match_card(match: dict[str, Any]) -> None:
         <a href="{href}" target="_self" class="match-card-link">
           <div class="match-card">
             <div class="small">{escape(meta)}</div>
-            <div class="teams">{escape(matchup)}</div>
+            {matchup}
             <div class="score-row">
               <div class="score-pill">{escape(score)}</div>
               <div class="prob-line">勝敗確率トップ：{escape(str(strongest["label"]))}<br>{escape(format_percent(strongest["value"]))}（{escape(confidence["label"])}）</div>
@@ -534,14 +597,15 @@ def render_match_detail(match: dict[str, Any]) -> None:
 
     home = display_team(match.get("home_team"))
     away = display_team(match.get("away_team"))
-    matchup = format_matchup(home, away)
+    matchup = team_matchup_html(match.get("home_team"), match.get("away_team"), home, away)
     probabilities = match.get("result_probabilities")
     strongest = get_strongest_outcome(probabilities)
     insight = get_match_insight_label(probabilities)
     predicted_score = match.get("predicted_score")
     score_text = format_score(predicted_score)
 
-    st.markdown(f'<div class="section-title">{escape(matchup)}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">対戦カード</div>', unsafe_allow_html=True)
+    st.markdown(matchup, unsafe_allow_html=True)
     st.caption(format_match_meta(match))
     st.markdown(f"<div class='score'>{score_text}</div>", unsafe_allow_html=True)
 
@@ -739,13 +803,13 @@ def render_past_card(match: dict[str, Any]) -> None:
     score_class = "result-badge-correct" if evaluation["score_hit"] else "result-badge-wrong"
     home = display_team(match.get("home_team"))
     away = display_team(match.get("away_team"))
-    matchup = format_matchup(home, away)
+    matchup = team_matchup_html(match.get("home_team"), match.get("away_team"), home, away)
 
     st.markdown(
         f"""
         <div class="match-card">
           <div class="small">{escape(format_match_meta(match))}</div>
-          <div class="teams">{escape(matchup)}</div>
+          {matchup}
           <span class="label {result_class}">{evaluation["result_label"]}</span>
           <span class="label {score_class}">{evaluation["score_label"]}</span>
           <div class="score-row">
@@ -836,10 +900,6 @@ def option_index(options: list[Any], selected: Any, default: int = 0) -> int:
         if str(option) == selected_text:
             return index
     return default
-
-
-def format_matchup(home: str, away: str) -> str:
-    return f"{home}（H） vs {away}（A）"
 
 
 def match_section(match: dict[str, Any]) -> Any:
