@@ -49,6 +49,9 @@ def test_scheduled_prediction_workflow_updates_predictions() -> None:
     assert "python scripts/build_past_prediction_results.py" in text
     assert "python scripts/validate_prediction_outputs.py" in text
     assert "python scripts/validate_past_prediction_results.py" in text
+    assert "python scripts/build_standings_forecast.py" in text
+    assert "python scripts/validate_standings_forecast.py" in text
+    assert "outputs/standings_forecast" in text
     assert "build_model_metrics.py" not in text
     assert "git add outputs/local" not in text
 
@@ -69,4 +72,7 @@ def test_manual_workflow_remains_manual_only() -> None:
     assert "python scripts/build_model_metrics.py" not in text
     assert "python scripts/validate_prediction_outputs.py" in text
     assert "python scripts/validate_past_prediction_results.py" in text
+    assert "python scripts/build_standings_forecast.py" in text
+    assert "python scripts/validate_standings_forecast.py" in text
+    assert "outputs/standings_forecast" in text
     assert "git add outputs/local" not in text

@@ -21,3 +21,6 @@ def test_manual_update_workflow_excludes_local_model_metrics() -> None:
     assert "outputs/local/model_metrics.json must not be generated in Actions" in text
     assert "python scripts/build_past_prediction_results.py" in text
     assert "python scripts/run_competition_pipeline.py" in text
+    assert "python scripts/build_standings_forecast.py" in text
+    assert "python scripts/validate_standings_forecast.py" in text
+    assert "outputs/standings_forecast" in text

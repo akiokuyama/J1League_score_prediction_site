@@ -40,7 +40,8 @@ from app.utils.load_predictions import (  # noqa: E402
     load_latest_predictions,
     load_past_prediction_results,
 )
-from app.utils.team_logos import team_matchup_html  # noqa: E402
+from app.utils.standings_loader import load_standings_forecasts  # noqa: E402
+from app.utils.team_logos import team_logo_html, team_matchup_html  # noqa: E402
 from src.data.team_master import to_display_name  # noqa: E402
 
 
@@ -57,6 +58,7 @@ def main() -> None:
     latest = load_latest_predictions()
     all_unplayed = load_all_unplayed_predictions()
     past = load_past_prediction_results()
+    standings_forecasts = load_standings_forecasts()
 
     initialize_state()
     render_header(latest, past, all_unplayed)
@@ -65,7 +67,7 @@ def main() -> None:
     if st.session_state.view != "detail":
         tab = st.radio(
             "表示切替",
-            ["これからの試合", "過去の予測結果"],
+            ["これからの試合", "過去の予測結果", "最終順位予測"],
             horizontal=True,
             label_visibility="collapsed",
         )
@@ -74,8 +76,10 @@ def main() -> None:
         if st.session_state.view != "detail":
             render_prediction_logic_summary(latest)
         render_future_matches(latest, all_unplayed)
-    else:
+    elif tab == "過去の予測結果":
         render_past_predictions(past)
+    else:
+        render_standings_forecast(standings_forecasts)
 
 
 def initialize_state() -> None:
@@ -391,6 +395,82 @@ def inject_css() -> None:
             font-size: 1.05rem;
             font-weight: 850;
         }
+        .standings-table {
+            border: 1px solid rgba(128, 128, 128, 0.25);
+            border-radius: 8px;
+            overflow: hidden;
+            background: var(--secondary-background-color);
+            box-shadow: 0 7px 18px rgba(0, 0, 0, 0.10);
+        }
+        .standings-header, .standings-row {
+            display: grid;
+            grid-template-columns: 44px minmax(165px, 1fr) 54px 54px 68px 64px 64px 64px;
+            align-items: center;
+            gap: 9px;
+            padding: 10px 11px;
+        }
+        .standings-header {
+            border-bottom: 1px solid rgba(128, 128, 128, 0.25);
+            background: color-mix(in srgb, var(--primary-color) 10%, var(--secondary-background-color));
+            color: color-mix(in srgb, var(--text-color) 70%, transparent);
+            font-size: .68rem;
+            font-weight: 800;
+            text-align: center;
+        }
+        .standings-header div:nth-child(2) { text-align: left; }
+        .standings-row {
+            border-bottom: 1px solid rgba(128, 128, 128, 0.18);
+            color: var(--text-color);
+            min-height: 64px;
+        }
+        .standings-row:last-child { border-bottom: 0; }
+        .standings-row:nth-child(2),
+        .standings-row:nth-child(3),
+        .standings-row:nth-child(4) {
+            background: color-mix(in srgb, #f59e0b 6%, var(--secondary-background-color));
+        }
+        .standings-rank {
+            grid-column: 1;
+            grid-row: 1;
+            text-align: center;
+            font-size: 1.08rem;
+            font-weight: 900;
+        }
+        .standings-team {
+            grid-column: 2;
+            grid-row: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 0;
+        }
+        .standings-team-copy { min-width: 0; }
+        .standings-team-name {
+            display: block;
+            font-size: .82rem;
+            font-weight: 850;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+        .standings-range {
+            display: block;
+            margin-top: 3px;
+            color: color-mix(in srgb, var(--text-color) 60%, transparent);
+            font-size: .67rem;
+        }
+        .standings-points, .standings-metric {
+            text-align: center;
+            font-size: .78rem;
+            font-weight: 800;
+        }
+        .standings-current { grid-column: 3; grid-row: 1; }
+        .standings-change { grid-column: 4; grid-row: 1; }
+        .standings-points { grid-column: 5; grid-row: 1; font-size: .9rem; }
+        .standings-champion { grid-column: 6; grid-row: 1; }
+        .standings-top3 { grid-column: 7; grid-row: 1; }
+        .standings-bottom3 { grid-column: 8; grid-row: 1; }
+        .standings-change-up { color: #16a34a; }
+        .standings-change-down { color: #dc2626; }
         @media (max-width: 640px) {
             .block-container { padding-left: 1rem; padding-right: 1rem; }
             .score { font-size: 1.45rem; }
@@ -399,6 +479,38 @@ def inject_css() -> None:
             .header-meta, .summary-grid { grid-template-columns: 1fr; }
             .score-row { align-items: flex-start; flex-direction: column; }
             .prob-line { text-align: left; }
+            .standings-header { display: none; }
+            .standings-row {
+                grid-template-columns: 34px repeat(5, minmax(0, 1fr)) 64px;
+                gap: 7px;
+                padding: 12px 10px;
+            }
+            .standings-rank { grid-column: 1; grid-row: 1 / span 2; }
+            .standings-team { grid-column: 2 / 7; grid-row: 1; }
+            .standings-points { grid-column: 7; grid-row: 1; }
+            .standings-points::before {
+                content: "期待勝点";
+                display: block;
+                margin-bottom: 2px;
+                color: color-mix(in srgb, var(--text-color) 58%, transparent);
+                font-size: .58rem;
+                font-weight: 700;
+            }
+            .standings-row .standings-metric {
+                color: color-mix(in srgb, var(--text-color) 75%, transparent);
+                font-size: .68rem;
+                font-weight: 750;
+            }
+            .standings-current { grid-column: 2; grid-row: 2; }
+            .standings-change { grid-column: 3; grid-row: 2; }
+            .standings-champion { grid-column: 4; grid-row: 2; }
+            .standings-top3 { grid-column: 5; grid-row: 2; }
+            .standings-bottom3 { grid-column: 6 / 8; grid-row: 2; }
+            .standings-current::before { content: "現在 "; }
+            .standings-change::before { content: "変動 "; }
+            .standings-champion::before { content: "優勝 "; }
+            .standings-top3::before { content: "Top3 "; }
+            .standings-bottom3::before { content: "下位3 "; }
         }
         </style>
         """,
@@ -748,6 +860,115 @@ def render_past_predictions(data: dict[str, Any]) -> None:
         return
     for match in filtered:
         render_past_card(match)
+
+
+def render_standings_forecast(forecasts: list[dict[str, Any]]) -> None:
+    st.markdown('<div class="section-title">シーズン最終順位予測</div>', unsafe_allow_html=True)
+    if not forecasts:
+        st.info("最終順位予測はまだ生成されていません。")
+        return
+
+    selected_index = st.selectbox(
+        "予測した日時",
+        list(range(len(forecasts))),
+        format_func=lambda index: _standings_snapshot_label(forecasts[index]),
+        key="standings_snapshot",
+    )
+    forecast = forecasts[int(selected_index)]
+    teams = [team for team in forecast.get("teams", []) if isinstance(team, dict)]
+    if not teams:
+        st.info("選択した時点の順位予測データがありません。")
+        return
+
+    data_as_of = forecast.get("data_as_of") if isinstance(forecast.get("data_as_of"), dict) else {}
+    fixture_summary = forecast.get("fixture_summary") if isinstance(forecast.get("fixture_summary"), dict) else {}
+    st.markdown(
+        f"""
+        <div class="summary-card">
+          <div class="summary-grid">
+            <div class="summary-item">
+              <div class="summary-label">予測日時</div>
+              <div class="summary-value">{escape(format_datetime_jp(forecast.get('generated_at')))}</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">実績の基準</div>
+              <div class="summary-value">{escape(str(data_as_of.get('label') or '-'))}</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">シミュレーション</div>
+              <div class="summary-value">{int(forecast.get('simulation_count') or 0):,}回</div>
+            </div>
+            <div class="summary-item">
+              <div class="summary-label">終了済み試合</div>
+              <div class="summary-value">{int(data_as_of.get('completed_matches') or 0)}試合</div>
+            </div>
+          </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    if int(fixture_summary.get("supplemented_matches") or 0) > 0:
+        official = int(fixture_summary.get("official_schedule_matches") or 0)
+        expected = int(fixture_summary.get("expected_round_robin_matches") or 0)
+        st.warning(
+            f"現在の公式日程データは {official} / {expected} 試合です。未収録の1試合は、正式日程が反映されるまで逆カードの予測確率を入れ替えて暫定補完しています。"
+        )
+
+    rows = []
+    for team in teams:
+        name = str(team.get("team_name") or display_team(team.get("team")))
+        logo = team_logo_html(team.get("team"), name)
+        current_rank = safe_int(team.get("current_rank"))
+        current_text = str(current_rank) if current_rank is not None else "-"
+        change_text, change_class = _format_rank_change(team.get("rank_change"))
+        points = safe_float(team.get("expected_points"))
+        points_text = f"{points:.1f}" if points is not None else "-"
+        low = safe_int(team.get("likely_rank_low"))
+        high = safe_int(team.get("likely_rank_high"))
+        range_text = f"想定 {low}〜{high}位" if low is not None and high is not None else ""
+        rows.append(
+            f'<div class="standings-row">'
+            f'<div class="standings-rank">{int(team.get("predicted_rank") or 0)}</div>'
+            f'<div class="standings-team">{logo}'
+            f'<span class="standings-team-copy"><span class="standings-team-name">{escape(name)}</span>'
+            f'<span class="standings-range">{escape(range_text)}</span></span></div>'
+            f'<div class="standings-metric standings-current">{escape(current_text)}</div>'
+            f'<div class="standings-metric standings-change {change_class}">{escape(change_text)}</div>'
+            f'<div class="standings-metric standings-champion">{escape(format_percent(team.get("champion_probability")))}</div>'
+            f'<div class="standings-metric standings-top3">{escape(format_percent(team.get("top3_probability")))}</div>'
+            f'<div class="standings-metric standings-bottom3">{escape(format_percent(team.get("bottom3_probability")))}</div>'
+            f'<div class="standings-points">{escape(points_text)}</div></div>'
+        )
+
+    st.markdown(
+        '<div class="standings-table"><div class="standings-header">'
+        '<div>予測</div><div>クラブ</div><div>現在</div><div>変動</div>'
+        '<div>期待勝点</div><div>優勝</div><div>Top 3</div><div>下位3</div></div>'
+        + "".join(rows)
+        + "</div>",
+        unsafe_allow_html=True,
+    )
+
+    model = forecast.get("model_version") or "-"
+    st.caption(f"使用モデル：{model} / 表中の『想定』はシミュレーション順位の10〜90パーセンタイルです。")
+
+
+def _standings_snapshot_label(forecast: dict[str, Any]) -> str:
+    generated = format_datetime_jp(forecast.get("generated_at"))
+    data_as_of = forecast.get("data_as_of") if isinstance(forecast.get("data_as_of"), dict) else {}
+    return f"{generated}（実績：{data_as_of.get('label') or '-'}）"
+
+
+def _format_rank_change(value: Any) -> tuple[str, str]:
+    change = safe_int(value)
+    if change is None:
+        return "-", ""
+    if change > 0:
+        return f"↑{change}", "standings-change-up"
+    if change < 0:
+        return f"↓{abs(change)}", "standings-change-down"
+    return "→", ""
 
 
 def filter_past_matches(matches: list[dict[str, Any]]) -> list[dict[str, Any]]:

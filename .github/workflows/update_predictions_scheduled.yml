@@ -39,6 +39,9 @@ jobs:
             --shadow-model-dir Models/reviewed_point_in_time_normal_v1
           python scripts/build_past_prediction_results.py \
             --matches Data/processed/matches_2026_27_j1_clean.csv
+          python scripts/build_standings_forecast.py \
+            --matches Data/processed/matches_2026_27_j1_clean.csv \
+            --predictions outputs/all_unplayed_predictions.json
 
       - name: Validate generated outputs
         run: |
@@ -48,6 +51,7 @@ jobs:
             echo "No predictable fixtures; public prediction files were intentionally preserved."
           fi
           python scripts/validate_past_prediction_results.py
+          python scripts/validate_standings_forecast.py
           test ! -e outputs/local/model_metrics.json
 
       - name: Commit 2026-27 prediction outputs
@@ -78,7 +82,7 @@ jobs:
             Data/features/snapshots/upcoming_features_2026_27_j1_* \
             outputs/latest_predictions.json outputs/latest_predictions.csv \
             outputs/all_unplayed_predictions.json outputs/all_unplayed_predictions.csv \
-            outputs/shadow outputs/prediction_history outputs/past_prediction_results.json outputs/last_updated.txt
+            outputs/shadow outputs/prediction_history outputs/standings_forecast outputs/past_prediction_results.json outputs/last_updated.txt
           for target in \
             Data/raw/football_lab/expected_2026_27_j1.csv \
             Data/raw/football_lab/kagi_2026_27_j1.csv \

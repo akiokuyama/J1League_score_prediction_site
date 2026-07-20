@@ -1,6 +1,6 @@
 # J1 League Score Prediction App
 
-J1リーグ 2026年特別シーズン（J1百年構想リーグ）の試合結果・スコアを予測し、Streamlitで確認するためのアプリです。
+J1リーグ 2026/27シーズンの試合結果・スコアと最終順位を予測し、Streamlitで確認するためのアプリです。
 
 予測は過去データ、チーム成績、選手スタッツ、フォーメーション、移動距離、Eloなどの特徴量と機械学習モデルに基づく参考情報です。実際の試合結果を保証するものではありません。
 
@@ -13,6 +13,8 @@ J1リーグ 2026年特別シーズン（J1百年構想リーグ）の試合結�
 - 試合詳細ページの表示
 - 過去予測結果と実際の結果の照合
 - 絞り込み条件に連動した精度サマリー
+- 10,000回シミュレーションによる最終順位・期待勝点・順位確率の表示
+- 予測日時ごとの最終順位予測履歴
 - Light/Darkモード対応
 - GitHub Actionsによる定期データ更新
 
@@ -24,6 +26,8 @@ Streamlitアプリは主に以下の出力ファイルを読み込みます。
 outputs/all_unplayed_predictions.json   # 今後行われる未消化試合すべての予測
 outputs/latest_predictions.json         # 次節予測
 outputs/past_prediction_results.json    # 過去予測と実際の結果の照合
+outputs/standings_forecast/latest.json  # 最新の最終順位予測
+outputs/standings_forecast/history/     # 予測日時ごとの順位予測履歴
 outputs/last_updated.txt                # 更新時刻
 ```
 
@@ -85,6 +89,7 @@ python -m compileall app src scripts
 pytest
 python scripts/validate_prediction_outputs.py
 python scripts/validate_past_prediction_results.py
+python scripts/validate_standings_forecast.py
 ```
 
 モデル指標をローカルで確認する場合:
@@ -106,16 +111,16 @@ python scripts/build_model_metrics.py
 - 主な処理:
 
 ```bash
-python scripts/update_2026_special_data.py --season 2026_special --category 100yj1 --scope results
-python scripts/build_past_prediction_results.py
+python scripts/update_competition_data.py --competition-key 2026_27_j1 --scope results
+python scripts/build_past_prediction_results.py --matches Data/processed/matches_2026_27_j1_clean.csv
 python scripts/validate_past_prediction_results.py
 ```
 
 主な更新対象:
 
 ```text
-Data/processed/matches_2026_special_clean.csv
-Data/processed/update_2026_special_report.json
+Data/processed/matches_2026_27_j1_clean.csv
+Data/processed/update_2026_27_j1_report.json
 outputs/past_prediction_results.json
 ```
 
@@ -128,11 +133,15 @@ outputs/past_prediction_results.json
 - 主な処理:
 
 ```bash
-python scripts/full_pipeline.py --season 2026_special --category 100yj1 --mode next_section
-python scripts/run_prediction.py --mode all_unplayed
-python scripts/build_past_prediction_results.py
+python scripts/run_competition_pipeline.py \
+  --competition-key 2026_27_j1 \
+  --history Data/features/training_dataset_with_2026_special_point_in_time.csv \
+  --shadow-model-dir Models/reviewed_point_in_time_normal_v1
+python scripts/build_past_prediction_results.py --matches Data/processed/matches_2026_27_j1_clean.csv
+python scripts/build_standings_forecast.py
 python scripts/validate_prediction_outputs.py
 python scripts/validate_past_prediction_results.py
+python scripts/validate_standings_forecast.py
 ```
 
 主な更新対象:
@@ -145,6 +154,7 @@ outputs/latest_predictions.csv
 outputs/all_unplayed_predictions.json
 outputs/all_unplayed_predictions.csv
 outputs/prediction_history/
+outputs/standings_forecast/
 outputs/past_prediction_results.json
 outputs/last_updated.txt
 ```
