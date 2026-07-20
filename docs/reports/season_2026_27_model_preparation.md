@@ -1,7 +1,8 @@
 # 2026-2027シーズン開始時 改善・改修記録
 
-ステータス: レビュー待ち
-コード確定コミット: `734ff0e` (`Prepare leakage-safe 2026-27 prediction model`)
+ステータス: 本番運用反映済み
+データ・特徴量確定コミット: `734ff0e` (`Prepare leakage-safe 2026-27 prediction model`)
+スコア分布モデル確定コミット: `026a618` (`Unify score predictions with calibrated distributions`)
 
 ## 1. 目的と対象範囲
 
@@ -88,10 +89,13 @@
 
 ## 6. モデルと予測運用
 
-- 本番モデル: `Models/`（`reviewed_2026_special_v1`）
+- 本番モデル: `Models/`（`score_distribution_2026_27_v1`）
 - シャドーモデル: `Models/reviewed_point_in_time_normal_v1/`
 - 本番モデルの特徴量数: 156
-- 旧本番モデルの退避先: `Models/legacy_weather_20260719_160732/`
+- 公開予測方式: 期待得点から作る独立Poissonスコア分布
+- 勝敗確率: 全スコア確率をホーム勝利・引き分け・アウェイ勝利へ合算
+- 確率校正: 温度スケーリングを実装したが、時系列評価で悪化したため現在は未適用（`T=1.0`）
+- 旧本番モデルの最新退避先: `Models/legacy_weather_20260720_144023/`
 
 シャドー予測の実行例:
 
@@ -110,8 +114,12 @@ python scripts/run_prediction.py \
 - 候補モデル指定とシャドー出力を `scripts/run_prediction.py` に追加した。
 - スナップショット判定を「試合日以前」から「キックオフより前」へ厳格化した。
 - 市場価値を既存学習データと同じEUR百万単位へ揃えた。
+- 予測スコア、勝敗確率、スコア候補Top 5を同じスコア分布から算出するよう統合した。
+- L2、Poisson、3種類のブレンドをwalk-forwardで比較し、差が実質的でなかったためL2を採用した。
+- 勝敗確率が45%未満、または上位2結果の差が10ポイント未満の試合を「拮抗」と表示するようにした。
+- Top 5の確率を、Top 5内の相対値ではなく全スコアに対する絶対確率へ変更した。
 
-新シーズンの日程取得は対象外のため、大会プロファイルは準備済みだが、アクティブ設定は `2026_special` のままである。
+スコア分布モデルの詳細、数式、比較結果、校正判断は [`score_distribution_model_update_2026_27.md`](score_distribution_model_update_2026_27.md) を参照する。
 
 ## 8. 再現手順
 
@@ -124,18 +132,21 @@ python scripts/build_point_in_time_training_dataset.py \
 
 python scripts/retrain_models_no_weather.py \
   --dataset Data/features/training_dataset_with_2026_special_point_in_time.csv \
-  --output-dir Models/reviewed_2026_special_v1 \
+  --output-dir Models/score_distribution_2026_27_v1 \
   --test-season 2026_special \
   --test-start-date 2026-05-01 \
-  --model-version reviewed_2026_special_v1
+  --model-version score_distribution_2026_27_v1 \
+  --score-model auto
 ```
 
 評価確認後に正式反映する場合だけ、最後のコマンドへ `--activate` を追加する。
 
 ## 9. 検証結果
 
-- `pytest -q`: 36 passed
+- `pytest -q`: 46 passed
 - 本番モデルで次節相当10試合の予測生成: 成功
+- 本番モデルで未消化379試合の予測生成: 成功
+- 最新10試合・未消化379試合のJSON整合性検証: 成功
 - 通常年シャドーモデルで同じ10試合の分離出力: 成功
 - 両モデルとも特徴量不足によるスキップ: 0
 - 本番モデル内の `Attendance` / `Stadium_Fill_Rate` / Weather系列: 0
@@ -146,4 +157,6 @@ python scripts/retrain_models_no_weather.py \
 - xG / AGI / KAGIの取得時刻がキックオフ前であること。
 - 本番モデルとシャドーモデルについて、勝敗精度、完全一致率、MAE、確率校正を同一試合集合で比較すること。
 - 特別リーグ特有の地域分割・試合数・大会目的による分布差が、新シーズンでも悪影響を与えていないこと。
-- 日程取得を実装する際に `ACTIVE_COMPETITION_KEY` と入力ファイルを `2026_27_j1` へ切り替えること。
+- 勝敗確率のLog Loss、Brier Score、Accuracyを主要指標として継続評価すること。
+- 最有力の単一スコアが1-1へ集中する傾向と、勝敗カテゴリ合算との見え方の差を確認すること。
+- 十分な試合数が蓄積した時点で温度スケーリングを再評価すること。

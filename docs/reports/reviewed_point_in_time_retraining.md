@@ -1,8 +1,10 @@
 # 試合前時点データ再構築・再学習レポート
 
-この分析の最終判断と運用手順は、[`season_2026_27_model_preparation.md`](season_2026_27_model_preparation.md) に統合した。
+この分析の最終判断と運用手順は、[`season_2026_27_model_preparation.md`](season_2026_27_model_preparation.md) に統合した。公開予測ロジックの後続更新は、[`score_distribution_model_update_2026_27.md`](score_distribution_model_update_2026_27.md) を参照すること。
 
 ## 最終判断
+
+以下は試合前時点データ再構築を確定した時点の判断である。現在の本番成果物は、同じ結合学習データを使って公開予測ロジックを更新した `score_distribution_2026_27_v1` である。
 
 - 通常J1と2026特別リーグを結合した `reviewed_2026_special_v1` を本番採用した。
 - 通常J1だけの `reviewed_point_in_time_normal_v1` はシャドーモデルとして保持した。

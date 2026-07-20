@@ -7,6 +7,7 @@ docs/
 ├── index.html               # GitHub Pages公開用の検索流入ページ
 ├── reports/                 # 完了レポート、判断メモ、チェックリスト
 │   ├── season_2026_27_model_preparation.md  # 新シーズン開始時の正本
+│   ├── score_distribution_model_update_2026_27.md  # スコア分布・校正・モデル比較の確定記録
 │   ├── week1/
 │   ├── week2/
 │   ├── week3/
@@ -22,3 +23,5 @@ docs/
 日常的に確認する資料は `docs/reports/` を見ます。作業指示書を見返したい場合は `docs/archive/instructions/` を参照します。
 
 2026-2027シーズン開始時のデータ方針、評価結果、本番／シャドーモデル、再現手順は `docs/reports/season_2026_27_model_preparation.md` を正本とします。
+
+期待得点からのスコア分布、L2/Poisson比較、温度スケーリング、UI表示変更の詳細は `docs/reports/score_distribution_model_update_2026_27.md` を参照します。
