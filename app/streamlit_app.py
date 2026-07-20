@@ -416,7 +416,8 @@ def render_prediction_logic_summary(data: dict[str, Any]) -> None:
           <div class="logic-card-title">このアプリの予測について</div>
           <ul>
             <li>試合ごとのチーム状態・直近成績・戦術情報など、{feature_text}の特徴量を使って機械学習モデルが試合結果を予測しています。</li>
-            <li>予測スコアは、AIモデルが算出した期待得点と勝敗確率をもとに、最も有力なスコア候補として表示しています。</li>
+            <li>期待得点から全スコアの確率分布を作り、予測スコアと勝敗確率を同じ分布から一貫して算出しています。</li>
+            <li>勝敗確率が45%未満、または上位2結果の差が10ポイント未満の試合は「拮抗」と表示します。</li>
             <li>得点者候補は、チームのゴール期待値を選手の得点実績・アシスト・攻撃指標に応じて配分した参考予測です。</li>
           </ul>
         </div>
@@ -541,7 +542,7 @@ def filter_future_matches(matches: list[dict[str, Any]]) -> list[dict[str, Any]]
 def render_match_card(match: dict[str, Any]) -> None:
     probabilities = match.get("result_probabilities")
     strongest = get_strongest_outcome(probabilities)
-    confidence = get_confidence_label(strongest.get("value"))
+    confidence = get_confidence_label(strongest.get("value"), probabilities)
     insight = get_match_insight_label(probabilities)
     match_id = str(match.get("match_id") or id(match))
     home = display_team(match.get("home_team"))
@@ -551,7 +552,9 @@ def render_match_card(match: dict[str, Any]) -> None:
     meta = format_match_meta(match)
     href = build_detail_href(match_id)
     insight_class = (
-        "home-advantage"
+        "badge-confidence-low"
+        if insight and insight.startswith("拮抗")
+        else "home-advantage"
         if insight == "ホーム優勢"
         else "away-advantage"
         if insight == "アウェイ優勢"
@@ -619,7 +622,7 @@ def render_match_detail(match: dict[str, Any]) -> None:
 
 def render_conclusion(match: dict[str, Any], strongest: dict[str, Any], insight: str | None) -> None:
     score_text = format_score(match.get("predicted_score"))
-    confidence = get_confidence_label(strongest.get("value"))
+    confidence = get_confidence_label(strongest.get("value"), match.get("result_probabilities"))
     trend = f'試合傾向は「{insight}」です。' if insight else ""
     explanation = build_score_probability_explanation(match.get("predicted_score"), match.get("result_probabilities"))
     message = (
@@ -642,7 +645,7 @@ def render_expected_goals(match: dict[str, Any]) -> None:
 
     candidates = match.get("score_candidates") or []
     if candidates:
-        st.caption(f"最有力スコア候補：{candidates[0].get('score', '-')}（{format_percent(candidates[0].get('probability'))}）")
+        st.caption(f"最有力スコア候補：{candidates[0].get('score', '-')}（全スコア中 {format_percent(candidates[0].get('probability'))}）")
 
 
 def render_probability_bars(probabilities: dict | None) -> None:
@@ -678,7 +681,15 @@ def render_score_candidates(candidates: Any) -> None:
         if not isinstance(candidates, list) or not candidates:
             st.write("スコア候補はありません。")
             return
-        st.caption("各行は「その試合が該当スコアで終わる確率」を表します。%はスコア候補内での相対的な起こりやすさです。")
+        top_probability = sum(
+            max(safe_float(candidate.get("probability")) or 0.0, 0.0)
+            for candidate in candidates[:5]
+            if isinstance(candidate, dict)
+        )
+        st.caption(
+            "各行は、その試合が該当スコアで終わる全体確率です。"
+            f"Top 5の合計は {format_percent(top_probability)} で、残りは他のスコア候補です。"
+        )
         for index, candidate in enumerate(candidates[:5], start=1):
             score = candidate.get("score", "-") if isinstance(candidate, dict) else "-"
             probability = candidate.get("probability") if isinstance(candidate, dict) else None

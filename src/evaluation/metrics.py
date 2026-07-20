@@ -7,10 +7,7 @@ from typing import Any
 import numpy as np
 from sklearn.metrics import accuracy_score, log_loss, mean_absolute_error
 
-from src.predict.score_candidates import generate_score_candidates
-
-
-RESULT_CLASS_MAP = {-1: "away_win", 0: "draw", 1: "home_win"}
+from src.predict.score_distribution import predict_score_distribution
 
 
 def result_from_score(home_goals: int, away_goals: int) -> int:
@@ -49,34 +46,38 @@ def evaluate_final_scores(
     y_goals_true: Any,
     y_result_true: Any,
     pred_goals: Any,
-    pred_result_proba: Any,
-    pred_diff: Any,
-    result_classes: Any,
-    max_goals: int = 5,
+    max_goals: int = 8,
+    temperature: float = 1.0,
 ) -> dict[str, float]:
     y_goals = np.asarray(y_goals_true, dtype=int)
-    classes = list(result_classes)
     final_scores: list[tuple[int, int]] = []
+    result_probabilities: list[list[float]] = []
 
     for idx, goals in enumerate(np.asarray(pred_goals)):
-        probabilities = {"home_win": 0.0, "draw": 0.0, "away_win": 0.0}
-        for cls, prob in zip(classes, pred_result_proba[idx]):
-            probabilities[RESULT_CLASS_MAP[int(cls)]] = float(prob)
-
-        candidates = generate_score_candidates(
+        prediction = predict_score_distribution(
             expected_home_goals=float(goals[0]),
             expected_away_goals=float(goals[1]),
-            result_probabilities=probabilities,
-            predicted_goal_diff=float(pred_diff[idx]),
+            temperature=temperature,
             max_goals=max_goals,
             top_n=1,
         )
-        best = candidates[0]
+        best = prediction.score_candidates[0]
         final_scores.append((int(best["home_goals"]), int(best["away_goals"])))
+        result_probabilities.append(
+            [
+                prediction.result_probabilities["away_win"],
+                prediction.result_probabilities["draw"],
+                prediction.result_probabilities["home_win"],
+            ]
+        )
 
     final_arr = np.asarray(final_scores, dtype=int)
     final_results = np.asarray([result_from_score(h, a) for h, a in final_arr], dtype=int)
     y_result = np.asarray(y_result_true, dtype=int)
+    result_probability_array = np.asarray(result_probabilities)
+    probability_results = np.asarray([-1, 0, 1], dtype=int)[
+        np.argmax(result_probability_array, axis=1)
+    ]
 
     return {
         "final_score_emr": float(
@@ -85,5 +86,10 @@ def evaluate_final_scores(
         "final_home_mae": float(mean_absolute_error(y_goals[:, 0], final_arr[:, 0])),
         "final_away_mae": float(mean_absolute_error(y_goals[:, 1], final_arr[:, 1])),
         "final_result_accuracy": float(accuracy_score(y_result, final_results)),
+        "score_distribution_result_accuracy": float(
+            accuracy_score(y_result, probability_results)
+        ),
+        "score_distribution_result_log_loss": float(
+            log_loss(y_result, result_probability_array, labels=[-1, 0, 1])
+        ),
     }
-

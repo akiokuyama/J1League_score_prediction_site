@@ -1,0 +1,719 @@
+{
+  "selection_metric": "selected_metrics.result_log_loss_with_0.001_simplicity_tolerance",
+  "selected_candidate": "l2",
+  "selected_poisson_weight": 0.0,
+  "selected_temperature": 1.0,
+  "max_goals": 8,
+  "candidates": {
+    "l2": {
+      "poisson_weight": 0.0,
+      "fitted_temperature": 1.1034490471359333,
+      "calibration_improves_walk_forward": false,
+      "deployment_temperature": 1.0,
+      "weighted_raw": {
+        "result_accuracy": 0.45382585751978893,
+        "result_log_loss": 1.0654390184523548,
+        "result_brier": 0.6431074335929614,
+        "expected_home_mae": 0.9340785736816188,
+        "expected_away_mae": 0.8439547874249601,
+        "score_exact_match_rate": 0.1266490765171504,
+        "modal_home_mae": 0.8970976253298153,
+        "modal_away_mae": 0.8557607739665787
+      },
+      "weighted_progressive_calibrated": {
+        "result_accuracy": 0.45382585751978893,
+        "result_log_loss": 1.0676199122441699,
+        "result_brier": 0.6448064587078687,
+        "expected_home_mae": 0.9340785736816188,
+        "expected_away_mae": 0.8439547874249601,
+        "score_exact_match_rate": 0.12049252418645559,
+        "modal_home_mae": 0.8953386103781882,
+        "modal_away_mae": 0.8434476693051891
+      },
+      "selected_metrics": {
+        "result_accuracy": 0.45382585751978893,
+        "result_log_loss": 1.0654390184523548,
+        "result_brier": 0.6431074335929614,
+        "expected_home_mae": 0.9340785736816188,
+        "expected_away_mae": 0.8439547874249601,
+        "score_exact_match_rate": 0.1266490765171504,
+        "modal_home_mae": 0.8970976253298153,
+        "modal_away_mae": 0.8557607739665787
+      },
+      "folds": [
+        {
+          "fold": "2023",
+          "train_rows": 686,
+          "test_rows": 306,
+          "temperature_from_preceding_folds": 1.0,
+          "raw": {
+            "result_accuracy": 0.4542483660130719,
+            "result_log_loss": 1.0600505946323155,
+            "result_brier": 0.6391390950127102,
+            "expected_home_mae": 0.8692489100473227,
+            "expected_away_mae": 0.8221516880410107,
+            "score_exact_match_rate": 0.11764705882352941,
+            "modal_home_mae": 0.8594771241830066,
+            "modal_away_mae": 0.8594771241830066
+          },
+          "calibrated": {
+            "result_accuracy": 0.4542483660130719,
+            "result_log_loss": 1.0600505946323155,
+            "result_brier": 0.6391390950127102,
+            "expected_home_mae": 0.8692489100473227,
+            "expected_away_mae": 0.8221516880410107,
+            "score_exact_match_rate": 0.11764705882352941,
+            "modal_home_mae": 0.8594771241830066,
+            "modal_away_mae": 0.8594771241830066
+          }
+        },
+        {
+          "fold": "2024",
+          "train_rows": 992,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 1.038000273609484,
+          "raw": {
+            "result_accuracy": 0.4,
+            "result_log_loss": 1.0925397000935488,
+            "result_brier": 0.662547623572115,
+            "expected_home_mae": 0.9893639991851058,
+            "expected_away_mae": 0.8635239804190702,
+            "score_exact_match_rate": 0.12368421052631579,
+            "modal_home_mae": 0.9605263157894737,
+            "modal_away_mae": 0.8894736842105263
+          },
+          "calibrated": {
+            "result_accuracy": 0.4,
+            "result_log_loss": 1.0910523149836662,
+            "result_brier": 0.6614882968892708,
+            "expected_home_mae": 0.9893639991851058,
+            "expected_away_mae": 0.8635239804190702,
+            "score_exact_match_rate": 0.11842105263157894,
+            "modal_home_mae": 0.9631578947368421,
+            "modal_away_mae": 0.8973684210526316
+          }
+        },
+        {
+          "fold": "2025",
+          "train_rows": 1372,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 1.374753729971775,
+          "raw": {
+            "result_accuracy": 0.5,
+            "result_log_loss": 1.0459810447375704,
+            "result_brier": 0.6291950559657928,
+            "expected_home_mae": 0.9301019340717865,
+            "expected_away_mae": 0.8207201985213068,
+            "score_exact_match_rate": 0.12894736842105264,
+            "modal_home_mae": 0.8710526315789474,
+            "modal_away_mae": 0.8105263157894737
+          },
+          "calibrated": {
+            "result_accuracy": 0.5,
+            "result_log_loss": 1.0534611390045678,
+            "result_brier": 0.6349346214816288,
+            "expected_home_mae": 0.9301019340717865,
+            "expected_away_mae": 0.8207201985213068,
+            "score_exact_match_rate": 0.11578947368421053,
+            "modal_home_mae": 0.8631578947368421,
+            "modal_away_mae": 0.7710526315789473
+          }
+        },
+        {
+          "fold": "2026_special_after_2026-05-01",
+          "train_rows": 1881,
+          "test_rows": 71,
+          "temperature_from_preceding_folds": 1.1302523000767544,
+          "raw": {
+            "result_accuracy": 0.49295774647887325,
+            "result_log_loss": 1.0477577322114615,
+            "result_brier": 0.6306249393929976,
+            "expected_home_mae": 0.9388748896324072,
+            "expected_away_mae": 0.9575406868209446,
+            "score_exact_match_rate": 0.16901408450704225,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.9014084507042254
+          },
+          "calibrated": {
+            "result_accuracy": 0.49295774647887325,
+            "result_log_loss": 1.0506090950507572,
+            "result_brier": 0.6327841055776847,
+            "expected_home_mae": 0.9388748896324072,
+            "expected_away_mae": 0.9575406868209446,
+            "score_exact_match_rate": 0.16901408450704225,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.8732394366197183
+          }
+        }
+      ]
+    },
+    "blend_poisson_25": {
+      "poisson_weight": 0.25,
+      "fitted_temperature": 1.0538276526714687,
+      "calibration_improves_walk_forward": false,
+      "deployment_temperature": 1.0,
+      "weighted_raw": {
+        "result_accuracy": 0.455584872471416,
+        "result_log_loss": 1.065425004630179,
+        "result_brier": 0.6431655869038978,
+        "expected_home_mae": 0.9359282754056967,
+        "expected_away_mae": 0.8420407246093328,
+        "score_exact_match_rate": 0.1266490765171504,
+        "modal_home_mae": 0.8918205804749341,
+        "modal_away_mae": 0.8548812664907651
+      },
+      "weighted_progressive_calibrated": {
+        "result_accuracy": 0.455584872471416,
+        "result_log_loss": 1.0677227192348393,
+        "result_brier": 0.6449160600406645,
+        "expected_home_mae": 0.9359282754056967,
+        "expected_away_mae": 0.8420407246093328,
+        "score_exact_match_rate": 0.12225153913808268,
+        "modal_home_mae": 0.8927000879507476,
+        "modal_away_mae": 0.8460861917326298
+      },
+      "selected_metrics": {
+        "result_accuracy": 0.455584872471416,
+        "result_log_loss": 1.065425004630179,
+        "result_brier": 0.6431655869038978,
+        "expected_home_mae": 0.9359282754056967,
+        "expected_away_mae": 0.8420407246093328,
+        "score_exact_match_rate": 0.1266490765171504,
+        "modal_home_mae": 0.8918205804749341,
+        "modal_away_mae": 0.8548812664907651
+      },
+      "folds": [
+        {
+          "fold": "2023",
+          "train_rows": 686,
+          "test_rows": 306,
+          "temperature_from_preceding_folds": 1.0,
+          "raw": {
+            "result_accuracy": 0.46405228758169936,
+            "result_log_loss": 1.0595758641454882,
+            "result_brier": 0.63894399631946,
+            "expected_home_mae": 0.8720809858001244,
+            "expected_away_mae": 0.8188640503464232,
+            "score_exact_match_rate": 0.12418300653594772,
+            "modal_home_mae": 0.8562091503267973,
+            "modal_away_mae": 0.8594771241830066
+          },
+          "calibrated": {
+            "result_accuracy": 0.46405228758169936,
+            "result_log_loss": 1.0595758641454882,
+            "result_brier": 0.63894399631946,
+            "expected_home_mae": 0.8720809858001244,
+            "expected_away_mae": 0.8188640503464232,
+            "score_exact_match_rate": 0.12418300653594772,
+            "modal_home_mae": 0.8562091503267973,
+            "modal_away_mae": 0.8594771241830066
+          }
+        },
+        {
+          "fold": "2024",
+          "train_rows": 992,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 0.9893994620740553,
+          "raw": {
+            "result_accuracy": 0.4052631578947368,
+            "result_log_loss": 1.0908072720147914,
+            "result_brier": 0.6613096278536267,
+            "expected_home_mae": 0.9895636164202343,
+            "expected_away_mae": 0.8612780757959533,
+            "score_exact_match_rate": 0.12368421052631579,
+            "modal_home_mae": 0.9552631578947368,
+            "modal_away_mae": 0.8947368421052632
+          },
+          "calibrated": {
+            "result_accuracy": 0.4052631578947368,
+            "result_log_loss": 1.0911892293305483,
+            "result_brier": 0.6615817950274511,
+            "expected_home_mae": 0.9895636164202343,
+            "expected_away_mae": 0.8612780757959533,
+            "score_exact_match_rate": 0.12105263157894737,
+            "modal_home_mae": 0.9578947368421052,
+            "modal_away_mae": 0.8973684210526316
+          }
+        },
+        {
+          "fold": "2025",
+          "train_rows": 1372,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 1.303598302828995,
+          "raw": {
+            "result_accuracy": 0.48947368421052634,
+            "result_log_loss": 1.047846095902596,
+            "result_brier": 0.6306080313917951,
+            "expected_home_mae": 0.9328647178582541,
+            "expected_away_mae": 0.8203245721817101,
+            "score_exact_match_rate": 0.12368421052631579,
+            "modal_home_mae": 0.8631578947368421,
+            "modal_away_mae": 0.8052631578947368
+          },
+          "calibrated": {
+            "result_accuracy": 0.48947368421052634,
+            "result_log_loss": 1.0540033183097621,
+            "result_brier": 0.6353185780824815,
+            "expected_home_mae": 0.9328647178582541,
+            "expected_away_mae": 0.8203245721817101,
+            "score_exact_match_rate": 0.11578947368421053,
+            "modal_home_mae": 0.8631578947368421,
+            "modal_away_mae": 0.7710526315789473
+          }
+        },
+        {
+          "fold": "2026_special_after_2026-05-01",
+          "train_rows": 1881,
+          "test_rows": 71,
+          "temperature_from_preceding_folds": 1.0792121593341177,
+          "raw": {
+            "result_accuracy": 0.5070422535211268,
+            "result_log_loss": 1.0488695215124895,
+            "result_brier": 0.6314605482072788,
+            "expected_home_mae": 0.9404352176846952,
+            "expected_away_mae": 0.9551957499055473,
+            "score_exact_match_rate": 0.16901408450704225,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.8873239436619719
+          },
+          "calibrated": {
+            "result_accuracy": 0.5070422535211268,
+            "result_log_loss": 1.0506668906785168,
+            "result_brier": 0.6328247269113573,
+            "expected_home_mae": 0.9404352176846952,
+            "expected_away_mae": 0.9551957499055473,
+            "score_exact_match_rate": 0.15492957746478872,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.9154929577464789
+          }
+        }
+      ]
+    },
+    "blend_poisson_50": {
+      "poisson_weight": 0.5,
+      "fitted_temperature": 1.011533888055898,
+      "calibration_improves_walk_forward": false,
+      "deployment_temperature": 1.0,
+      "weighted_raw": {
+        "result_accuracy": 0.45030782761653476,
+        "result_log_loss": 1.0658481270299267,
+        "result_brier": 0.6435259435788704,
+        "expected_home_mae": 0.9384133183181004,
+        "expected_away_mae": 0.8404781721084579,
+        "score_exact_match_rate": 0.12401055408970976,
+        "modal_home_mae": 0.8891820580474934,
+        "modal_away_mae": 0.8496042216358839
+      },
+      "weighted_progressive_calibrated": {
+        "result_accuracy": 0.45030782761653476,
+        "result_log_loss": 1.068105507052651,
+        "result_brier": 0.6452192782088114,
+        "expected_home_mae": 0.9384133183181004,
+        "expected_away_mae": 0.8404781721084579,
+        "score_exact_match_rate": 0.12137203166226913,
+        "modal_home_mae": 0.8909410729991205,
+        "modal_away_mae": 0.8487247141600703
+      },
+      "selected_metrics": {
+        "result_accuracy": 0.45030782761653476,
+        "result_log_loss": 1.0658481270299267,
+        "result_brier": 0.6435259435788704,
+        "expected_home_mae": 0.9384133183181004,
+        "expected_away_mae": 0.8404781721084579,
+        "score_exact_match_rate": 0.12401055408970976,
+        "modal_home_mae": 0.8891820580474934,
+        "modal_away_mae": 0.8496042216358839
+      },
+      "folds": [
+        {
+          "fold": "2023",
+          "train_rows": 686,
+          "test_rows": 306,
+          "temperature_from_preceding_folds": 1.0,
+          "raw": {
+            "result_accuracy": 0.45751633986928103,
+            "result_log_loss": 1.0595378491262109,
+            "result_brier": 0.6390286004237699,
+            "expected_home_mae": 0.8758298037228087,
+            "expected_away_mae": 0.8162011414656558,
+            "score_exact_match_rate": 0.11764705882352941,
+            "modal_home_mae": 0.8496732026143791,
+            "modal_away_mae": 0.8496732026143791
+          },
+          "calibrated": {
+            "result_accuracy": 0.45751633986928103,
+            "result_log_loss": 1.0595378491262109,
+            "result_brier": 0.6390286004237699,
+            "expected_home_mae": 0.8758298037228087,
+            "expected_away_mae": 0.8162011414656558,
+            "score_exact_match_rate": 0.11764705882352941,
+            "modal_home_mae": 0.8496732026143791,
+            "modal_away_mae": 0.8496732026143791
+          }
+        },
+        {
+          "fold": "2024",
+          "train_rows": 992,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 0.9485121524533329,
+          "raw": {
+            "result_accuracy": 0.39473684210526316,
+            "result_log_loss": 1.0896896520328836,
+            "result_brier": 0.6605088352865529,
+            "expected_home_mae": 0.9908882895418447,
+            "expected_away_mae": 0.859152143272089,
+            "score_exact_match_rate": 0.12631578947368421,
+            "modal_home_mae": 0.95,
+            "modal_away_mae": 0.9
+          },
+          "calibrated": {
+            "result_accuracy": 0.39473684210526316,
+            "result_log_loss": 1.09138483357993,
+            "result_brier": 0.6617157037121901,
+            "expected_home_mae": 0.9908882895418447,
+            "expected_away_mae": 0.859152143272089,
+            "score_exact_match_rate": 0.12368421052631579,
+            "modal_home_mae": 0.9578947368421052,
+            "modal_away_mae": 0.9131578947368421
+          }
+        },
+        {
+          "fold": "2025",
+          "train_rows": 1372,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 1.2420941028809227,
+          "raw": {
+            "result_accuracy": 0.4921052631578947,
+            "result_log_loss": 1.0500076664755733,
+            "result_brier": 0.6322293250168243,
+            "expected_home_mae": 0.9356652347770364,
+            "expected_away_mae": 0.8203576585082409,
+            "score_exact_match_rate": 0.11842105263157894,
+            "modal_home_mae": 0.8657894736842106,
+            "modal_away_mae": 0.7921052631578948
+          },
+          "calibrated": {
+            "result_accuracy": 0.4921052631578947,
+            "result_log_loss": 1.054911890274581,
+            "result_brier": 0.6359713129539385,
+            "expected_home_mae": 0.9356652347770364,
+            "expected_away_mae": 0.8203576585082409,
+            "score_exact_match_rate": 0.11578947368421053,
+            "modal_home_mae": 0.8631578947368421,
+            "modal_away_mae": 0.7710526315789473
+          }
+        },
+        {
+          "fold": "2026_special_after_2026-05-01",
+          "train_rows": 1881,
+          "test_rows": 71,
+          "temperature_from_preceding_folds": 1.0357410518790464,
+          "raw": {
+            "result_accuracy": 0.49295774647887325,
+            "result_log_loss": 1.0502219375660926,
+            "result_brier": 0.6324752845664603,
+            "expected_home_mae": 0.9419955457369832,
+            "expected_away_mae": 0.9528508129901496,
+            "score_exact_match_rate": 0.16901408450704225,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.8873239436619719
+          },
+          "calibrated": {
+            "result_accuracy": 0.49295774647887325,
+            "result_log_loss": 1.0510510510074553,
+            "result_brier": 0.6331056515579742,
+            "expected_home_mae": 0.9419955457369832,
+            "expected_away_mae": 0.9528508129901496,
+            "score_exact_match_rate": 0.15492957746478872,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.9154929577464789
+          }
+        }
+      ]
+    },
+    "blend_poisson_75": {
+      "poisson_weight": 0.75,
+      "fitted_temperature": 0.9780369339300616,
+      "calibration_improves_walk_forward": false,
+      "deployment_temperature": 1.0,
+      "weighted_raw": {
+        "result_accuracy": 0.4467897977132806,
+        "result_log_loss": 1.0667144699498288,
+        "result_brier": 0.6441977292658336,
+        "expected_home_mae": 0.9412857741061383,
+        "expected_away_mae": 0.8394207438990468,
+        "score_exact_match_rate": 0.1248900615655233,
+        "modal_home_mae": 0.8874230430958663,
+        "modal_away_mae": 0.8408091468777484
+      },
+      "weighted_progressive_calibrated": {
+        "result_accuracy": 0.4467897977132806,
+        "result_log_loss": 1.0688273763684621,
+        "result_brier": 0.645763570422078,
+        "expected_home_mae": 0.9412857741061383,
+        "expected_away_mae": 0.8394207438990468,
+        "score_exact_match_rate": 0.12401055408970976,
+        "modal_home_mae": 0.8909410729991205,
+        "modal_away_mae": 0.8469656992084432
+      },
+      "selected_metrics": {
+        "result_accuracy": 0.4467897977132806,
+        "result_log_loss": 1.0667144699498288,
+        "result_brier": 0.6441977292658336,
+        "expected_home_mae": 0.9412857741061383,
+        "expected_away_mae": 0.8394207438990468,
+        "score_exact_match_rate": 0.1248900615655233,
+        "modal_home_mae": 0.8874230430958663,
+        "modal_away_mae": 0.8408091468777484
+      },
+      "folds": [
+        {
+          "fold": "2023",
+          "train_rows": 686,
+          "test_rows": 306,
+          "temperature_from_preceding_folds": 1.0,
+          "raw": {
+            "result_accuracy": 0.4444444444444444,
+            "result_log_loss": 1.0599387692307578,
+            "result_brier": 0.6393986198236544,
+            "expected_home_mae": 0.879999051182492,
+            "expected_away_mae": 0.81410601669196,
+            "score_exact_match_rate": 0.11764705882352941,
+            "modal_home_mae": 0.8529411764705882,
+            "modal_away_mae": 0.8431372549019608
+          },
+          "calibrated": {
+            "result_accuracy": 0.4444444444444444,
+            "result_log_loss": 1.0599387692307578,
+            "result_brier": 0.6393986198236544,
+            "expected_home_mae": 0.879999051182492,
+            "expected_away_mae": 0.81410601669196,
+            "score_exact_match_rate": 0.11764705882352941,
+            "modal_home_mae": 0.8529411764705882,
+            "modal_away_mae": 0.8431372549019608
+          }
+        },
+        {
+          "fold": "2024",
+          "train_rows": 992,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 0.9162441512205014,
+          "raw": {
+            "result_accuracy": 0.3973684210526316,
+            "result_log_loss": 1.0892005502482194,
+            "result_brier": 0.6601643087585753,
+            "expected_home_mae": 0.9927170139437245,
+            "expected_away_mae": 0.8573843687024063,
+            "score_exact_match_rate": 0.12894736842105264,
+            "modal_home_mae": 0.9447368421052632,
+            "modal_away_mae": 0.881578947368421
+          },
+          "calibrated": {
+            "result_accuracy": 0.3973684210526316,
+            "result_log_loss": 1.0917085909519324,
+            "result_brier": 0.6619477011397907,
+            "expected_home_mae": 0.9927170139437245,
+            "expected_away_mae": 0.8573843687024063,
+            "score_exact_match_rate": 0.12894736842105264,
+            "modal_home_mae": 0.9552631578947368,
+            "modal_away_mae": 0.9157894736842105
+          }
+        },
+        {
+          "fold": "2025",
+          "train_rows": 1372,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 1.1921366659423975,
+          "raw": {
+            "result_accuracy": 0.48947368421052634,
+            "result_log_loss": 1.052467782787114,
+            "result_brier": 0.6340623843934433,
+            "expected_home_mae": 0.9387823241031137,
+            "expected_away_mae": 0.8210867563085646,
+            "score_exact_match_rate": 0.11842105263157894,
+            "modal_home_mae": 0.8631578947368421,
+            "modal_away_mae": 0.7868421052631579
+          },
+          "calibrated": {
+            "result_accuracy": 0.48947368421052634,
+            "result_log_loss": 1.0562757703514425,
+            "result_brier": 0.636959581358313,
+            "expected_home_mae": 0.9387823241031137,
+            "expected_away_mae": 0.8210867563085646,
+            "score_exact_match_rate": 0.11578947368421053,
+            "modal_home_mae": 0.8631578947368421,
+            "modal_away_mae": 0.7710526315789473
+          }
+        },
+        {
+          "fold": "2026_special_after_2026-05-01",
+          "train_rows": 1881,
+          "test_rows": 71,
+          "temperature_from_preceding_folds": 1.001378144662252,
+          "raw": {
+            "result_accuracy": 0.49295774647887325,
+            "result_log_loss": 1.0518186252805195,
+            "result_brier": 0.6336717903020755,
+            "expected_home_mae": 0.9435558737892714,
+            "expected_away_mae": 0.9505058760747521,
+            "score_exact_match_rate": 0.16901408450704225,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.9014084507042254
+          },
+          "calibrated": {
+            "result_accuracy": 0.49295774647887325,
+            "result_log_loss": 1.051850792268269,
+            "result_brier": 0.6336962613321832,
+            "expected_home_mae": 0.9435558737892714,
+            "expected_away_mae": 0.9505058760747521,
+            "score_exact_match_rate": 0.16901408450704225,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.9014084507042254
+          }
+        }
+      ]
+    },
+    "poisson": {
+      "poisson_weight": 1.0,
+      "fitted_temperature": 0.955291039838535,
+      "calibration_improves_walk_forward": false,
+      "deployment_temperature": 1.0,
+      "weighted_raw": {
+        "result_accuracy": 0.4388742304309587,
+        "result_log_loss": 1.0680319606014246,
+        "result_brier": 0.645189699823148,
+        "expected_home_mae": 0.9443374046454215,
+        "expected_away_mae": 0.8390176121866331,
+        "score_exact_match_rate": 0.1248900615655233,
+        "modal_home_mae": 0.8883025505716798,
+        "modal_away_mae": 0.8328935795954265
+      },
+      "weighted_progressive_calibrated": {
+        "result_accuracy": 0.4388742304309587,
+        "result_log_loss": 1.0699560495516014,
+        "result_brier": 0.6466027120781238,
+        "expected_home_mae": 0.9443374046454215,
+        "expected_away_mae": 0.8390176121866331,
+        "score_exact_match_rate": 0.12401055408970976,
+        "modal_home_mae": 0.8891820580474934,
+        "modal_away_mae": 0.8487247141600703
+      },
+      "selected_metrics": {
+        "result_accuracy": 0.4388742304309587,
+        "result_log_loss": 1.0680319606014246,
+        "result_brier": 0.645189699823148,
+        "expected_home_mae": 0.9443374046454215,
+        "expected_away_mae": 0.8390176121866331,
+        "score_exact_match_rate": 0.1248900615655233,
+        "modal_home_mae": 0.8883025505716798,
+        "modal_away_mae": 0.8328935795954265
+      },
+      "folds": [
+        {
+          "fold": "2023",
+          "train_rows": 686,
+          "test_rows": 306,
+          "temperature_from_preceding_folds": 1.0,
+          "raw": {
+            "result_accuracy": 0.4411764705882353,
+            "result_log_loss": 1.0607829492068646,
+            "result_brier": 0.6400594649747292,
+            "expected_home_mae": 0.8841682986421755,
+            "expected_away_mae": 0.8126098787781858,
+            "score_exact_match_rate": 0.11437908496732026,
+            "modal_home_mae": 0.8562091503267973,
+            "modal_away_mae": 0.8366013071895425
+          },
+          "calibrated": {
+            "result_accuracy": 0.4411764705882353,
+            "result_log_loss": 1.0607829492068646,
+            "result_brier": 0.6400594649747292,
+            "expected_home_mae": 0.8841682986421755,
+            "expected_away_mae": 0.8126098787781858,
+            "score_exact_match_rate": 0.11437908496732026,
+            "modal_home_mae": 0.8562091503267973,
+            "modal_away_mae": 0.8366013071895425
+          }
+        },
+        {
+          "fold": "2024",
+          "train_rows": 992,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 0.8937397466950415,
+          "raw": {
+            "result_accuracy": 0.39210526315789473,
+            "result_log_loss": 1.089356736015565,
+            "result_brier": 0.6602941939504549,
+            "expected_home_mae": 0.9947701732074464,
+            "expected_away_mae": 0.8562427649760246,
+            "score_exact_match_rate": 0.12368421052631579,
+            "modal_home_mae": 0.9447368421052632,
+            "modal_away_mae": 0.881578947368421
+          },
+          "calibrated": {
+            "result_accuracy": 0.39210526315789473,
+            "result_log_loss": 1.0922536672586178,
+            "result_brier": 0.6623543972349872,
+            "expected_home_mae": 0.9947701732074464,
+            "expected_away_mae": 0.8562427649760246,
+            "score_exact_match_rate": 0.13157894736842105,
+            "modal_home_mae": 0.9473684210526315,
+            "modal_away_mae": 0.9289473684210526
+          }
+        },
+        {
+          "fold": "2025",
+          "train_rows": 1372,
+          "test_rows": 380,
+          "temperature_from_preceding_folds": 1.1562873294199596,
+          "raw": {
+            "result_accuracy": 0.4710526315789474,
+            "result_log_loss": 1.0552291457447867,
+            "result_brier": 0.6361104536168442,
+            "expected_home_mae": 0.9422110882835735,
+            "expected_away_mae": 0.8226650652075618,
+            "score_exact_match_rate": 0.12894736842105264,
+            "modal_home_mae": 0.8631578947368421,
+            "modal_away_mae": 0.7657894736842106
+          },
+          "calibrated": {
+            "result_accuracy": 0.4710526315789474,
+            "result_log_loss": 1.0581832621189233,
+            "result_brier": 0.638349534921874,
+            "expected_home_mae": 0.9422110882835735,
+            "expected_away_mae": 0.8226650652075618,
+            "score_exact_match_rate": 0.11578947368421053,
+            "modal_home_mae": 0.8631578947368421,
+            "modal_away_mae": 0.7710526315789473
+          }
+        },
+        {
+          "fold": "2026_special_after_2026-05-01",
+          "train_rows": 1881,
+          "test_rows": 71,
+          "temperature_from_preceding_folds": 0.9781776214549639,
+          "raw": {
+            "result_accuracy": 0.5070422535211268,
+            "result_log_loss": 1.0536636855997978,
+            "result_brier": 0.6350524836771628,
+            "expected_home_mae": 0.9451162018415595,
+            "expected_away_mae": 0.9481609391593543,
+            "score_exact_match_rate": 0.15492957746478872,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.9154929577464789
+          },
+          "calibrated": {
+            "result_accuracy": 0.5070422535211268,
+            "result_log_loss": 1.0531607425268235,
+            "result_brier": 0.6346703257880613,
+            "expected_home_mae": 0.9451162018415595,
+            "expected_away_mae": 0.9481609391593543,
+            "score_exact_match_rate": 0.16901408450704225,
+            "modal_home_mae": 0.8591549295774648,
+            "modal_away_mae": 0.8873239436619719
+          }
+        }
+      ]
+    }
+  }
+}

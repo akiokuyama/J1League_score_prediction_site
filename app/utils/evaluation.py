@@ -52,11 +52,19 @@ def get_strongest_outcome(probabilities: dict | None) -> dict:
 
 def get_match_insight_label(probabilities: dict | None) -> str | None:
     """
-    home_win が最大 -> 'ホーム優勢'
-    away_win が最大 -> 'アウェイ優勢'
-    draw が最大 -> '引き分け濃厚'
+    最大確率が45%未満、または上位2結果の差が10pt未満なら拮抗表示。
     """
     strongest = get_strongest_outcome(probabilities)
+    values = _valid_probability_values(probabilities)
+    if len(values) >= 2:
+        ordered = sorted(values.values(), reverse=True)
+        is_close = ordered[0] < 0.45 or ordered[0] - ordered[1] < 0.10
+        if is_close:
+            return {
+                "home": "拮抗（ホーム寄り）",
+                "away": "拮抗（アウェイ寄り）",
+                "draw": "拮抗（引き分け寄り）",
+            }.get(str(strongest["key"]))
     if strongest["key"] == "home":
         return "ホーム優勢"
     if strongest["key"] == "away":
@@ -66,7 +74,13 @@ def get_match_insight_label(probabilities: dict | None) -> str | None:
     return None
 
 
-def get_confidence_label(probability: float | int | str | None) -> dict[str, str]:
+def get_confidence_label(
+    probability: float | int | str | None,
+    probabilities: dict | None = None,
+) -> dict[str, str]:
+    insight = get_match_insight_label(probabilities) if probabilities is not None else None
+    if insight and insight.startswith("拮抗"):
+        return {"label": "拮抗", "class": "badge-confidence-low"}
     try:
         value = float(probability)
     except (TypeError, ValueError):
@@ -78,6 +92,21 @@ def get_confidence_label(probability: float | int | str | None) -> dict[str, str
     if value >= 0.45:
         return {"label": "やや優勢", "class": "badge-confidence-medium"}
     return {"label": "拮抗", "class": "badge-confidence-low"}
+
+
+def _valid_probability_values(probabilities: dict | None) -> dict[str, float]:
+    if not isinstance(probabilities, dict):
+        return {}
+    values: dict[str, float] = {}
+    for key in ("home_win", "draw", "away_win"):
+        try:
+            value = float(probabilities.get(key))
+        except (TypeError, ValueError):
+            continue
+        if value > 1:
+            value /= 100
+        values[key] = value
+    return values
 
 
 def build_score_probability_explanation(predicted_score: dict | None, result_probabilities: dict | None) -> str:

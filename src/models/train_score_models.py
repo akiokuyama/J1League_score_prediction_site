@@ -27,6 +27,7 @@ MODEL_FILENAMES = [
     "model_step2_diff.pkl",
     "model_features.pkl",
 ]
+MODEL_AUXILIARY_FILENAMES = ["model_metadata.json", "feature_policy.json", "score_model_selection.json"]
 
 DROP_COLS_BASE = [
     "Season",
@@ -78,6 +79,19 @@ class TrainResult:
     train_rows: int
     test_rows: int
     models: dict[str, Any]
+
+
+@dataclass
+class BlendedGoalRegressor:
+    """Blend L2 and Poisson expected-goal predictions."""
+
+    l2_model: Any
+    poisson_model: Any
+    poisson_weight: float
+
+    def predict(self, X: pd.DataFrame) -> np.ndarray:
+        weight = float(self.poisson_weight)
+        return (1.0 - weight) * self.l2_model.predict(X) + weight * self.poisson_model.predict(X)
 
 
 def season_year(value: Any) -> int:
@@ -135,6 +149,41 @@ def default_model_params() -> dict[str, dict[str, Any]]:
     }
 
 
+def train_goal_regressor(
+    X: pd.DataFrame,
+    y_goals: pd.DataFrame,
+    *,
+    poisson_weight: float = 0.0,
+) -> Any:
+    """Train L2, Poisson, or a weighted blend of both goal models."""
+
+    weight = float(poisson_weight)
+    if not 0.0 <= weight <= 1.0:
+        raise ValueError("poisson_weight must be between 0 and 1.")
+    base_params = default_model_params()["step1"]
+
+    l2_model = None
+    poisson_model = None
+    if weight < 1.0:
+        l2_model = MultiOutputRegressor(lgb.LGBMRegressor(**base_params))
+        l2_model.fit(X, y_goals)
+    if weight > 0.0:
+        poisson_params = dict(base_params)
+        poisson_params["objective"] = "poisson"
+        poisson_model = MultiOutputRegressor(lgb.LGBMRegressor(**poisson_params))
+        poisson_model.fit(X, y_goals)
+
+    if weight == 0.0:
+        return l2_model
+    if weight == 1.0:
+        return poisson_model
+    return BlendedGoalRegressor(
+        l2_model=l2_model,
+        poisson_model=poisson_model,
+        poisson_weight=weight,
+    )
+
+
 def build_training_frame(
     dataset_path: str | Path,
     *,
@@ -162,6 +211,7 @@ def train_and_evaluate(
     test_season: str | int = 2025,
     test_start_date: str | None = None,
     include_test_season_history: bool = True,
+    poisson_weight: float = 0.0,
 ) -> TrainResult:
     X, y_goals, y_result, y_diff, df = build_training_frame(dataset_path, exclude_weather=exclude_weather)
     test_label = season_label(test_season)
@@ -189,8 +239,11 @@ def train_and_evaluate(
     y_result_train, y_result_test = y_result[train_mask], y_result[test_mask]
     y_diff_train, y_diff_test = y_diff[train_mask], y_diff[test_mask]
 
-    step1 = MultiOutputRegressor(lgb.LGBMRegressor(**params["step1"]))
-    step1.fit(X_train, y_goals_train)
+    step1 = train_goal_regressor(
+        X_train,
+        y_goals_train,
+        poisson_weight=poisson_weight,
+    )
     pred_goals = step1.predict(X_test)
 
     step2_clf = lgb.LGBMClassifier(**params["step2_clf"])
@@ -217,9 +270,6 @@ def train_and_evaluate(
             y_goals_true=y_goals_test,
             y_result_true=y_result_test,
             pred_goals=pred_goals,
-            pred_result_proba=pred_result_proba,
-            pred_diff=pred_diff,
-            result_classes=step2_clf.classes_,
         )
     )
 
@@ -236,12 +286,16 @@ def train_and_evaluate(
     )
 
 
-def train_full_models(dataset_path: str | Path, *, exclude_weather: bool = True) -> TrainResult:
+def train_full_models(
+    dataset_path: str | Path,
+    *,
+    exclude_weather: bool = True,
+    poisson_weight: float = 0.0,
+) -> TrainResult:
     X, y_goals, y_result, y_diff, df = build_training_frame(dataset_path, exclude_weather=exclude_weather)
     params = default_model_params()
 
-    step1 = MultiOutputRegressor(lgb.LGBMRegressor(**params["step1"]))
-    step1.fit(X, y_goals)
+    step1 = train_goal_regressor(X, y_goals, poisson_weight=poisson_weight)
     step2_clf = lgb.LGBMClassifier(**params["step2_clf"])
     step2_clf.fit(X, y_result)
     step2_diff = lgb.LGBMRegressor(**params["step2_diff"])
@@ -314,7 +368,7 @@ def backup_active_models(model_dir: str | Path = "Models") -> Path:
     backup_dir = model_path / f"legacy_weather_{timestamp}"
     backup_dir.mkdir(parents=True, exist_ok=False)
 
-    for filename in MODEL_FILENAMES + ["model_metadata.json", "feature_policy.json"]:
+    for filename in MODEL_FILENAMES + MODEL_AUXILIARY_FILENAMES:
         src = model_path / filename
         if src.exists():
             shutil.copy2(src, backup_dir / filename)
@@ -325,7 +379,7 @@ def activate_models(source_dir: str | Path, model_dir: str | Path = "Models") ->
     backup_dir = backup_active_models(model_dir)
     source = Path(source_dir)
     target = Path(model_dir)
-    for filename in MODEL_FILENAMES + ["model_metadata.json", "feature_policy.json"]:
+    for filename in MODEL_FILENAMES + MODEL_AUXILIARY_FILENAMES:
         src = source / filename
         if src.exists():
             shutil.copy2(src, target / filename)

@@ -14,7 +14,7 @@ from src.predict.feature_preprocess import (
     prepare_features_for_model,
     resolve_dataset_path,
 )
-from src.predict.score_candidates import generate_score_candidates
+from src.predict.score_distribution import predict_score_distribution
 
 
 TEAM_NAME_ALIASES = {
@@ -60,13 +60,6 @@ TEAM_NAME_TO_DATASET_CODE = {
     "徳島ヴォルティス": "toku",
     "ベガルタ仙台": "send",
 }
-
-RESULT_CLASS_MAP = {
-    -1: "away_win",
-    0: "draw",
-    1: "home_win",
-}
-
 
 def normalize_team_name(name: str) -> str:
     """Normalize a small set of team aliases used by the app interface."""
@@ -148,15 +141,6 @@ def _select_dataset_row(
     return row, row_index, warnings
 
 
-def _map_result_probabilities(classes: Any, probabilities: Any) -> dict[str, float]:
-    mapped = {"home_win": 0.0, "draw": 0.0, "away_win": 0.0}
-    for cls, proba in zip(classes, probabilities):
-        key = RESULT_CLASS_MAP.get(int(cls))
-        if key is not None:
-            mapped[key] = float(proba)
-    return mapped
-
-
 def _match_id(match_date: str | None, home_team: str, away_team: str) -> str:
     date_part = match_date or "unknown-date"
     return f"{date_part}-J1-unknown-{home_team}-vs-{away_team}"
@@ -170,7 +154,7 @@ def predict_match(
     dataset_path: str | Path | None = None,
     model_dir: str | Path | None = None,
     feature_row: pd.Series | dict[str, Any] | None = None,
-    max_goals: int = 5,
+    max_goals: int = 8,
     top_n_scores: int = 5,
 ) -> dict[str, Any]:
     """Return a JSON-compatible prediction result for one match."""
@@ -217,19 +201,16 @@ def predict_match(
     expected_goals = bundle.step1_goals.predict(X)[0]
     expected_home_goals = float(expected_goals[0])
     expected_away_goals = float(expected_goals[1])
-    proba = bundle.step2_clf.predict_proba(X)[0]
-    classes = getattr(bundle.step2_clf, "classes_", [])
-    result_probabilities = _map_result_probabilities(classes, proba)
-    predicted_goal_diff = float(bundle.step2_diff.predict(X)[0])
-
-    score_candidates = generate_score_candidates(
+    score_prediction = predict_score_distribution(
         expected_home_goals=expected_home_goals,
         expected_away_goals=expected_away_goals,
-        result_probabilities=result_probabilities,
-        predicted_goal_diff=predicted_goal_diff,
+        temperature=bundle.calibration_temperature,
         max_goals=max_goals,
         top_n=top_n_scores,
     )
+    result_probabilities = score_prediction.result_probabilities
+    score_candidates = score_prediction.score_candidates
+    predicted_goal_diff = expected_home_goals - expected_away_goals
     best_score = score_candidates[0]
 
     row_context = _row_to_context(row)
@@ -266,5 +247,10 @@ def predict_match(
             "feature_count": int(len(bundle.feature_names)),
             "max_goals": int(max_goals),
             "top_n_scores": int(top_n_scores),
+            "prediction_strategy": bundle.prediction_strategy,
+            "probability_calibration": {
+                "method": "temperature_scaling",
+                "temperature": float(bundle.calibration_temperature),
+            },
         },
     }

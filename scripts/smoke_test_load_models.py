@@ -24,6 +24,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.models.load_model import ModelBundle, load_models
 from src.predict.feature_preprocess import prepare_features_for_model, resolve_dataset_path
+from src.predict.score_distribution import predict_score_distribution
 
 SAMPLE_CONTEXT_COLS = ["Season", "Section", "Date", "Home", "Away", "Score"]
 
@@ -43,16 +44,22 @@ def build_feature_frame(df: pd.DataFrame, feature_names: list[str]) -> pd.DataFr
 
 def run_prediction(bundle: ModelBundle, X_sample: pd.DataFrame) -> dict[str, object]:
     goals = bundle.step1_goals.predict(X_sample)[0]
-    result_probabilities = bundle.step2_clf.predict_proba(X_sample)[0]
-    result_classes = list(getattr(bundle.step2_clf, "classes_", []))
-    goal_diff = bundle.step2_diff.predict(X_sample)[0]
+    score_prediction = predict_score_distribution(
+        expected_home_goals=float(goals[0]),
+        expected_away_goals=float(goals[1]),
+        temperature=bundle.calibration_temperature,
+        max_goals=8,
+        top_n=5,
+    )
 
     return {
         "expected_goals_home": float(goals[0]),
         "expected_goals_away": float(goals[1]),
-        "result_classes": [int(value) for value in result_classes],
-        "result_probabilities": [float(value) for value in result_probabilities],
-        "predicted_goal_diff": float(goal_diff),
+        "result_probabilities": score_prediction.result_probabilities,
+        "predicted_goal_diff": float(goals[0] - goals[1]),
+        "top_score_candidates": [item["score"] for item in score_prediction.score_candidates],
+        "prediction_strategy": bundle.prediction_strategy,
+        "calibration_temperature": bundle.calibration_temperature,
     }
 
 

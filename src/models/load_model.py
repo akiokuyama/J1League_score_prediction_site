@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import math
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -21,6 +23,9 @@ class ModelBundle:
     step2_diff: Any
     feature_names: list[str]
     model_dir: Path
+    model_metadata: dict[str, Any]
+    calibration_temperature: float
+    prediction_strategy: str
 
 
 MODEL_CANDIDATES = {
@@ -98,6 +103,17 @@ def _load_feature_names(path: Path) -> list[str]:
     return feature_names
 
 
+def _load_model_metadata(model_dir: Path) -> dict[str, Any]:
+    path = model_dir / "model_metadata.json"
+    if not path.is_file():
+        return {}
+    try:
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    return raw if isinstance(raw, dict) else {}
+
+
 def load_models(model_dir: str | Path | None = None) -> ModelBundle:
     """Load trained models from Models/ or a caller-provided directory."""
 
@@ -107,10 +123,24 @@ def load_models(model_dir: str | Path | None = None) -> ModelBundle:
         for name in MODEL_CANDIDATES
     }
 
+    metadata = _load_model_metadata(resolved_model_dir)
+    calibration = metadata.get("probability_calibration")
+    if not isinstance(calibration, dict):
+        calibration = {}
+    try:
+        temperature = float(calibration.get("temperature", 1.0))
+    except (TypeError, ValueError):
+        temperature = 1.0
+    if not math.isfinite(temperature) or temperature <= 0:
+        temperature = 1.0
+
     return ModelBundle(
         step1_goals=joblib.load(paths["step1_goals"]),
         step2_clf=joblib.load(paths["step2_clf"]),
         step2_diff=joblib.load(paths["step2_diff"]),
         feature_names=_load_feature_names(paths["feature_names"]),
         model_dir=resolved_model_dir,
+        model_metadata=metadata,
+        calibration_temperature=temperature,
+        prediction_strategy=str(metadata.get("prediction_strategy") or "legacy_three_model_combination"),
     )

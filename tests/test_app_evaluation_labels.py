@@ -7,10 +7,17 @@ def test_match_insight_label_for_home_away_and_draw() -> None:
     assert get_match_insight_label({"home_win": 0.2, "draw": 0.5, "away_win": 0.3}) == "引き分け濃厚"
 
 
+def test_match_insight_label_marks_low_or_narrow_probabilities_as_close() -> None:
+    assert get_match_insight_label({"home_win": 0.44, "draw": 0.31, "away_win": 0.25}) == "拮抗（ホーム寄り）"
+    assert get_match_insight_label({"home_win": 0.46, "draw": 0.41, "away_win": 0.13}) == "拮抗（ホーム寄り）"
+    assert get_match_insight_label({"home_win": 0.20, "draw": 0.39, "away_win": 0.41}) == "拮抗（アウェイ寄り）"
+
+
 def test_confidence_label_thresholds() -> None:
     assert get_confidence_label(0.60)["label"] == "確度高め"
     assert get_confidence_label(0.45)["label"] == "やや優勢"
     assert get_confidence_label(0.44)["label"] == "拮抗"
+    assert get_confidence_label(0.46, {"home_win": 0.46, "draw": 0.41, "away_win": 0.13})["label"] == "拮抗"
 
 
 def test_score_probability_explanation() -> None:
