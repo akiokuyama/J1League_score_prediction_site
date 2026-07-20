@@ -16,4 +16,4 @@ html5lib
 geopy
 optuna
 pytest
-streamlit
+streamlit>=1.58.0

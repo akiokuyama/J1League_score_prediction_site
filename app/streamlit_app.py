@@ -41,8 +41,12 @@ from app.utils.load_predictions import (  # noqa: E402
     load_past_prediction_results,
 )
 from app.utils.standings_loader import load_standings_forecasts  # noqa: E402
+from app.utils.team_preferences import (  # noqa: E402
+    normalize_storage_action,
+    sync_team_preference,
+)
 from app.utils.team_logos import team_logo_html, team_matchup_html  # noqa: E402
-from src.data.team_master import to_display_name  # noqa: E402
+from src.data.team_master import to_dataset_code, to_display_name  # noqa: E402
 
 
 st.set_page_config(
@@ -61,7 +65,12 @@ def main() -> None:
     standings_forecasts = load_standings_forecasts()
 
     initialize_state()
+    available_teams = collect_available_team_codes(latest, all_unplayed, past, standings_forecasts)
+    if not initialize_my_team_preference(available_teams):
+        st.caption("マイチーム設定を読み込んでいます…")
+        return
     render_header(latest, past, all_unplayed)
+    render_my_team_settings(available_teams)
 
     tab = "これからの試合"
     if st.session_state.view != "detail":
@@ -96,6 +105,36 @@ def initialize_state() -> None:
         st.session_state.selected_match_id = None
 
 
+def initialize_my_team_preference(available_teams: list[str]) -> bool:
+    """Load the browser preference and initialize team filters once per session."""
+
+    pending = st.session_state.pop("_my_team_storage_action", None)
+    action, pending_value = normalize_storage_action(pending)
+    snapshot = sync_team_preference(action=action, value=pending_value)
+    if not snapshot.loaded and action == "read":
+        return False
+
+    if action == "set":
+        saved_team = pending_value
+    elif action == "clear":
+        saved_team = None
+    else:
+        saved_team = snapshot.value
+
+    st.session_state.my_team_code = saved_team
+    st.session_state.my_team_storage_error = snapshot.error
+
+    if not st.session_state.get("_my_team_filters_initialized"):
+        saved_display = display_team(saved_team) if saved_team in available_teams else None
+        explicit_future = query_value("upcoming_team")
+        if explicit_future == "すべてのチーム":
+            explicit_future = None
+        st.session_state.future_team_filter = explicit_future or saved_display or "すべてのチーム"
+        st.session_state.past_team_filter = saved_display or "すべてのチーム"
+        st.session_state._my_team_filters_initialized = True
+    return True
+
+
 def inject_css() -> None:
     st.markdown(
         """
@@ -124,6 +163,37 @@ def inject_css() -> None:
         }
         .app-header {
             border-left: 6px solid var(--primary-color);
+        }
+        .my-team-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            border: 1px solid color-mix(in srgb, var(--primary-color) 42%, rgba(128, 128, 128, 0.25));
+            border-left: 6px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 13px 16px;
+            margin-bottom: 10px;
+            background: color-mix(in srgb, var(--primary-color) 8%, var(--secondary-background-color));
+            color: var(--text-color);
+        }
+        .my-team-identity {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
+        .my-team-label {
+            color: color-mix(in srgb, var(--text-color) 62%, transparent);
+            font-size: .72rem;
+            font-weight: 750;
+        }
+        .my-team-name {
+            display: block;
+            margin-top: 2px;
+            font-size: 1rem;
+            font-weight: 850;
+            overflow-wrap: anywhere;
         }
         .app-title {
             margin: 0 0 .45rem 0;
@@ -424,6 +494,10 @@ def inject_css() -> None:
             min-height: 64px;
         }
         .standings-row:last-child { border-bottom: 0; }
+        .standings-row--my-team {
+            border-left: 5px solid var(--primary-color);
+            background: color-mix(in srgb, var(--primary-color) 12%, var(--secondary-background-color)) !important;
+        }
         .standings-row:nth-child(2),
         .standings-row:nth-child(3),
         .standings-row:nth-child(4) {
@@ -476,6 +550,7 @@ def inject_css() -> None:
             .score { font-size: 1.45rem; }
             .app-header { padding: 18px 16px; }
             .app-title { font-size: 1.55rem; }
+            .my-team-card { align-items: flex-start; padding: 12px 13px; }
             .header-meta, .summary-grid { grid-template-columns: 1fr; }
             .score-row { align-items: flex-start; flex-direction: column; }
             .prob-line { text-align: left; }
@@ -597,6 +672,128 @@ def render_header(data: dict[str, Any], past_data: dict[str, Any] | None = None,
     )
 
 
+def collect_available_team_codes(
+    latest: dict[str, Any],
+    all_unplayed: dict[str, Any],
+    past: dict[str, Any],
+    standings_forecasts: list[dict[str, Any]],
+) -> list[str]:
+    """Return current-season team codes in display-name order."""
+
+    matches = safe_matches(all_unplayed) or safe_matches(latest)
+    if not matches:
+        matches = safe_matches(past)
+
+    teams = {
+        to_dataset_code(str(team))
+        for match in matches
+        for team in (match.get("home_team"), match.get("away_team"))
+        if team not in (None, "", "tbd", "未定")
+    }
+    if not teams and standings_forecasts:
+        for item in standings_forecasts[0].get("teams", []):
+            if not isinstance(item, dict):
+                continue
+            team = item.get("team") or item.get("team_name")
+            if team not in (None, "", "tbd", "未定"):
+                teams.add(to_dataset_code(str(team)))
+    return sorted(teams, key=display_team)
+
+
+def render_my_team_settings(available_teams: list[str]) -> None:
+    """Render the saved team summary and controls."""
+
+    current = st.session_state.get("my_team_code")
+    current_is_available = current in available_teams
+    storage_error = st.session_state.get("my_team_storage_error")
+
+    if storage_error:
+        st.warning("このブラウザではマイチーム設定を保存できません。現在のタブ内では引き続き利用できます。")
+
+    if current_is_available:
+        name = display_team(current)
+        logo = team_logo_html(current, name)
+        st.markdown(
+            f'<div class="my-team-card"><div class="my-team-identity">{logo}'
+            f'<span><span class="my-team-label">マイチーム</span>'
+            f'<span class="my-team-name">{escape(name)}</span></span></div>'
+            f'<span class="small">起動時にこのクラブで絞り込みます</span></div>',
+            unsafe_allow_html=True,
+        )
+    elif current:
+        st.warning(
+            f"設定中の「{display_team(current)}」は現在のJ1予測対象に含まれていません。マイチームを変更してください。"
+        )
+
+    if not available_teams:
+        return
+
+    with st.expander("マイチームを設定・変更", expanded=not current_is_available):
+        default_index = available_teams.index(current) if current_is_available else 0
+        selected = st.selectbox(
+            "応援しているクラブ",
+            available_teams,
+            index=default_index,
+            format_func=display_team,
+            key="my_team_setting_select",
+        )
+        save_col, clear_col = st.columns(2)
+        if save_col.button("マイチームに設定", type="primary", use_container_width=True):
+            set_my_team_preference(selected)
+        if clear_col.button(
+            "設定を解除",
+            disabled=not bool(current),
+            use_container_width=True,
+        ):
+            clear_my_team_preference()
+
+    if not current_is_available:
+        st.info("マイチームを設定すると、次回からそのクラブの試合を最初に表示します。")
+
+
+def set_my_team_preference(team_code: str) -> None:
+    """Queue a browser save and immediately apply the preference."""
+
+    display_name = display_team(team_code)
+    st.session_state._my_team_storage_action = {"action": "set", "value": team_code}
+    st.session_state.my_team_code = team_code
+    st.session_state.future_team_filter = display_name
+    st.session_state.past_team_filter = display_name
+    st.session_state._future_team_filter_initialized = True
+    st.session_state._past_team_filter_initialized = True
+    st.session_state._my_team_filters_initialized = True
+    if st.session_state.view != "detail":
+        set_query_params_if_changed(
+            {
+                "view": "list",
+                "upcoming_team": display_name,
+                "upcoming_section": str(current_future_section_filter()),
+            }
+        )
+    st.rerun()
+
+
+def clear_my_team_preference() -> None:
+    """Queue removal of the saved team and reset both team filters."""
+
+    st.session_state._my_team_storage_action = {"action": "clear"}
+    st.session_state.my_team_code = None
+    st.session_state.future_team_filter = "すべてのチーム"
+    st.session_state.past_team_filter = "すべてのチーム"
+    st.session_state._future_team_filter_initialized = True
+    st.session_state._past_team_filter_initialized = True
+    st.session_state._my_team_filters_initialized = True
+    if st.session_state.view != "detail":
+        set_query_params_if_changed(
+            {
+                "view": "list",
+                "upcoming_team": "すべてのチーム",
+                "upcoming_section": str(current_future_section_filter()),
+            }
+        )
+    st.rerun()
+
+
 def render_future_matches(latest: dict[str, Any], all_unplayed: dict[str, Any]) -> None:
     matches = safe_matches(all_unplayed) or safe_matches(latest)
     if st.session_state.view == "detail":
@@ -627,16 +824,30 @@ def filter_future_matches(matches: list[dict[str, Any]]) -> list[dict[str, Any]]
 
     team_options = ["すべてのチーム", *teams]
     section_options = ["すべての節", *sections]
+    if not st.session_state.get("_future_team_filter_initialized"):
+        requested_team = query_value("upcoming_team")
+        if requested_team == "すべてのチーム":
+            requested_team = None
+        my_team_name = display_team(st.session_state.get("my_team_code"))
+        preferred_team = requested_team or my_team_name
+        st.session_state.future_team_filter = preferred_team if preferred_team in team_options else "すべてのチーム"
+        st.session_state._future_team_filter_initialized = True
+    elif st.session_state.get("future_team_filter") not in team_options:
+        st.session_state.future_team_filter = "すべてのチーム"
+    if st.session_state.get("future_section_filter") not in section_options:
+        requested_section = query_value("upcoming_section")
+        st.session_state.future_section_filter = next(
+            (option for option in section_options if str(option) == str(requested_section)),
+            "すべての節",
+        )
     team = st.selectbox(
         "チーム",
         team_options,
-        index=option_index(team_options, query_value("upcoming_team"), default=0),
         key="future_team_filter",
     )
     section = st.selectbox(
         "試合が行われる節",
         section_options,
-        index=option_index(section_options, query_value("upcoming_section"), default=0),
         key="future_section_filter",
     )
     update_future_filter_query_params(team, section)
@@ -927,8 +1138,9 @@ def render_standings_forecast(forecasts: list[dict[str, Any]]) -> None:
         low = safe_int(team.get("likely_rank_low"))
         high = safe_int(team.get("likely_rank_high"))
         range_text = f"想定 {low}〜{high}位" if low is not None and high is not None else ""
+        row_class = "standings-row standings-row--my-team" if is_my_team(team.get("team") or name) else "standings-row"
         rows.append(
-            f'<div class="standings-row">'
+            f'<div class="{row_class}">'
             f'<div class="standings-rank">{int(team.get("predicted_rank") or 0)}</div>'
             f'<div class="standings-team">{logo}'
             f'<span class="standings-team-copy"><span class="standings-team-name">{escape(name)}</span>'
@@ -949,10 +1161,6 @@ def render_standings_forecast(forecasts: list[dict[str, Any]]) -> None:
         + "</div>",
         unsafe_allow_html=True,
     )
-
-    model = forecast.get("model_version") or "-"
-    st.caption(f"使用モデル：{model} / 表中の『想定』はシミュレーション順位の10〜90パーセンタイルです。")
-
 
 def _standings_snapshot_label(forecast: dict[str, Any]) -> str:
     generated = format_datetime_jp(forecast.get("generated_at"))
@@ -977,6 +1185,13 @@ def filter_past_matches(matches: list[dict[str, Any]]) -> list[dict[str, Any]]:
     result_options = ["すべての判定", "勝敗的中", "勝敗外れ", "スコア的中", "スコア外れ"]
 
     st.markdown('<div class="section-title">絞り込み</div>', unsafe_allow_html=True)
+    team_options = ["すべてのチーム", *teams]
+    if not st.session_state.get("_past_team_filter_initialized"):
+        my_team_name = display_team(st.session_state.get("my_team_code"))
+        st.session_state.past_team_filter = my_team_name if my_team_name in team_options else "すべてのチーム"
+        st.session_state._past_team_filter_initialized = True
+    elif st.session_state.get("past_team_filter") not in team_options:
+        st.session_state.past_team_filter = "すべてのチーム"
     team = st.selectbox("チーム", ["すべてのチーム", *teams], key="past_team_filter")
     section = st.selectbox("試合が行われた節", ["すべての節", *sections], key="past_section_filter")
     judgment = st.selectbox("予測結果に対する判定", result_options, key="past_judgment_filter")
@@ -1129,16 +1344,6 @@ def query_value(key: str) -> str | None:
     return str(value)
 
 
-def option_index(options: list[Any], selected: Any, default: int = 0) -> int:
-    if selected is None:
-        return default
-    selected_text = str(selected)
-    for index, option in enumerate(options):
-        if str(option) == selected_text:
-            return index
-    return default
-
-
 def match_section(match: dict[str, Any]) -> Any:
     return match.get("matchweek") or match.get("section")
 
@@ -1169,6 +1374,13 @@ def display_team(value: Any) -> str:
     if value is None or value == "":
         return "-"
     return to_display_name(str(value))
+
+
+def is_my_team(value: Any) -> bool:
+    current = st.session_state.get("my_team_code")
+    if not current or value in (None, ""):
+        return False
+    return to_dataset_code(str(value)) == str(current)
 
 
 def safe_float(value: Any) -> float | None:
