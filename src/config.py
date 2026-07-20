@@ -53,7 +53,9 @@ def get_competition(key: str = "2026_special") -> CompetitionProfile:
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-ACTIVE_COMPETITION_KEY = "2026_special"
+# The 2026 special competition has finished.  New scheduled jobs and UI
+# defaults must target the regular 2026-27 season.
+ACTIVE_COMPETITION_KEY = "2026_27_j1"
 ACTIVE_COMPETITION = get_competition(ACTIVE_COMPETITION_KEY)
 SEASON = ACTIVE_COMPETITION.season
 SEASON_YEAR = ACTIVE_COMPETITION.season_year
@@ -66,3 +68,15 @@ PROCESSED_DATA_DIR = PROJECT_ROOT / "Data" / "processed"
 FEATURE_DATA_DIR = PROJECT_ROOT / "Data" / "features"
 HTML_CACHE_DIR = RAW_DATA_DIR / "html_cache"
 OUTPUT_DIR = PROJECT_ROOT / "outputs"
+
+
+def competition_matches_path(key: str = ACTIVE_COMPETITION_KEY) -> Path:
+    return PROCESSED_DATA_DIR / f"matches_{key}_clean.csv"
+
+
+def competition_upcoming_features_path(key: str = ACTIVE_COMPETITION_KEY) -> Path:
+    return FEATURE_DATA_DIR / f"upcoming_features_{key}.csv"
+
+
+def competition_upcoming_sources_path(key: str = ACTIVE_COMPETITION_KEY) -> Path:
+    return FEATURE_DATA_DIR / f"upcoming_features_{key}_sources.csv"

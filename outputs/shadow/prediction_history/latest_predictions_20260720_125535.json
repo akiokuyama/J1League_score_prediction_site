@@ -1,11 +1,11 @@
 {
-  "last_updated": "2026-07-20T12:55:34+09:00",
+  "last_updated": "2026-07-20T12:55:35+09:00",
   "season": "2026_27",
   "league": "J1",
   "competition": "明治安田J1リーグ",
   "category": "j1",
   "matchweek": 1,
-  "model_version": "reviewed_2026_special_v1",
+  "model_version": "reviewed_point_in_time_normal_v1",
   "feature_policy": {
     "exclude_weather": true
   },
@@ -20,57 +20,57 @@
         "away": 0
       },
       "expected_goals": {
-        "home": 1.560740279353754,
-        "away": 1.1879327911583693
+        "home": 1.5163525854404225,
+        "away": 1.1699703945452307
       },
       "result_probabilities": {
-        "home_win": 0.5246479859498901,
-        "draw": 0.33441539589011265,
-        "away_win": 0.14093661815999725
+        "home_win": 0.8227940241433381,
+        "draw": 0.09516654156920781,
+        "away_win": 0.08203943428745403
       },
       "score_candidates": [
         {
           "score": "1-0",
           "home_goals": 1,
           "away_goals": 0,
-          "probability": 0.31628197521276247,
-          "poisson_probability": 0.09990726994422126,
-          "combined_score": 0.020631548999230642
+          "probability": 0.3375255841208859,
+          "poisson_probability": 0.10331061557051278,
+          "combined_score": 0.033722411040089724
         },
         {
           "score": "2-1",
           "home_goals": 2,
           "away_goals": 1,
-          "probability": 0.29320201861350426,
-          "poisson_probability": 0.09261676452508742,
-          "combined_score": 0.019126008713043326
-        },
-        {
-          "score": "1-1",
-          "home_goals": 1,
-          "away_goals": 1,
-          "probability": 0.17115104006191542,
-          "poisson_probability": 0.11868312204185141,
-          "combined_score": 0.011164439791206316
+          "probability": 0.29939998224716624,
+          "poisson_probability": 0.09164104270293548,
+          "combined_score": 0.02991325618480647
         },
         {
           "score": "2-0",
           "home_goals": 2,
           "away_goals": 0,
-          "probability": 0.1270532056633719,
-          "poisson_probability": 0.0779646502011074,
-          "combined_score": 0.008287871720763845
+          "probability": 0.1725235189233642,
+          "poisson_probability": 0.07832765951189431,
+          "combined_score": 0.017236942302817207
         },
         {
-          "score": "0-0",
-          "home_goals": 0,
-          "away_goals": 0,
-          "probability": 0.09231176044844605,
-          "poisson_probability": 0.06401274527597202,
-          "combined_score": 0.006021634990790031
+          "score": "3-1",
+          "home_goals": 3,
+          "away_goals": 1,
+          "probability": 0.10202394708815916,
+          "poisson_probability": 0.04632004401168413,
+          "combined_score": 0.010193282054752461
+        },
+        {
+          "score": "3-2",
+          "home_goals": 3,
+          "away_goals": 2,
+          "probability": 0.0885269676204244,
+          "poisson_probability": 0.02709654008385127,
+          "combined_score": 0.008844789641663001
         }
       ],
-      "predicted_goal_diff": 0.8359587324440089,
+      "predicted_goal_diff": 1.1057316007536642,
       "scorer_candidates": {
         "home": [
           {
@@ -244,60 +244,60 @@
       "away_team": "uraw",
       "predicted_score": {
         "home": 1,
-        "away": 1
+        "away": 0
       },
       "expected_goals": {
-        "home": 1.220296323558623,
-        "away": 1.1608063443507675
+        "home": 1.204580043001413,
+        "away": 1.072942605340518
       },
       "result_probabilities": {
-        "home_win": 0.33758932949404746,
-        "draw": 0.34550629535068833,
-        "away_win": 0.3169043751552642
+        "home_win": 0.4763761968428375,
+        "draw": 0.28308484686122504,
+        "away_win": 0.24053895629593747
       },
       "score_candidates": [
-        {
-          "score": "1-1",
-          "home_goals": 1,
-          "away_goals": 1,
-          "probability": 0.3152588815965758,
-          "poisson_probability": 0.1309559774285186,
-          "combined_score": 0.017545226774814012
-        },
-        {
-          "score": "0-0",
-          "home_goals": 0,
-          "away_goals": 0,
-          "probability": 0.22255751045134067,
-          "poisson_probability": 0.09244858120288918,
-          "combined_score": 0.012386080834682579
-        },
         {
           "score": "1-0",
           "home_goals": 1,
           "away_goals": 0,
-          "probability": 0.20426346882308757,
-          "poisson_probability": 0.1128146637600965,
-          "combined_score": 0.011367955326623698
+          "probability": 0.3026164407867281,
+          "poisson_probability": 0.12351512581538561,
+          "combined_score": 0.01817359968082712
+        },
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "probability": 0.2393250475601281,
+          "poisson_probability": 0.1325246408913217,
+          "combined_score": 0.014372641475279129
         },
         {
           "score": "2-1",
           "home_goals": 2,
           "away_goals": 1,
-          "probability": 0.14467243231111482,
-          "poisson_probability": 0.07990254890202364,
-          "combined_score": 0.00805151188796836
+          "probability": 0.19555759068480613,
+          "poisson_probability": 0.07981826881180756,
+          "combined_score": 0.011744191288527574
         },
         {
-          "score": "0-1",
+          "score": "0-0",
           "home_goals": 0,
-          "away_goals": 1,
-          "probability": 0.11324770681788121,
-          "poisson_probability": 0.10731489958654086,
-          "combined_score": 0.006302619256227667
+          "away_goals": 0,
+          "probability": 0.18517229075625788,
+          "poisson_probability": 0.10253791479695028,
+          "combined_score": 0.01112050315388398
+        },
+        {
+          "score": "2-2",
+          "home_goals": 2,
+          "away_goals": 2,
+          "probability": 0.07732863021207982,
+          "poisson_probability": 0.042820210646355314,
+          "combined_score": 0.004643963050016436
         }
       ],
-      "predicted_goal_diff": 0.23831212358900308,
+      "predicted_goal_diff": 0.28458723773976935,
       "scorer_candidates": {
         "home": [
           {
@@ -471,60 +471,60 @@
       "away_team": "mito",
       "predicted_score": {
         "home": 1,
-        "away": 0
+        "away": 1
       },
       "expected_goals": {
-        "home": 1.5433387044207159,
-        "away": 1.0222601259546618
+        "home": 1.3493047160781473,
+        "away": 1.044999449962884
       },
       "result_probabilities": {
-        "home_win": 0.7530184525156616,
-        "draw": 0.1824175042360136,
-        "away_win": 0.06456404324832471
+        "home_win": 0.44933245248974624,
+        "draw": 0.3297023148844873,
+        "away_win": 0.22096523262576645
       },
       "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "probability": 0.2792585270369284,
+          "poisson_probability": 0.12864503008028763,
+          "combined_score": 0.016801469827819937
+        },
         {
           "score": "1-0",
           "home_goals": 1,
           "away_goals": 0,
-          "probability": 0.352110286469585,
-          "poisson_probability": 0.11864128255127804,
-          "combined_score": 0.03514927247125662
+          "probability": 0.24882459211007948,
+          "poisson_probability": 0.1231053567395244,
+          "combined_score": 0.014970425150900656
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "probability": 0.19805250637676008,
+          "poisson_probability": 0.09123614204605991,
+          "combined_score": 0.011915744330246435
         },
         {
           "score": "2-1",
           "home_goals": 2,
           "away_goals": 1,
-          "probability": 0.2777610759630698,
-          "poisson_probability": 0.09358979717829999,
-          "combined_score": 0.027727391434157027
+          "probability": 0.17542415987162432,
+          "poisson_probability": 0.0867906728936736,
+          "combined_score": 0.01055431954192039
         },
         {
-          "score": "2-0",
+          "score": "2-2",
           "home_goals": 2,
-          "away_goals": 0,
-          "probability": 0.1946995689347876,
-          "poisson_probability": 0.09155184165175076,
-          "combined_score": 0.01943580878349659
-        },
-        {
-          "score": "3-1",
-          "home_goals": 3,
-          "away_goals": 1,
-          "probability": 0.10239208913605323,
-          "poisson_probability": 0.048146918774718356,
-          "combined_score": 0.01022125049520588
-        },
-        {
-          "score": "3-2",
-          "home_goals": 3,
           "away_goals": 2,
-          "probability": 0.0730369794965045,
-          "poisson_probability": 0.024609337625486227,
-          "combined_score": 0.00729088808662786
+          "probability": 0.09844021460460775,
+          "poisson_probability": 0.04534810271789875,
+          "combined_score": 0.00592261340440546
         }
       ],
-      "predicted_goal_diff": 1.1667123789688645,
+      "predicted_goal_diff": 0.11905371372353768,
       "scorer_candidates": {
         "home": [
           {
@@ -701,57 +701,57 @@
         "away": 1
       },
       "expected_goals": {
-        "home": 1.1461134528672436,
-        "away": 1.0986305303008903
+        "home": 1.2283413531043432,
+        "away": 1.0343464851124964
       },
       "result_probabilities": {
-        "home_win": 0.09787431529521605,
-        "draw": 0.3623710358853386,
-        "away_win": 0.5397546488194453
+        "home_win": 0.3534678962118714,
+        "draw": 0.23269034414238804,
+        "away_win": 0.41384175964574055
       },
       "score_candidates": [
         {
           "score": "1-1",
           "home_goals": 1,
           "away_goals": 1,
-          "probability": 0.3168379789517824,
-          "poisson_probability": 0.13341336821221975,
-          "combined_score": 0.018888758550153244
-        },
-        {
-          "score": "0-0",
-          "home_goals": 0,
-          "away_goals": 0,
-          "probability": 0.25162741755345275,
-          "poisson_probability": 0.10595466307862553,
-          "combined_score": 0.01500113575553731
+          "probability": 0.24224884522877954,
+          "poisson_probability": 0.13222460354925167,
+          "combined_score": 0.01227071822001615
         },
         {
           "score": "0-1",
           "home_goals": 0,
           "away_goals": 1,
-          "probability": 0.2036095432237347,
-          "poisson_probability": 0.11640502768592252,
-          "combined_score": 0.01213848009378132
+          "probability": 0.218025292459627,
+          "poisson_probability": 0.10764483603445016,
+          "combined_score": 0.011043713855816812
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "probability": 0.21055449563017284,
+          "poisson_probability": 0.1278339564666001,
+          "combined_score": 0.010665292886723451
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "probability": 0.19066746809986304,
+          "poisson_probability": 0.1040703841351021,
+          "combined_score": 0.009657948101126329
         },
         {
           "score": "1-2",
           "home_goals": 1,
           "away_goals": 2,
-          "probability": 0.12818801066580854,
-          "poisson_probability": 0.07328599973410947,
-          "combined_score": 0.007642115350254177
-        },
-        {
-          "score": "2-2",
-          "home_goals": 2,
-          "away_goals": 2,
-          "probability": 0.09973704960522167,
-          "poisson_probability": 0.04199703510104406,
-          "combined_score": 0.005945969781559519
+          "probability": 0.13850389858155754,
+          "poisson_probability": 0.0683830269632809,
+          "combined_score": 0.007015687980939357
         }
       ],
-      "predicted_goal_diff": 0.2042558017617033,
+      "predicted_goal_diff": -0.02453525544188276,
       "scorer_candidates": {
         "home": [
           {
@@ -928,57 +928,57 @@
         "away": 1
       },
       "expected_goals": {
-        "home": 1.2746024835300704,
-        "away": 0.9997868035680519
+        "home": 1.293766458480136,
+        "away": 0.9539343251747209
       },
       "result_probabilities": {
-        "home_win": 0.34541295029736346,
-        "draw": 0.5502029292588841,
-        "away_win": 0.10438412044375232
+        "home_win": 0.4637079493609472,
+        "draw": 0.45918733180998683,
+        "away_win": 0.077104718829066
       },
       "score_candidates": [
         {
           "score": "1-1",
           "home_goals": 1,
           "away_goals": 1,
-          "probability": 0.35052336607439805,
-          "poisson_probability": 0.13107728683803088,
-          "combined_score": 0.028287848708738534
-        },
-        {
-          "score": "0-0",
-          "home_goals": 0,
-          "away_goals": 0,
-          "probability": 0.2750646706493143,
-          "poisson_probability": 0.10285970700753827,
-          "combined_score": 0.022198200010424676
+          "probability": 0.2717120989650364,
+          "poisson_probability": 0.13037980180593775,
+          "combined_score": 0.021975791510714302
         },
         {
           "score": "1-0",
           "home_goals": 1,
           "away_goals": 0,
-          "probability": 0.16048549065159462,
-          "poisson_probability": 0.13110523800698368,
-          "combined_score": 0.0129514597852413
+          "probability": 0.26238289908057294,
+          "poisson_probability": 0.13667586789274788,
+          "combined_score": 0.021221255542666996
         },
         {
-          "score": "2-2",
-          "home_goals": 2,
-          "away_goals": 2,
-          "probability": 0.11167067536707731,
-          "poisson_probability": 0.041758954076060756,
-          "combined_score": 0.009012018814506252
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "probability": 0.22015807212410288,
+          "poisson_probability": 0.10564183898638793,
+          "combined_score": 0.017806155525752477
         },
         {
           "score": "2-1",
           "home_goals": 2,
           "away_goals": 1,
-          "probability": 0.10225579725761577,
-          "poisson_probability": 0.08353571766906878,
-          "combined_score": 0.008252221684419539
+          "probability": 0.16191231952995624,
+          "poisson_probability": 0.08434050721990506,
+          "combined_score": 0.01309529973291448
+        },
+        {
+          "score": "2-2",
+          "home_goals": 2,
+          "away_goals": 2,
+          "probability": 0.08383461030033147,
+          "poisson_probability": 0.0402276524198569,
+          "combined_score": 0.006780455947157271
         }
       ],
-      "predicted_goal_diff": 0.1841094630008597,
+      "predicted_goal_diff": 0.4081047088003737,
       "scorer_candidates": {
         "home": [
           {
@@ -1155,57 +1155,57 @@
         "away": 0
       },
       "expected_goals": {
-        "home": 1.4033508402024453,
-        "away": 1.0554207196387002
+        "home": 1.5011865791863535,
+        "away": 1.0258772911252767
       },
       "result_probabilities": {
-        "home_win": 0.3926001901241779,
-        "draw": 0.23662688038134144,
-        "away_win": 0.37077292949448065
+        "home_win": 0.444919481004391,
+        "draw": 0.3034821953517986,
+        "away_win": 0.2515983236438103
       },
       "score_candidates": [
         {
           "score": "1-0",
           "home_goals": 1,
           "away_goals": 0,
-          "probability": 0.30499315325460385,
-          "poisson_probability": 0.12004258481563782,
-          "combined_score": 0.015490480756412526
-        },
-        {
-          "score": "2-1",
-          "home_goals": 2,
-          "away_goals": 1,
-          "probability": 0.2258665764902032,
-          "poisson_probability": 0.08889906994964215,
-          "combined_score": 0.011471673443493789
+          "probability": 0.2722530853510164,
+          "poisson_probability": 0.1199346794730887,
+          "combined_score": 0.015578012614226385
         },
         {
           "score": "1-1",
           "home_goals": 1,
           "away_goals": 1,
-          "probability": 0.21928373299469436,
-          "poisson_probability": 0.12669543125341015,
-          "combined_score": 0.011137333444705256
+          "probability": 0.2546802681556781,
+          "poisson_probability": 0.12303826408983055,
+          "combined_score": 0.014572515954441877
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "probability": 0.20963939802498566,
+          "poisson_probability": 0.09235169538901995,
+          "combined_score": 0.0119953284740979
         },
         {
           "score": "0-0",
           "home_goals": 0,
           "away_goals": 0,
-          "probability": 0.14805208947414436,
-          "poisson_probability": 0.08553996718192056,
-          "combined_score": 0.0075195066462079
+          "probability": 0.16537323002411902,
+          "poisson_probability": 0.0798932532011401,
+          "combined_score": 0.009462468570556716
         },
         {
-          "score": "0-1",
-          "home_goals": 0,
-          "away_goals": 1,
-          "probability": 0.10180444778635415,
-          "poisson_probability": 0.09028065372101339,
-          "combined_score": 0.005170607348143537
+          "score": "2-2",
+          "home_goals": 2,
+          "away_goals": 2,
+          "probability": 0.09805401844420084,
+          "poisson_probability": 0.04737075354825725,
+          "combined_score": 0.005610539672047998
         }
       ],
-      "predicted_goal_diff": 0.37755511616790494,
+      "predicted_goal_diff": 0.2097009469157242,
       "scorer_candidates": {
         "home": [
           {
@@ -1382,57 +1382,57 @@
         "away": 1
       },
       "expected_goals": {
-        "home": 1.111665684036964,
-        "away": 1.288998003810555
+        "home": 1.030234104708324,
+        "away": 1.2297042658380866
       },
       "result_probabilities": {
-        "home_win": 0.11700387914509376,
-        "draw": 0.2709633444602604,
-        "away_win": 0.6120327763946458
+        "home_win": 0.05534586627404065,
+        "draw": 0.2867397471675493,
+        "away_win": 0.6579143865584101
       },
       "score_candidates": [
         {
           "score": "0-1",
           "home_goals": 0,
           "away_goals": 1,
-          "probability": 0.363171806283609,
-          "poisson_probability": 0.1168576779365753,
-          "combined_score": 0.02593583906361875
+          "probability": 0.3974350919213833,
+          "poisson_probability": 0.1283281447949483,
+          "combined_score": 0.033393653076358325
         },
         {
           "score": "1-2",
           "home_goals": 1,
           "away_goals": 2,
-          "probability": 0.2602007684499565,
-          "poisson_probability": 0.08372471946412419,
-          "combined_score": 0.018582183798369865
-        },
-        {
-          "score": "1-1",
-          "home_goals": 1,
-          "away_goals": 1,
-          "probability": 0.16780331616232516,
-          "poisson_probability": 0.1299066704783342,
-          "combined_score": 0.011983638947261595
-        },
-        {
-          "score": "0-0",
-          "home_goals": 0,
-          "away_goals": 0,
-          "probability": 0.11710463768820847,
-          "poisson_probability": 0.09065776486163586,
-          "combined_score": 0.008363003361315263
+          "probability": 0.25175193510307387,
+          "poisson_probability": 0.08128839007177131,
+          "combined_score": 0.02115293025960802
         },
         {
           "score": "0-2",
           "home_goals": 0,
           "away_goals": 2,
-          "probability": 0.09171947141590091,
-          "poisson_probability": 0.07531465679509115,
-          "combined_score": 0.006550126988066114
+          "probability": 0.12999103380142776,
+          "poisson_probability": 0.07890283354071778,
+          "combined_score": 0.010922224972174115
+        },
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "probability": 0.12340980429799064,
+          "poisson_probability": 0.13220803136170373,
+          "combined_score": 0.010369250915979936
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "probability": 0.0974121348761243,
+          "poisson_probability": 0.10435691601629778,
+          "combined_score": 0.008184851070282908
         }
       ],
-      "predicted_goal_diff": -0.5631406823494266,
+      "predicted_goal_diff": -0.8688073216841127,
       "scorer_candidates": {
         "home": [
           {
@@ -1609,57 +1609,57 @@
         "away": 0
       },
       "expected_goals": {
-        "home": 1.9985111105334044,
-        "away": 0.9570368570460407
+        "home": 1.6749141909989738,
+        "away": 0.9313365331189768
       },
       "result_probabilities": {
-        "home_win": 0.8597142185252156,
-        "draw": 0.045988049306588716,
-        "away_win": 0.0942977321681958
+        "home_win": 0.6427892070218254,
+        "draw": 0.17505055092595886,
+        "away_win": 0.18216024205221576
       },
       "score_candidates": [
         {
           "score": "1-0",
           "home_goals": 1,
           "away_goals": 0,
-          "probability": 0.3229182506769523,
-          "poisson_probability": 0.1040227650597573,
-          "combined_score": 0.035152994317147086
+          "probability": 0.387986428283692,
+          "poisson_probability": 0.12362669362857402,
+          "combined_score": 0.030640387051963393
         },
         {
           "score": "2-1",
           "home_goals": 2,
           "away_goals": 1,
-          "probability": 0.308814601035445,
-          "poisson_probability": 0.09947950796583932,
-          "combined_score": 0.033617666057875285
+          "probability": 0.3026117172081648,
+          "poisson_probability": 0.09642318216439258,
+          "combined_score": 0.023898104329921975
         },
         {
           "score": "2-0",
           "home_goals": 2,
           "away_goals": 0,
-          "probability": 0.1647735350776381,
-          "poisson_probability": 0.10394532586016549,
-          "combined_score": 0.01793730496823189
+          "probability": 0.1517973847406935,
+          "poisson_probability": 0.1035320517723905,
+          "combined_score": 0.01198786937601278
         },
         {
           "score": "3-1",
           "home_goals": 3,
           "away_goals": 1,
-          "probability": 0.10505130093974477,
-          "poisson_probability": 0.0662703006467087,
-          "combined_score": 0.011435921559720402
+          "probability": 0.07893002420607356,
+          "poisson_probability": 0.0538335187161401,
+          "combined_score": 0.006233327548062038
         },
         {
           "score": "3-2",
           "home_goals": 3,
           "away_goals": 2,
-          "probability": 0.09844231227021986,
-          "poisson_probability": 0.03171156012321115,
-          "combined_score": 0.010716464729222712
+          "probability": 0.07867444556137619,
+          "poisson_probability": 0.025068561343342736,
+          "combined_score": 0.006213143778669935
         }
       ],
-      "predicted_goal_diff": 0.8279175411188779,
+      "predicted_goal_diff": 0.738961521979238,
       "scorer_candidates": {
         "home": [
           {
@@ -1836,57 +1836,57 @@
         "away": 1
       },
       "expected_goals": {
-        "home": 1.1258240360765202,
-        "away": 1.3179687219640028
+        "home": 0.9601276739944937,
+        "away": 1.4001638603624103
       },
       "result_probabilities": {
-        "home_win": 0.3620609383343196,
-        "draw": 0.34859699895043356,
-        "away_win": 0.28934206271524676
+        "home_win": 0.14444807586175343,
+        "draw": 0.5812235348459363,
+        "away_win": 0.27432838929231035
       },
       "score_candidates": [
         {
           "score": "1-1",
           "home_goals": 1,
           "away_goals": 1,
-          "probability": 0.2951359737059969,
-          "poisson_probability": 0.1288397609862575,
-          "combined_score": 0.015444663984234048
-        },
-        {
-          "score": "0-1",
-          "home_goals": 0,
-          "away_goals": 1,
-          "probability": 0.22761225979240596,
-          "poisson_probability": 0.11444040707752352,
-          "combined_score": 0.011911102625150658
+          "probability": 0.3600142696209268,
+          "poisson_probability": 0.12689551202917235,
+          "combined_score": 0.0278083340946044
         },
         {
           "score": "0-0",
           "home_goals": 0,
           "away_goals": 0,
-          "probability": 0.19890537906530256,
-          "poisson_probability": 0.08683089755497944,
-          "combined_score": 0.010408852251201793
+          "probability": 0.26780079589584627,
+          "poisson_probability": 0.09439270046935927,
+          "combined_score": 0.020685552300229643
         },
         {
-          "score": "1-2",
-          "home_goals": 1,
-          "away_goals": 2,
-          "probability": 0.16886563409428795,
-          "poisson_probability": 0.08490338756260268,
-          "combined_score": 0.008836852195012174
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "probability": 0.15021809235553013,
+          "poisson_probability": 0.13216524787921077,
+          "combined_score": 0.011603192572547697
         },
         {
           "score": "2-2",
           "home_goals": 2,
           "away_goals": 2,
-          "probability": 0.10948075334200666,
-          "poisson_probability": 0.04779313723114919,
-          "combined_score": 0.005729201448660083
+          "probability": 0.120995042133013,
+          "poisson_probability": 0.04264755350010573,
+          "combined_score": 0.00934593664570117
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "probability": 0.10097179999468388,
+          "poisson_probability": 0.0888372549927153,
+          "combined_score": 0.007799295153890006
         }
       ],
-      "predicted_goal_diff": -0.545029560372554,
+      "predicted_goal_diff": -0.33606504364456546,
       "scorer_candidates": {
         "home": [
           {
@@ -2060,60 +2060,60 @@
       "away_team": "kyot",
       "predicted_score": {
         "home": 1,
-        "away": 0
+        "away": 1
       },
       "expected_goals": {
-        "home": 1.2993637939735365,
-        "away": 1.2142909188916513
+        "home": 1.4305902933242403,
+        "away": 1.2473442930237697
       },
       "result_probabilities": {
-        "home_win": 0.34223995697654863,
-        "draw": 0.19818103051169117,
-        "away_win": 0.45957901251176014
+        "home_win": 0.44529818556923334,
+        "draw": 0.40694396571941827,
+        "away_win": 0.1477578487113485
       },
       "score_candidates": [
-        {
-          "score": "1-0",
-          "home_goals": 1,
-          "away_goals": 0,
-          "probability": 0.2510635344604987,
-          "poisson_probability": 0.10521178529450592,
-          "combined_score": 0.011002844832058491
-        },
         {
           "score": "1-1",
           "home_goals": 1,
           "away_goals": 1,
-          "probability": 0.2222482571459447,
-          "poisson_probability": 0.12775771544349673,
-          "combined_score": 0.009740016975491945
+          "probability": 0.3189182790261872,
+          "poisson_probability": 0.1225996991896134,
+          "combined_score": 0.019773420041680114
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "probability": 0.190298917238395,
+          "poisson_probability": 0.09828857988551931,
+          "combined_score": 0.011798823308345795
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "probability": 0.1787219085200368,
+          "poisson_probability": 0.06870491177255766,
+          "combined_score": 0.011081031098650933
         },
         {
           "score": "2-1",
           "home_goals": 2,
           "away_goals": 1,
-          "probability": 0.19806473226305532,
-          "poisson_probability": 0.08300187492402668,
-          "combined_score": 0.008680175400527889
+          "probability": 0.16978837034803634,
+          "poisson_probability": 0.08769496981256632,
+          "combined_score": 0.010527138097369425
         },
         {
-          "score": "0-1",
-          "home_goals": 0,
-          "away_goals": 1,
-          "probability": 0.183701132921127,
-          "poisson_probability": 0.09832328408413286,
-          "combined_score": 0.008050691492684793
-        },
-        {
-          "score": "1-2",
-          "home_goals": 1,
+          "score": "2-2",
+          "home_goals": 2,
           "away_goals": 2,
-          "probability": 0.14492234320937428,
-          "poisson_probability": 0.07756751684069088,
-          "combined_score": 0.006351213283352991
+          "probability": 0.1422725248673447,
+          "poisson_probability": 0.05469291006129818,
+          "combined_score": 0.008821113682108469
         }
       ],
-      "predicted_goal_diff": 0.2697400893910225,
+      "predicted_goal_diff": 0.11460928070780109,
       "scorer_candidates": {
         "home": [
           {

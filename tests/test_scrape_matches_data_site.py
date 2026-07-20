@@ -1,4 +1,13 @@
-from src.data.scrape_matches import _parse_data_site_tables
+import pandas as pd
+
+from src.config import get_competition
+from src.data.scrape_matches import (
+    _filter_profile_matches,
+    _merge_with_existing,
+    _parse_data_site_tables,
+    _parse_matchlist_sections,
+    _parse_next_schedule,
+)
 
 
 def test_parse_data_site_table_includes_regular_and_playoff_matches() -> None:
@@ -41,3 +50,56 @@ def test_parse_data_site_table_includes_regular_and_playoff_matches() -> None:
     assert playoff["home_team"] == "nago"
     assert playoff["away_team"] == "tbd"
     assert playoff["status"] == "postponed_or_tbd"
+
+
+def test_regular_j1_parser_excludes_completed_special_competition() -> None:
+    html = """
+    <section class="matchlistWrap">
+      <div class="timeStamp"><h4>2026年6月1日</h4></div>
+      <div class="leagAccTit"><h5>明治安田Ｊ１百年構想リーグ 第10節</h5></div>
+      <table class="matchTable"><tbody><tr><td class="match"><td class="clubName">横浜FM</td><td class="point"></td><td class="clubName">町田</td></td><td class="stadium">19:00 日産ス</td></tr></tbody></table>
+    </section>
+    <section class="matchlistWrap">
+      <div class="timeStamp"><h4>2026年8月7日</h4></div>
+      <div class="leagAccTit"><h5>明治安田Ｊ１リーグ 第1節</h5></div>
+      <table class="matchTable"><tbody><tr><td class="match"><td class="clubName">横浜FM</td><td class="point"></td><td class="clubName">鹿島</td></td><td class="stadium">19:00 日産ス</td></tr></tbody></table>
+    </section>
+    """
+
+    profile = get_competition("2026_27_j1")
+    df = _filter_profile_matches(_parse_matchlist_sections(html, profile), profile)
+
+    assert len(df) == 1
+    assert df.iloc[0]["season"] == "2026_27"
+    assert df.iloc[0]["category"] == "j1"
+    assert df.iloc[0]["match_date"] == "2026-08-07"
+    assert df.iloc[0]["competition"] == "明治安田J1リーグ"
+
+
+def test_next_schedule_parser_merges_partial_refresh_with_full_schedule() -> None:
+    html = """
+    <div class="p-game-schedule__group">
+      <h3>2026/8/7 (金) 第1節</h3>
+      <a class="m-schedule__link" href="/match/j1/2026/080701/">
+        <span class="m-schedule__team-name" data-media="pc">横浜Ｆ・マリノス</span>
+        <p class="m-schedule__time-text">19:25</p>
+        <span class="m-schedule__team-name" data-media="pc">鹿島アントラーズ</span>
+        <p class="m-schedule__info-stadium" data-media="pc">ＭＵＦＧスタジアム</p>
+      </a>
+    </div>
+    """
+    profile = get_competition("2026_27_j1")
+    fresh = _parse_next_schedule(html, profile)
+    existing = fresh.copy()
+    existing.loc[0, "kickoff_time"] = "未定"
+    second = existing.copy()
+    second.loc[0, "match_date"] = "2026-08-08"
+    second.loc[0, "home_team"] = "kasw"
+    second.loc[0, "away_team"] = "mito"
+    existing = pd.concat([existing, second], ignore_index=True)
+
+    merged = _merge_with_existing(fresh, existing)
+
+    assert len(merged) == 2
+    assert merged.loc[merged["home_team"] == "y-fm", "kickoff_time"].iloc[0] == "19:25"
+    assert merged.loc[merged["home_team"] == "kasw", "away_team"].iloc[0] == "mito"

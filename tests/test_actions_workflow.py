@@ -20,4 +20,4 @@ def test_manual_update_workflow_excludes_local_model_metrics() -> None:
     assert "git add outputs/local" not in text
     assert "outputs/local/model_metrics.json must not be generated in Actions" in text
     assert "python scripts/build_past_prediction_results.py" in text
-    assert "python scripts/run_prediction.py --mode all_unplayed" in text
+    assert "python scripts/run_competition_pipeline.py" in text

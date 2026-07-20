@@ -1,0 +1,12 @@
+{
+  "updated_at": "2026-07-20T12:55:19+09:00",
+  "competition_key": "2026_27_j1",
+  "steps": [
+    "fixtures_updated",
+    "features_generated",
+    "next_section_predicted",
+    "all_unplayed_predicted"
+  ],
+  "upcoming_feature_rows": 379,
+  "prediction_updated": true
+}

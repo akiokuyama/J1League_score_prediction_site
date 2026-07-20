@@ -1,13 +1,16 @@
-name: Update Results After Matches
+name: Update 2026-27 J1 Results
 
 on:
   workflow_dispatch:
-  # Paused: season ended. Re-enable when next season starts.
-  # schedule:
-  #   - cron: "0 22 * * 0"  # Mon 07:00 JST
+  schedule:
+    - cron: "0 22 * * 0"  # Mon 07:00 JST
 
 permissions:
   contents: write
+
+concurrency:
+  group: j1-2026-27-data-update
+  cancel-in-progress: false
 
 jobs:
   update-results:
@@ -15,16 +18,17 @@ jobs:
     env:
       PYTHONPATH: ${{ github.workspace }}
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configure Python import path
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install dependencies and verify code
         run: |
-          echo "PYTHONPATH=${GITHUB_WORKSPACE}" >> "$GITHUB_ENV"
-          python -c "import os; print('PYTHONPATH=' + os.environ.get('PYTHONPATH', ''))"
-
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          python -m compileall app src scripts
+          python -m pytest
       - name: Capture prediction output baseline
         run: |
           python - <<'PY'
@@ -32,117 +36,65 @@ jobs:
           import os
           from pathlib import Path
 
-          latest = Path("outputs/latest_predictions.json")
-          all_unplayed = Path("outputs/all_unplayed_predictions.json")
-          history = Path("outputs/prediction_history")
-
-          def digest(path: Path) -> str:
-              return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else "missing"
-
-          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as f:
-              f.write(f"LATEST_BEFORE={digest(latest)}\n")
-              f.write(f"ALL_UNPLAYED_BEFORE={digest(all_unplayed)}\n")
-              f.write(f"HISTORY_COUNT_BEFORE={len(list(history.glob('*.json'))) if history.exists() else 0}\n")
+          targets = [
+              Path("outputs/latest_predictions.json"),
+              Path("outputs/all_unplayed_predictions.json"),
+              Path("outputs/prediction_history"),
+          ]
+          def digest(path):
+              if not path.exists():
+                  return "missing"
+              if path.is_dir():
+                  return str(len(list(path.glob("*.json"))))
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+          with open(os.environ["GITHUB_ENV"], "a", encoding="utf-8") as env:
+              for index, target in enumerate(targets):
+                  env.write(f"PREDICTION_BASELINE_{index}={digest(target)}\n")
           PY
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      - name: Install dependencies
+      - name: Update official match results only
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run syntax check
-        run: python -m compileall app src scripts
-
-      - name: Run tests
-        run: python -m pytest
-
-      - name: Update match results only
-        run: |
-          echo "::group::Update match results"
-          echo "mode=results-after-matches"
-          echo "season=2026_special"
-          echo "category=100yj1"
-          python scripts/update_2026_special_data.py --season 2026_special --category 100yj1 --scope results
-          echo "::endgroup::"
-
-      - name: Build past prediction results
-        run: |
-          echo "::group::Build past prediction results"
-          python scripts/build_past_prediction_results.py
-          echo "::endgroup::"
-
-      - name: Validate result outputs and unchanged predictions
-        run: |
-          echo "::group::Validate past prediction results"
+          python scripts/update_competition_data.py --competition-key 2026_27_j1 --scope results
+          python scripts/build_past_prediction_results.py \
+            --matches Data/processed/matches_2026_27_j1_clean.csv
           python scripts/validate_past_prediction_results.py
           python - <<'PY'
           import hashlib
           import os
           from pathlib import Path
 
-          latest = Path("outputs/latest_predictions.json")
-          all_unplayed = Path("outputs/all_unplayed_predictions.json")
-          history = Path("outputs/prediction_history")
-
-          def digest(path: Path) -> str:
-              return hashlib.sha256(path.read_bytes()).hexdigest() if path.exists() else "missing"
-
-          checks = {
-              "LATEST_BEFORE": digest(latest),
-              "ALL_UNPLAYED_BEFORE": digest(all_unplayed),
-              "HISTORY_COUNT_BEFORE": str(len(list(history.glob("*.json"))) if history.exists() else 0),
-          }
-          for env_key, current in checks.items():
-              expected = os.environ.get(env_key)
-              if expected != current:
-                  raise SystemExit(f"{env_key} changed unexpectedly: before={expected}, after={current}")
+          targets = [
+              Path("outputs/latest_predictions.json"),
+              Path("outputs/all_unplayed_predictions.json"),
+              Path("outputs/prediction_history"),
+          ]
+          def digest(path):
+              if not path.exists():
+                  return "missing"
+              if path.is_dir():
+                  return str(len(list(path.glob("*.json"))))
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+          for index, target in enumerate(targets):
+              current = digest(target)
+              expected = os.environ[f"PREDICTION_BASELINE_{index}"]
+              if current != expected:
+                  raise SystemExit(f"prediction output changed unexpectedly: {target}")
           PY
-          echo "::endgroup::"
-
-      - name: Commit past result outputs
+      - name: Commit result data without changing predictions
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           tmp_dir="$(mktemp -d)"
-          for target in \
-            Data/processed/matches_2026_special_clean.csv \
-            Data/processed/update_2026_special_report.json \
-            outputs/past_prediction_results.json
-          do
-            if [ -e "$target" ]; then
-              mkdir -p "$tmp_dir/$(dirname "$target")"
-              cp -a "$target" "$tmp_dir/$target"
-              echo "Preserved $target"
-            else
-              echo "Skipped missing $target"
-            fi
+          for target in Data/processed/matches_2026_27_j1_clean.csv Data/processed/update_2026_27_j1_report.json outputs/past_prediction_results.json; do
+            [ -e "$target" ] && mkdir -p "$tmp_dir/$(dirname "$target")" && cp -a "$target" "$tmp_dir/$target"
           done
-
           git fetch origin main
           git reset --hard origin/main
           git clean -fd
           (cd "$tmp_dir" && tar -cf - .) | tar -xf -
-
-          for target in \
-            Data/processed/matches_2026_special_clean.csv \
-            Data/processed/update_2026_special_report.json \
-            outputs/past_prediction_results.json
-          do
-            if [ -e "$target" ]; then
-              git add "$target"
-              echo "Added $target"
-            fi
-          done
-
+          git add Data/processed/matches_2026_27_j1_clean.csv Data/processed/update_2026_27_j1_report.json outputs/past_prediction_results.json
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update past prediction results"
+            git commit -m "Update 2026-27 J1 results"
             git push
           fi

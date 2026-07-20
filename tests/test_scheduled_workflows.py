@@ -8,7 +8,7 @@ def read_workflow(name: str) -> str:
 def test_results_after_matches_workflow_is_results_only() -> None:
     text = read_workflow("update_results_after_matches.yml")
 
-    assert "name: Update Results After Matches" in text
+    assert "name: Update 2026-27 J1 Results" in text
     assert "workflow_dispatch:" in text
     assert 'cron: "0 22 * * 0"' in text
     assert "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true" in text
@@ -18,17 +18,13 @@ def test_results_after_matches_workflow_is_results_only() -> None:
     assert "git reset --hard origin/main" in text
     assert "git clean -fd" in text
     assert 'tmp_dir="$(mktemp -d)"' in text
-    assert "python scripts/update_2026_special_data.py --season 2026_special --category 100yj1 --scope results" in text
+    assert "python scripts/update_competition_data.py --competition-key 2026_27_j1 --scope results" in text
+    assert "group: j1-2026-27-data-update" in text
     assert "python scripts/build_past_prediction_results.py" in text
     assert "python scripts/validate_past_prediction_results.py" in text
-    assert "ln -s Data data" not in text
-    assert "full_pipeline.py --season 2026_special --category 100yj1 --mode next_section" not in text
+    assert "run_competition_pipeline.py" not in text
     assert "run_prediction.py --mode all_unplayed" not in text
-    assert "outputs/latest_predictions.json \\" not in text
-    assert "outputs/all_unplayed_predictions.json \\" not in text
-    assert "outputs/prediction_history \\" not in text
-    assert "Data/features \\" not in text
-    assert "data/features" not in text
+    assert "Data/features" not in text
     assert "build_model_metrics.py" not in text
     assert "git add outputs/local" not in text
 
@@ -36,7 +32,7 @@ def test_results_after_matches_workflow_is_results_only() -> None:
 def test_scheduled_prediction_workflow_updates_predictions() -> None:
     text = read_workflow("update_predictions_scheduled.yml")
 
-    assert "name: Update Predictions Scheduled" in text
+    assert "name: Update 2026-27 J1 Predictions" in text
     assert "workflow_dispatch:" in text
     assert 'cron: "0 22 * * 2"' in text
     assert "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true" in text
@@ -46,15 +42,15 @@ def test_scheduled_prediction_workflow_updates_predictions() -> None:
     assert "git reset --hard origin/main" in text
     assert "git clean -fd" in text
     assert 'tmp_dir="$(mktemp -d)"' in text
-    assert "python scripts/full_pipeline.py --season 2026_special --category 100yj1 --mode next_section" in text
-    assert "python scripts/run_prediction.py --mode all_unplayed" in text
+    assert "python scripts/run_competition_pipeline.py" in text
+    assert "--competition-key 2026_27_j1" in text
+    assert "Data/processed/market_values_2026_27_j1_clean.csv" in text
+    assert "group: j1-2026-27-data-update" in text
     assert "python scripts/build_past_prediction_results.py" in text
     assert "python scripts/validate_prediction_outputs.py" in text
     assert "python scripts/validate_past_prediction_results.py" in text
-    assert "ln -s Data data" not in text
     assert "build_model_metrics.py" not in text
     assert "git add outputs/local" not in text
-    assert "outputs/local/model_metrics.json must not be generated in Actions" in text
 
 
 def test_manual_workflow_remains_manual_only() -> None:
@@ -68,8 +64,9 @@ def test_manual_workflow_remains_manual_only() -> None:
     assert "git reset --hard origin/main" in text
     assert "git clean -fd" in text
     assert 'tmp_dir="$(mktemp -d)"' in text
+    assert "python scripts/run_competition_pipeline.py" in text
+    assert "group: j1-2026-27-data-update" in text
     assert "python scripts/build_model_metrics.py" not in text
     assert "python scripts/validate_prediction_outputs.py" in text
     assert "python scripts/validate_past_prediction_results.py" in text
-    assert "ln -s Data data" not in text
     assert "git add outputs/local" not in text

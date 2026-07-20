@@ -182,6 +182,7 @@ def write_predictions_safely(
         writer = csv.DictWriter(
             f,
             fieldnames=["match_id", "date", "home_team", "away_team", "predicted_home", "predicted_away"],
+            lineterminator="\n",
         )
         writer.writeheader()
         for match in data["matches"]:

@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime
 from io import StringIO
 import re
 from typing import Any
@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 
 import pandas as pd
 
-from src.config import RAW_DATA_DIR
+from src.config import RAW_DATA_DIR, get_competition
 from src.data.scraping import empty_frame, fetch_html, safe_write_csv
 from src.data.team_master import TEAM_NAME_TO_CODE
 
@@ -20,6 +20,12 @@ FOOTBALL_LAB_URLS = {
     "kagi": "https://www.football-lab.jp/summary/team_ranking/j1001?data=kagi&year=100",
     "goal_patterns": "https://www.football-lab.jp/summary/team_ranking/j1001?data=goal&year=100",
     "team_styles": "https://www.football-lab.jp/summary/team_style/j1001?year=100&data=21",
+}
+REGULAR_J1_FOOTBALL_LAB_URLS = {
+    "expected": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=expected",
+    "kagi": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=kagi",
+    "goal_patterns": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=goal",
+    "team_styles": "https://www.football-lab.jp/summary/team_style/j1/?year=2026&data=21",
 }
 
 
@@ -123,4 +129,56 @@ def scrape_football_lab_team_2026_special(*, use_cache: bool = False) -> tuple[d
         info[f"{key}_path"] = str(path)
         info[f"{key}_rows"] = int(len(df))
 
+    return frames, info
+
+
+def scrape_football_lab_team(
+    competition_key: str = "2026_special", *, use_cache: bool = False
+) -> tuple[dict[str, pd.DataFrame], dict[str, Any]]:
+    """Fetch season-specific Football Lab snapshots when published.
+
+    The regular 2026-27 endpoints currently return no season data before
+    kickoff.  Empty responses therefore never create misleading "current"
+    files; scheduled runs will start using them automatically once published.
+    """
+    if competition_key == "2026_special":
+        return scrape_football_lab_team_2026_special(use_cache=use_cache)
+    profile = get_competition(competition_key)
+    if profile.key != "2026_27_j1":
+        raise ValueError(f"Football Lab取得URLが未設定です: {profile.key}")
+
+    season_start = date(2026, 8, 8)
+    if date.today() < season_start:
+        frames = {key: empty_frame(["team"]) for key in REGULAR_J1_FOOTBALL_LAB_URLS}
+        return frames, {
+            "urls": REGULAR_J1_FOOTBALL_LAB_URLS,
+            "warnings": [],
+            "status": "not_published_before_season_start",
+            "available_from": season_start.isoformat(),
+            **{f"{key}_rows": 0 for key in frames},
+        }
+
+    today = datetime.now(ZoneInfo("Asia/Tokyo")).strftime("%Y%m%d")
+    frames: dict[str, pd.DataFrame] = {}
+    info: dict[str, Any] = {"urls": REGULAR_J1_FOOTBALL_LAB_URLS, "warnings": []}
+    for key, url in REGULAR_J1_FOOTBALL_LAB_URLS.items():
+        try:
+            fetched = fetch_html(url, use_cache=use_cache, delay_seconds=0.2, retries=1, timeout=10)
+            df = _parse_tables(fetched.html, key)
+        except Exception as exc:  # noqa: BLE001
+            info["warnings"].append(f"{key}: {exc}")
+            df = empty_frame(["team"])
+
+        if key in {"expected", "kagi"}:
+            path = RAW_DATA_DIR / "football_lab" / f"{key}_{profile.key}.csv"
+        else:
+            path = RAW_DATA_DIR / "football_lab" / key / f"{key}_{profile.key}_asof_{today}.csv"
+        if not df.empty:
+            safe_write_csv(df, path)
+        elif path.exists() and path.stat().st_size > 0:
+            df = pd.read_csv(path)
+            info["warnings"].append(f"{key}: 新規取得が空のため既存スナップショットを保持しました。")
+        frames[key] = df
+        info[f"{key}_path"] = str(path)
+        info[f"{key}_rows"] = int(len(df))
     return frames, info

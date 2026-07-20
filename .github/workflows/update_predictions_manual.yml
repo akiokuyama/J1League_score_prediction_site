@@ -6,6 +6,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: j1-2026-27-data-update
+  cancel-in-progress: false
+
 jobs:
   update-predictions:
     runs-on: ubuntu-latest
@@ -39,13 +43,15 @@ jobs:
         run: python -m pytest
 
       - name: Run next section prediction pipeline
-        run: python scripts/full_pipeline.py --season 2026_special --category 100yj1 --mode next_section --use-cache
-
-      - name: Update all unplayed predictions
-        run: python scripts/run_prediction.py --mode all_unplayed
+        run: |
+          python scripts/run_competition_pipeline.py \
+            --competition-key 2026_27_j1 \
+            --history Data/features/training_dataset_with_2026_special_point_in_time.csv \
+            --shadow-model-dir Models/reviewed_point_in_time_normal_v1 \
+            --use-cache
 
       - name: Build past prediction results
-        run: python scripts/build_past_prediction_results.py
+        run: python scripts/build_past_prediction_results.py --matches Data/processed/matches_2026_27_j1_clean.csv
 
       - name: Validate generated outputs
         run: |
@@ -67,6 +73,11 @@ jobs:
           for target in \
             Data/processed \
             Data/features \
+            Data/raw/market_values \
+            Data/raw/matches \
+            Data/raw/football_lab \
+            Data/raw/formations \
+            Data/raw/player_stats \
             outputs/latest_predictions.json \
             outputs/latest_predictions.csv \
             outputs/all_unplayed_predictions.json \
@@ -90,6 +101,11 @@ jobs:
           for target in \
             Data/processed \
             Data/features \
+            Data/raw/market_values \
+            Data/raw/matches \
+            Data/raw/football_lab \
+            Data/raw/formations \
+            Data/raw/player_stats \
             outputs/latest_predictions.json \
             outputs/latest_predictions.csv \
             outputs/all_unplayed_predictions.json \

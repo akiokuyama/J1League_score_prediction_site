@@ -1,13 +1,16 @@
-name: Update Predictions Scheduled
+name: Update 2026-27 J1 Predictions
 
 on:
   workflow_dispatch:
-  # Paused: season ended. Re-enable when next season starts.
-  # schedule:
-  #   - cron: "0 22 * * 2"  # Wed 07:00 JST
+  schedule:
+    - cron: "0 22 * * 2"  # Wed 07:00 JST
 
 permissions:
   contents: write
+
+concurrency:
+  group: j1-2026-27-data-update
+  cancel-in-progress: false
 
 jobs:
   update-predictions:
@@ -17,113 +20,78 @@ jobs:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configure Python import path
-        run: |
-          echo "PYTHONPATH=${GITHUB_WORKSPACE}" >> "$GITHUB_ENV"
-          python -c "import os; print('PYTHONPATH=' + os.environ.get('PYTHONPATH', ''))"
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-
-      - name: Install dependencies
+      - name: Install dependencies and verify code
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          python -m compileall app src scripts
+          python -m pytest
 
-      - name: Run syntax check
-        run: python -m compileall app src scripts
-
-      - name: Run tests
-        run: python -m pytest
-
-      - name: Run next section prediction pipeline
+      - name: Refresh official schedule, features, and predictions
         run: |
-          echo "::group::Run scheduled prediction pipeline"
-          echo "mode=scheduled-predictions"
-          echo "season=2026_special"
-          echo "category=100yj1"
-          python scripts/full_pipeline.py --season 2026_special --category 100yj1 --mode next_section
-          echo "::endgroup::"
-
-      - name: Update all unplayed predictions
-        run: |
-          echo "::group::Update all unplayed predictions"
-          python scripts/run_prediction.py --mode all_unplayed
-          echo "::endgroup::"
-
-      - name: Build past prediction results
-        run: |
-          echo "::group::Build past prediction results"
-          python scripts/build_past_prediction_results.py
-          echo "::endgroup::"
+          python scripts/run_competition_pipeline.py \
+            --competition-key 2026_27_j1 \
+            --history Data/features/training_dataset_with_2026_special_point_in_time.csv \
+            --shadow-model-dir Models/reviewed_point_in_time_normal_v1
+          python scripts/build_past_prediction_results.py \
+            --matches Data/processed/matches_2026_27_j1_clean.csv
 
       - name: Validate generated outputs
         run: |
-          echo "::group::Validate prediction outputs"
-          python scripts/validate_prediction_outputs.py
-          python scripts/validate_past_prediction_results.py
-          if [ -e outputs/local/model_metrics.json ]; then
-            echo "outputs/local/model_metrics.json must not be generated in Actions"
-            exit 1
+          if [ -s Data/features/upcoming_features_2026_27_j1.csv ] && [ "$(wc -l < Data/features/upcoming_features_2026_27_j1.csv)" -gt 1 ]; then
+            python scripts/validate_prediction_outputs.py
+          else
+            echo "No predictable fixtures; public prediction files were intentionally preserved."
           fi
-          echo "::endgroup::"
+          python scripts/validate_past_prediction_results.py
+          test ! -e outputs/local/model_metrics.json
 
-      - name: Commit scheduled prediction outputs
+      - name: Commit 2026-27 prediction outputs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           tmp_dir="$(mktemp -d)"
-          for target in \
-            Data/processed \
-            Data/features \
-            outputs/latest_predictions.json \
-            outputs/latest_predictions.csv \
-            outputs/all_unplayed_predictions.json \
-            outputs/all_unplayed_predictions.csv \
-            outputs/prediction_history \
-            outputs/past_prediction_results.json \
-            outputs/last_updated.txt
-          do
-            if [ -e "$target" ]; then
-              mkdir -p "$tmp_dir/$(dirname "$target")"
-              cp -a "$target" "$tmp_dir/$target"
-              echo "Preserved $target"
-            else
-              echo "Skipped missing $target"
-            fi
+          for target in Data/processed Data/features Data/raw/matches Data/raw/market_values Data/raw/football_lab Data/raw/formations Data/raw/player_stats outputs; do
+            [ -e "$target" ] && mkdir -p "$tmp_dir/$(dirname "$target")" && cp -a "$target" "$tmp_dir/$target"
           done
-
           git fetch origin main
           git reset --hard origin/main
           git clean -fd
           (cd "$tmp_dir" && tar -cf - .) | tar -xf -
-
+          git add \
+            Data/processed/matches_2026_27_j1_clean.csv \
+            Data/processed/update_2026_27_j1_report.json \
+            Data/processed/pipeline_2026_27_j1_report.json \
+            Data/processed/market_values_2026_27_j1_clean.csv \
+            Data/raw/matches/schedule_2026_27_j1_j1.csv \
+            Data/raw/market_values/market_values_2026_27_j1.csv \
+            Data/raw/market_values/market_values_2026_27_j1_asof_* \
+            Data/features/match_features_2026_27_j1.csv \
+            Data/features/match_features_2026_27_j1_sources.csv \
+            Data/features/upcoming_features_2026_27_j1.csv \
+            Data/features/upcoming_features_2026_27_j1_sources.csv \
+            Data/features/upcoming_features_2026_27_j1_source_report.csv \
+            Data/features/snapshots/upcoming_features_2026_27_j1_* \
+            outputs/latest_predictions.json outputs/latest_predictions.csv \
+            outputs/all_unplayed_predictions.json outputs/all_unplayed_predictions.csv \
+            outputs/shadow outputs/prediction_history outputs/past_prediction_results.json outputs/last_updated.txt
           for target in \
-            Data/processed \
-            Data/features \
-            outputs/latest_predictions.json \
-            outputs/latest_predictions.csv \
-            outputs/all_unplayed_predictions.json \
-            outputs/all_unplayed_predictions.csv \
-            outputs/prediction_history \
-            outputs/past_prediction_results.json \
-            outputs/last_updated.txt
+            Data/raw/football_lab/expected_2026_27_j1.csv \
+            Data/raw/football_lab/kagi_2026_27_j1.csv \
+            Data/raw/formations/formations_2026_27_j1.csv \
+            Data/processed/formations_2026_27_j1_clean.csv \
+            Data/raw/player_stats/player_stats_2026_27_j1.csv \
+            Data/processed/player_stats_2026_27_j1_clean.csv
           do
-            if [ -e "$target" ]; then
-              git add "$target"
-              echo "Added $target"
-            fi
+            [ -e "$target" ] && git add "$target"
           done
-
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Update scheduled prediction outputs"
+            git commit -m "Update 2026-27 J1 predictions"
             git push
           fi

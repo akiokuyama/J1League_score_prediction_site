@@ -8,7 +8,7 @@ from typing import Any
 
 import pandas as pd
 
-from src.config import PROCESSED_DATA_DIR, PROJECT_ROOT, RAW_DATA_DIR
+from src.config import PROCESSED_DATA_DIR, PROJECT_ROOT, RAW_DATA_DIR, get_competition
 from src.data.scraping import empty_frame, fetch_html, safe_write_csv
 
 
@@ -79,7 +79,7 @@ def _flatten_column_name(column: object) -> str:
     return str(column)
 
 
-def _normalize_market_values(table: pd.DataFrame) -> pd.DataFrame:
+def _normalize_market_values(table: pd.DataFrame, *, source_url: str | None = None) -> pd.DataFrame:
     df = table.copy()
     df.columns = [_flatten_column_name(col) for col in df.columns]
 
@@ -112,7 +112,7 @@ def _normalize_market_values(table: pd.DataFrame) -> pd.DataFrame:
     normalized["market_value"] = df[total_value_col].map(_parse_euro_value)
     normalized["currency"] = "EUR"
     normalized["source"] = "transfermarkt"
-    normalized["source_url"] = TRANSFERMARKT_URL
+    normalized["source_url"] = source_url or TRANSFERMARKT_URL
     normalized["as_of_date"] = pd.Timestamp.now(tz="Asia/Tokyo").date().isoformat()
     normalized = normalized.dropna(subset=["market_value"])
     normalized = normalized[normalized["market_value"] > 0]
@@ -122,11 +122,20 @@ def _normalize_market_values(table: pd.DataFrame) -> pd.DataFrame:
 
 
 TRANSFERMARKT_URL = "https://www.transfermarkt.com/j1-100-year-vision-league/startseite/wettbewerb/J1YV"
+TRANSFERMARKT_URLS = {
+    "2026_special": TRANSFERMARKT_URL,
+    "2026_27_j1": "https://www.transfermarkt.com/j1-league/startseite/wettbewerb/JAP1",
+}
 
 
-def scrape_market_values_2026_special(*, use_cache: bool = False) -> tuple[pd.DataFrame, dict[str, Any]]:
-    url = TRANSFERMARKT_URL
-    manual_path = PROJECT_ROOT / "Data" / "manual" / "market_values_2026_special.csv"
+def scrape_market_values(
+    competition_key: str = "2026_special", *, use_cache: bool = False
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    profile = get_competition(competition_key)
+    url = TRANSFERMARKT_URLS.get(profile.key)
+    if not url:
+        raise ValueError(f"市場価値取得URLが未設定です: {profile.key}")
+    manual_path = PROJECT_ROOT / "Data" / "manual" / f"market_values_{profile.key}.csv"
     info: dict[str, Any] = {"url": url, "manual_path": str(manual_path), "warnings": []}
     if manual_path.exists():
         df = pd.read_csv(manual_path)
@@ -143,18 +152,32 @@ def scrape_market_values_2026_special(*, use_cache: bool = False) -> tuple[pd.Da
                 df = empty_frame(["team", "market_value"])
                 info["source"] = "empty"
             else:
-                df = _normalize_market_values(selected)
+                df = _normalize_market_values(selected, source_url=url)
                 info["source"] = "transfermarkt"
         except Exception as exc:  # noqa: BLE001
             info["warnings"].append(str(exc))
             df = empty_frame(["team", "market_value"])
             info["source"] = "empty"
 
-    raw_path = RAW_DATA_DIR / "market_values" / "market_values_2026_special.csv"
-    processed_path = PROCESSED_DATA_DIR / "market_values_2026_special_clean.csv"
+    raw_path = RAW_DATA_DIR / "market_values" / f"market_values_{profile.key}.csv"
+    processed_path = PROCESSED_DATA_DIR / f"market_values_{profile.key}_clean.csv"
+    if df.empty and processed_path.exists() and processed_path.stat().st_size > 0:
+        info["warnings"].append("取得結果が空のため、直前の市場価値スナップショットを保持しました。")
+        df = pd.read_csv(processed_path)
+        info["used_existing"] = True
     safe_write_csv(df, raw_path)
     safe_write_csv(df, processed_path)
+    if not df.empty:
+        as_of = str(df.get("as_of_date", pd.Series([pd.Timestamp.now(tz="Asia/Tokyo").date().isoformat()])).iloc[0])
+        snapshot_path = RAW_DATA_DIR / "market_values" / f"market_values_{profile.key}_asof_{as_of.replace('-', '')}.csv"
+        safe_write_csv(df, snapshot_path)
+        info["snapshot_path"] = str(snapshot_path)
     info["rows"] = int(len(df))
     info["raw_path"] = str(raw_path)
     info["processed_path"] = str(processed_path)
     return df, info
+
+
+def scrape_market_values_2026_special(*, use_cache: bool = False) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Backward-compatible special-season entry point."""
+    return scrape_market_values("2026_special", use_cache=use_cache)

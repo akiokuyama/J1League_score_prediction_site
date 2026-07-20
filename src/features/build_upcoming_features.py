@@ -90,14 +90,20 @@ def _load_market_values(path: str | Path = "Data/processed/market_values_2026_sp
     return normalized
 
 
-def _load_football_lab_values() -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
+def _load_football_lab_values(
+    *,
+    kagi_path: str | Path = "Data/raw/football_lab/kagi_2026_special.csv",
+    expected_path: str | Path = "Data/raw/football_lab/expected_2026_special.csv",
+) -> tuple[dict[str, float], dict[str, float], dict[str, float]]:
     agi: dict[str, float] = {}
     kagi: dict[str, float] = {}
     expected: dict[str, float] = {}
 
-    kagi_path = PROJECT_ROOT / "Data" / "raw" / "football_lab" / "kagi_2026_special.csv"
-    if kagi_path.exists():
-        df = pd.read_csv(kagi_path)
+    kagi_file = Path(kagi_path)
+    if not kagi_file.is_absolute():
+        kagi_file = PROJECT_ROOT / kagi_file
+    if kagi_file.exists():
+        df = pd.read_csv(kagi_file)
         if "team" in df.columns:
             if "AGI" in df.columns:
                 for _, row in df.dropna(subset=["team", "AGI"]).iterrows():
@@ -106,9 +112,11 @@ def _load_football_lab_values() -> tuple[dict[str, float], dict[str, float], dic
                 for _, row in df.dropna(subset=["team", "KAGI"]).iterrows():
                     kagi[str(row["team"])] = float(row["KAGI"])
 
-    expected_path = PROJECT_ROOT / "Data" / "raw" / "football_lab" / "expected_2026_special.csv"
-    if expected_path.exists():
-        df = pd.read_csv(expected_path)
+    expected_file = Path(expected_path)
+    if not expected_file.is_absolute():
+        expected_file = PROJECT_ROOT / expected_file
+    if expected_file.exists():
+        df = pd.read_csv(expected_file)
         if "team" in df.columns and "期待値" in df.columns:
             attacking = df[df.get("table_index", 0) == 0] if "table_index" in df.columns else df
             for _, row in attacking.dropna(subset=["team", "期待値"]).iterrows():
@@ -132,7 +140,7 @@ def _load_formations(path: str | Path = "Data/processed/formations_2026_special_
     return {str(row["team"]): str(row["formation"]) for _, row in values.iterrows()}
 
 
-def _apply_current_2026_special_values(row: dict[str, Any], home: str, away: str, market_values: dict[str, float], agi: dict[str, float], kagi: dict[str, float], expected: dict[str, float]) -> None:
+def _apply_current_season_values(row: dict[str, Any], home: str, away: str, market_values: dict[str, float], agi: dict[str, float], kagi: dict[str, float], expected: dict[str, float]) -> None:
     if home in market_values and "Home_Market_Value" in row:
         row["Home_Market_Value"] = market_values[home]
     if away in market_values and "Away_Market_Value" in row:
@@ -175,6 +183,10 @@ def build_upcoming_features(
     model_features_path: str | Path = "Models/model_features.pkl",
     output_path: str | Path = FEATURE_DATA_DIR / "upcoming_features_2026_special.csv",
     sources_output_path: str | Path = FEATURE_DATA_DIR / "upcoming_features_2026_special_sources.csv",
+    market_values_path: str | Path = "Data/processed/market_values_2026_special_clean.csv",
+    kagi_path: str | Path = "Data/raw/football_lab/kagi_2026_special.csv",
+    expected_path: str | Path = "Data/raw/football_lab/expected_2026_special.csv",
+    formations_path: str | Path = "Data/processed/formations_2026_special_clean.csv",
     only_unplayed: bool = True,
 ) -> pd.DataFrame:
     matches_file = Path(matches_path)
@@ -202,9 +214,9 @@ def build_upcoming_features(
     history = pd.read_csv(history_file)
     model_features = joblib.load(model_features_path)
     base = _base_row(history)
-    market_values = _load_market_values()
-    agi, kagi, expected = _load_football_lab_values()
-    formations = _load_formations()
+    market_values = _load_market_values(market_values_path)
+    agi, kagi, expected = _load_football_lab_values(kagi_path=kagi_path, expected_path=expected_path)
+    formations = _load_formations(formations_path)
 
     rows: list[dict[str, Any]] = []
     source_rows: list[dict[str, Any]] = []
@@ -232,23 +244,21 @@ def build_upcoming_features(
             for col in history.columns:
                 if col.startswith("Away_"):
                     sources[col] = "fallback_team_median" if pd.api.types.is_numeric_dtype(history[col]) else "fallback_team_mode"
-        _apply_current_2026_special_values(row, home, away, market_values, agi, kagi, expected)
-        for col in [
-            "Home_Market_Value",
-            "Away_Market_Value",
-            "Home_AGI",
-            "Away_AGI",
-            "Home_KAGI",
-            "Away_KAGI",
-            "Home_Rolling_xG",
-            "Away_Rolling_xG",
-        ]:
-            if col in row:
-                sources[col] = "football_lab_latest_pre_match_snapshot"
+        _apply_current_season_values(row, home, away, market_values, agi, kagi, expected)
+        for side, team in [("Home", home), ("Away", away)]:
+            if team in market_values and f"{side}_Market_Value" in row:
+                sources[f"{side}_Market_Value"] = "actual_latest_pre_match_snapshot"
+            if team in agi and f"{side}_AGI" in row:
+                sources[f"{side}_AGI"] = "actual_latest_pre_match_snapshot"
+            if team in kagi and f"{side}_KAGI" in row:
+                sources[f"{side}_KAGI"] = "actual_latest_pre_match_snapshot"
+            if team in expected and f"{side}_Rolling_xG" in row:
+                sources[f"{side}_Rolling_xG"] = "actual_latest_pre_match_snapshot"
         _apply_current_formations(row, home, away, formations)
-        for col in ["Home_Formation", "Away_Formation"]:
-            if col in row:
-                sources[col] = "current_season_modal_formation_snapshot"
+        if home in formations and "Home_Formation" in row:
+            sources["Home_Formation"] = "actual_current_season_modal_formation"
+        if away in formations and "Away_Formation" in row:
+            sources["Away_Formation"] = "actual_current_season_modal_formation"
         row.update(
             {
                 "Season": str(match.get("season", "2026_special") or "2026_special"),
@@ -284,7 +294,11 @@ def build_upcoming_features(
         source_rows.append(sources)
 
     df = pd.DataFrame(rows)
-    df = df[[col for col in df.columns if col != "Weather" and not str(col).startswith("Weather_")]]
+    # Attendance and stadium fill rate are post-match facts.  Do not retain
+    # even zero-filled placeholders in inference files, so they cannot be
+    # accidentally reintroduced into a future model or UI data flow.
+    excluded = {"Attendance", "Stadium_Fill_Rate", "Weather"}
+    df = df[[col for col in df.columns if col not in excluded and not str(col).startswith("Weather_")]]
     sources_df = pd.DataFrame(source_rows)
     sources_df = sources_df.reindex(columns=df.columns, fill_value="not_tracked")
     safe_write_csv(df, output_path)

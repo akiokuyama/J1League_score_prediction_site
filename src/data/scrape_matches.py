@@ -9,7 +9,7 @@ from typing import Any
 
 import pandas as pd
 
-from src.config import CATEGORY, COMPETITION, LEAGUE, PROCESSED_DATA_DIR, RAW_DATA_DIR, SEASON
+from src.config import CompetitionProfile, PROCESSED_DATA_DIR, RAW_DATA_DIR, get_competition
 from src.data.scraping import empty_frame, fetch_html, safe_write_csv, soup_from_html
 from src.data.team_master import to_dataset_code
 
@@ -37,6 +37,16 @@ MATCH_COLUMNS = [
 
 DATA_SITE_URL = "https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35&tv_relay_station_name="
 MATCH_SEARCH_URL = "https://www.jleague.jp/match/search/?category%5B%5D=100yj1&year=2026&section="
+REGULAR_J1_MATCH_SEARCH_URL = "https://www.jleague.jp/match/search/j1/all/"
+
+
+def _profile_values(profile: CompetitionProfile) -> dict[str, str]:
+    return {
+        "season": profile.season,
+        "league": profile.league,
+        "competition": profile.competition,
+        "category": profile.category,
+    }
 
 
 def _text(value: Any) -> str:
@@ -94,7 +104,8 @@ def _status_from_scores(home_score: Any, away_score: Any, text: str) -> str:
     return "unplayed"
 
 
-def _parse_tables(html: str, url: str) -> pd.DataFrame:
+def _parse_tables(html: str, url: str, profile: CompetitionProfile | None = None) -> pd.DataFrame:
+    profile = profile or get_competition("2026_special")
     try:
         tables = pd.read_html(StringIO(html))
     except ValueError:
@@ -122,10 +133,7 @@ def _parse_tables(html: str, url: str) -> pd.DataFrame:
             section_match = re.search(r"第?(\d+)節", text)
             rows.append(
                 {
-                    "season": SEASON,
-                    "league": LEAGUE,
-                    "competition": COMPETITION,
-                    "category": CATEGORY,
+                    **_profile_values(profile),
                     "section": int(section_match.group(1)) if section_match else None,
                     "match_date": date_match.group(1).replace("/", "-") if date_match else None,
                     "kickoff_time": kickoff_match.group(1) if kickoff_match else None,
@@ -142,7 +150,8 @@ def _parse_tables(html: str, url: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def _parse_match_links(html: str, url: str) -> pd.DataFrame:
+def _parse_match_links(html: str, url: str, profile: CompetitionProfile | None = None) -> pd.DataFrame:
+    profile = profile or get_competition("2026_special")
     soup = soup_from_html(html)
     rows: list[dict[str, Any]] = []
     for node in soup.select("a[href*='/match/']"):
@@ -159,10 +168,7 @@ def _parse_match_links(html: str, url: str) -> pd.DataFrame:
         match_url = href if href.startswith("http") else f"https://www.jleague.jp{href}"
         rows.append(
             {
-                "season": SEASON,
-                "league": LEAGUE,
-                "competition": COMPETITION,
-                "category": CATEGORY,
+                **_profile_values(profile),
                 "section": None,
                 "match_date": None,
                 "kickoff_time": None,
@@ -179,7 +185,8 @@ def _parse_match_links(html: str, url: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def _parse_data_site_tables(html: str, url: str) -> pd.DataFrame:
+def _parse_data_site_tables(html: str, url: str, profile: CompetitionProfile | None = None) -> pd.DataFrame:
+    profile = profile or get_competition("2026_special")
     try:
         tables = pd.read_html(StringIO(html))
     except ValueError:
@@ -199,10 +206,8 @@ def _parse_data_site_tables(html: str, url: str) -> pd.DataFrame:
             row_text = " ".join(_text(value) for value in raw.to_list())
             rows.append(
                 {
-                    "season": SEASON,
-                    "league": LEAGUE,
-                    "competition": _text(raw.get("大会")) or COMPETITION,
-                    "category": CATEGORY,
+                    **_profile_values(profile),
+                    "competition": _text(raw.get("大会")) or profile.competition,
                     "section": _section_from_label(section_label),
                     "section_label": section_label,
                     "match_date": _parse_data_site_date(raw.get("試合日")),
@@ -220,7 +225,8 @@ def _parse_data_site_tables(html: str, url: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def _parse_matchlist_sections(html: str) -> pd.DataFrame:
+def _parse_matchlist_sections(html: str, profile: CompetitionProfile | None = None) -> pd.DataFrame:
+    profile = profile or get_competition("2026_special")
     soup = soup_from_html(html)
     rows: list[dict[str, Any]] = []
     for section_node in soup.select("section.matchlistWrap"):
@@ -232,6 +238,7 @@ def _parse_matchlist_sections(html: str) -> pd.DataFrame:
                 date_value = f"{int(match.group(1)):04d}-{int(match.group(2)):02d}-{int(match.group(3)):02d}"
 
         section_text = section_node.select_one(".leagAccTit h5")
+        competition_label = section_text.get_text(" ", strip=True) if section_text else profile.competition
         section_value = None
         if section_text:
             match = re.search(r"第(\d+)節", section_text.get_text(" ", strip=True))
@@ -266,10 +273,8 @@ def _parse_matchlist_sections(html: str) -> pd.DataFrame:
             stadium = re.sub(r"\d{1,2}:\d{2}", "", stadium_text).strip() or None
             rows.append(
                 {
-                    "season": SEASON,
-                    "league": LEAGUE,
-                    "competition": COMPETITION,
-                    "category": CATEGORY,
+                    **_profile_values(profile),
+                    "competition": competition_label,
                     "section": section_value,
                     "section_label": f"第{section_value}節" if section_value else None,
                     "match_date": date_value,
@@ -287,23 +292,129 @@ def _parse_matchlist_sections(html: str) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def scrape_matches_2026_special(*, use_cache: bool = False) -> tuple[pd.DataFrame, dict[str, Any]]:
-    info: dict[str, Any] = {"url": DATA_SITE_URL, "fallback_url": MATCH_SEARCH_URL, "warnings": []}
+def _parse_next_schedule(html: str, profile: CompetitionProfile | None = None) -> pd.DataFrame:
+    """Parse the React/Next.js schedule cards used by the current J.League site."""
+    profile = profile or get_competition("2026_27_j1")
+    soup = soup_from_html(html)
+    rows: list[dict[str, Any]] = []
+    seen_urls: set[str] = set()
+    for link in soup.select("a.m-schedule__link[href*='/match/j1/']"):
+        href = str(link.get("href", ""))
+        if not href or href in seen_urls:
+            continue
+        seen_urls.add(href)
+        date_match = re.search(r"/match/j1/(\d{4})/(\d{2})(\d{2})\d{2}/", href)
+        teams = link.select(".m-schedule__team-name[data-media='pc']")
+        if not date_match or len(teams) < 2:
+            continue
+        time_node = link.select_one(".m-schedule__time-text")
+        time_text = time_node.get_text(" ", strip=True) if time_node else ""
+        score_pair = re.search(r"(\d+)\s*[-－]\s*(\d+)", time_text)
+        home_score = int(score_pair.group(1)) if score_pair else None
+        away_score = int(score_pair.group(2)) if score_pair else None
+        kickoff = None if score_pair else (re.search(r"\d{1,2}:\d{2}", time_text).group(0) if re.search(r"\d{1,2}:\d{2}", time_text) else None)
+        stadium_node = link.select_one(".m-schedule__info-stadium[data-media='pc']") or link.select_one(
+            ".m-schedule__info-stadium"
+        )
+        group = link.find_parent(class_="p-game-schedule__group")
+        group_text = group.get_text(" ", strip=True) if group else ""
+        section_match = re.search(r"第(\d+)節", group_text)
+        section = int(section_match.group(1)) if section_match else None
+        match_url = href if href.startswith("http") else f"https://www.jleague.jp{href}"
+        rows.append(
+            {
+                **_profile_values(profile),
+                "section": section,
+                "section_label": f"第{section}節" if section else None,
+                "match_date": f"{date_match.group(1)}-{date_match.group(2)}-{date_match.group(3)}",
+                "kickoff_time": kickoff,
+                "home_team": to_dataset_code(teams[0].get_text(" ", strip=True)),
+                "away_team": to_dataset_code(teams[1].get_text(" ", strip=True)),
+                "home_score": home_score,
+                "away_score": away_score,
+                "stadium": stadium_node.get_text(" ", strip=True) if stadium_node else None,
+                "attendance": None,
+                "status": _status_from_scores(home_score, away_score, link.get_text(" ", strip=True)),
+                "match_url": match_url,
+            }
+        )
+    return pd.DataFrame(rows)
+
+
+def _merge_with_existing(fresh: pd.DataFrame, existing: pd.DataFrame) -> pd.DataFrame:
+    if existing.empty:
+        return fresh
+    if fresh.empty:
+        return existing.copy()
+    keys = ["match_date", "home_team", "away_team"]
+    old = existing.copy()
+    for col in fresh.columns:
+        if col in old.columns and fresh[col].dtype == object and old[col].dtype != object:
+            old[col] = old[col].astype(object)
+    old = old.set_index(keys)
+    new = fresh.copy().set_index(keys)
+    for index, row in new.iterrows():
+        if index not in old.index:
+            old.loc[index, row.index] = row
+            continue
+        for col, value in row.items():
+            if pd.notna(value) and str(value) != "":
+                old.loc[index, col] = value
+    return old.reset_index()
+
+
+def _filter_profile_matches(df: pd.DataFrame, profile: CompetitionProfile) -> pd.DataFrame:
+    """Keep only rows belonging to the selected competition.
+
+    The official J1 schedule endpoint contains both the completed special
+    competition and the regular 2026-27 season.  The date/label guard keeps
+    the two datasets from being mixed when the page layout changes.
+    """
+    if df.empty:
+        return df
+    labels = df["competition"].fillna("").astype(str)
+    if profile.key == "2026_27_j1":
+        dates = pd.to_datetime(df["match_date"], errors="coerce")
+        mask = ~labels.str.contains("百年構想", na=False)
+        mask &= dates >= pd.Timestamp("2026-08-01")
+    else:
+        mask = labels.str.contains("百年構想", na=False)
+    filtered = df.loc[mask].copy()
+    for key, value in _profile_values(profile).items():
+        filtered[key] = value
+    return filtered
+
+
+def scrape_matches(
+    competition_key: str = "2026_special", *, use_cache: bool = False
+) -> tuple[pd.DataFrame, dict[str, Any]]:
+    profile = get_competition(competition_key)
+    raw_path = RAW_DATA_DIR / "matches" / f"schedule_{profile.key}_{profile.category}.csv"
+    processed_path = PROCESSED_DATA_DIR / f"matches_{profile.key}_clean.csv"
+    existing = pd.read_csv(processed_path) if processed_path.exists() and processed_path.stat().st_size > 0 else empty_frame(MATCH_COLUMNS)
+    use_data_site = profile.key == "2026_special"
+    schedule_url = MATCH_SEARCH_URL if use_data_site else REGULAR_J1_MATCH_SEARCH_URL
+    info: dict[str, Any] = {"url": schedule_url, "warnings": [], "competition_key": profile.key}
     try:
-        fetched = fetch_html(DATA_SITE_URL, use_cache=use_cache)
-        info["cache_path"] = str(fetched.cache_path)
-        info["from_cache"] = fetched.from_cache
-        df = _parse_data_site_tables(fetched.html, DATA_SITE_URL)
+        if use_data_site:
+            fetched = fetch_html(DATA_SITE_URL, use_cache=use_cache)
+            info["cache_path"] = str(fetched.cache_path)
+            info["from_cache"] = fetched.from_cache
+            df = _parse_data_site_tables(fetched.html, DATA_SITE_URL, profile)
+        else:
+            df = empty_frame(MATCH_COLUMNS)
         if df.empty:
             info["warnings"].append("J.League Data Siteから試合行を抽出できませんでした。jleague.jp側にフォールバックします。")
-            fetched = fetch_html(MATCH_SEARCH_URL, use_cache=use_cache)
+            fetched = fetch_html(schedule_url, use_cache=use_cache)
             info["fallback_cache_path"] = str(fetched.cache_path)
             info["fallback_from_cache"] = fetched.from_cache
-            df = _parse_matchlist_sections(fetched.html)
+            df = _parse_matchlist_sections(fetched.html, profile)
         if df.empty:
-            df = _parse_tables(fetched.html, MATCH_SEARCH_URL)
+            df = _parse_tables(fetched.html, schedule_url, profile)
         if df.empty:
-            df = _parse_match_links(fetched.html, MATCH_SEARCH_URL)
+            df = _parse_match_links(fetched.html, schedule_url, profile)
+        if df.empty:
+            df = _parse_next_schedule(fetched.html, profile)
         if df.empty:
             info["warnings"].append("Jリーグ公式HTMLから試合行を抽出できませんでした。")
             df = empty_frame(MATCH_COLUMNS)
@@ -311,6 +422,12 @@ def scrape_matches_2026_special(*, use_cache: bool = False) -> tuple[pd.DataFram
         info["warnings"].append(str(exc))
         df = empty_frame(MATCH_COLUMNS)
 
+    if not df.empty:
+        df = _filter_profile_matches(df, profile)
+    if df.empty and not existing.empty:
+        info["warnings"].append("新規取得が空のため、直前の正常な日程データを保持しました。")
+        info["used_existing"] = True
+    df = _merge_with_existing(df, existing)
     if not df.empty:
         df = df.reindex(columns=[col for col in MATCH_COLUMNS if col != "match_id"])
         df["match_id"] = (
@@ -327,11 +444,14 @@ def scrape_matches_2026_special(*, use_cache: bool = False) -> tuple[pd.DataFram
     else:
         df = empty_frame(MATCH_COLUMNS)
 
-    raw_path = RAW_DATA_DIR / "matches" / "schedule_2026_special_100yj1.csv"
-    processed_path = PROCESSED_DATA_DIR / "matches_2026_special_clean.csv"
     safe_write_csv(df, raw_path)
     safe_write_csv(df, processed_path)
     info["rows"] = int(len(df))
     info["raw_path"] = str(raw_path)
     info["processed_path"] = str(processed_path)
     return df, info
+
+
+def scrape_matches_2026_special(*, use_cache: bool = False) -> tuple[pd.DataFrame, dict[str, Any]]:
+    """Backward-compatible entry point for the completed special season."""
+    return scrape_matches("2026_special", use_cache=use_cache)
