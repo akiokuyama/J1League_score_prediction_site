@@ -1,0 +1,16 @@
+{
+  "exclude_weather": true,
+  "categorical_columns": [
+    "Backline_Matchup",
+    "Home_Formation",
+    "Away_Formation"
+  ],
+  "ignored_raw_columns": [
+    "Weather"
+  ],
+  "forbidden_feature_prefixes": [
+    "Weather_"
+  ],
+  "goal_pattern_policy": "use_previous_season_prev_features_only",
+  "team_style_policy": "use_previous_season_prev_features_only"
+}

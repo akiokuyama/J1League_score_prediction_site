@@ -1,0 +1,19 @@
+{
+  "season": "2026_special",
+  "season_key": "2026_special",
+  "season_label": "2026_special",
+  "season_name": "2026_special",
+  "strategy": "legacy_aggregate",
+  "aggregate_normalization_divisor": 38.0,
+  "finished_matches": 200,
+  "training_rows": 200,
+  "snapshot_rows": 0,
+  "reconstructed_rows": 200,
+  "fallback_rows": 0,
+  "skipped_rows": 0,
+  "skipped_match_ids": [],
+  "reference_columns": 155,
+  "snapshot_files": 0,
+  "combined_rows": 1952,
+  "combined_output": "Data/features/training_dataset_with_2026_special_legacy_aggregate.csv"
+}

@@ -1,0 +1,27 @@
+{
+  "model_version": "weather_removed_v1",
+  "trained_at": "2026-05-09T17:33:00+09:00",
+  "dataset_path": "Data/ML_dataset.csv",
+  "feature_count": 158,
+  "exclude_weather": true,
+  "training_split": {
+    "train": "Season < 2025",
+    "test": "Season == 2025"
+  },
+  "evaluation": {
+    "train_rows": 1372,
+    "test_rows": 380,
+    "metrics": {
+      "home_mae": 0.8992386919974984,
+      "away_mae": 0.8037698401231901,
+      "avg_goals_mae": 0.8515042660603442,
+      "result_accuracy": 0.5078947368421053,
+      "result_log_loss": 1.0589086088359463,
+      "goal_diff_mae": 1.0892872200854713,
+      "final_score_emr": 0.1736842105263158,
+      "final_home_mae": 0.9131578947368421,
+      "final_away_mae": 0.8447368421052631,
+      "final_result_accuracy": 0.49736842105263157
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "model_version": "point_in_time_2026_special_v1",
+  "trained_at": "2026-07-19T15:03:48+09:00",
+  "dataset_path": "Data/features/training_dataset_with_2026_special_point_in_time.csv",
+  "feature_count": 158,
+  "exclude_weather": true,
+  "training_split": {
+    "train": "year(Season) < 2026 or (Season == 2026_special and Date < 2026-05-01)",
+    "test": "Season == 2026_special and Date >= 2026-05-01"
+  },
+  "evaluation": {
+    "train_rows": 1881,
+    "test_rows": 71,
+    "metrics": {
+      "home_mae": 0.946390918618841,
+      "away_mae": 0.9609557453760106,
+      "avg_goals_mae": 0.9536733319974258,
+      "result_accuracy": 0.352112676056338,
+      "result_log_loss": 1.3289320524827333,
+      "goal_diff_mae": 1.408299389813676,
+      "final_score_emr": 0.1267605633802817,
+      "final_home_mae": 0.9295774647887324,
+      "final_away_mae": 1.0985915492957747,
+      "final_result_accuracy": 0.3380281690140845
+    }
+  },
+  "feature_lineage": {
+    "policy": "point_in_time_or_reconstructed_pre_match",
+    "season_end_fallback": "excluded"
+  }
+}

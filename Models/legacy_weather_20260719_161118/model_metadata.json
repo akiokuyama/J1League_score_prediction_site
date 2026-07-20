@@ -1,0 +1,33 @@
+{
+  "model_version": "reviewed_2026_special_v1",
+  "trained_at": "2026-07-19T15:51:51+09:00",
+  "dataset_path": "Data/features/training_dataset_reviewed_with_2026_special.csv",
+  "feature_count": 156,
+  "exclude_weather": true,
+  "training_split": {
+    "train": "year(Season) < 2026 or (Season == 2026_special and Date < 2026-05-01)",
+    "test": "Season == 2026_special and Date >= 2026-05-01"
+  },
+  "evaluation": {
+    "train_rows": 1881,
+    "test_rows": 71,
+    "metrics": {
+      "home_mae": 0.9388748896324072,
+      "away_mae": 0.9575406868209446,
+      "avg_goals_mae": 0.948207788226676,
+      "result_accuracy": 0.38028169014084506,
+      "result_log_loss": 1.1996888954978089,
+      "goal_diff_mae": 1.4074971789618265,
+      "final_score_emr": 0.18309859154929578,
+      "final_home_mae": 0.9436619718309859,
+      "final_away_mae": 0.9859154929577465,
+      "final_result_accuracy": 0.43661971830985913
+    }
+  },
+  "feature_lineage": {
+    "policy": "point_in_time_or_reconstructed_pre_match",
+    "historical_football_lab_without_snapshot": "final_snapshot_estimate_restored_unit",
+    "realised_attendance": "excluded",
+    "test_season_history_included": true
+  }
+}
