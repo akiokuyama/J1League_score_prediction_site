@@ -1,0 +1,47 @@
+name: Keep Streamlit App Awake
+
+on:
+  workflow_dispatch:
+  schedule:
+    # Community Cloud sleeps after 12 hours without traffic. Run with ample margin.
+    - cron: "23 */6 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: keep-streamlit-app-awake
+  cancel-in-progress: true
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      STREAMLIT_APP_URL: https://j1league-score-prediction.streamlit.app/
+      STREAMLIT_EXPECTED_TEXT: Jリーグ試合予想AI
+      STREAMLIT_STARTUP_TIMEOUT_MS: "180000"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Install browser monitor
+        run: |
+          npm install --no-save --package-lock=false playwright@1.61.1
+          npx playwright install --with-deps chromium
+
+      - name: Open, wake, and verify Streamlit app
+        run: node scripts/monitor_streamlit.mjs
+
+      - name: Upload failure screenshot
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: streamlit-monitor-failure
+          path: artifacts/streamlit-monitor-failure.png
+          if-no-files-found: ignore
+          retention-days: 7
