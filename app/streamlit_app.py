@@ -545,6 +545,92 @@ def inject_css() -> None:
         .standings-bottom3 { grid-column: 8; grid-row: 1; }
         .standings-change-up { color: #16a34a; }
         .standings-change-down { color: #dc2626; }
+        .standings-mobile { display: none; }
+        .standings-mobile-card {
+            border: 1px solid rgba(128, 128, 128, 0.25);
+            border-radius: 10px;
+            padding: 14px;
+            background: var(--secondary-background-color);
+            color: var(--text-color);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.09);
+        }
+        .standings-mobile-card--top3 {
+            border-color: color-mix(in srgb, #f59e0b 45%, rgba(128, 128, 128, 0.25));
+            background: color-mix(in srgb, #f59e0b 7%, var(--secondary-background-color));
+        }
+        .standings-mobile-card--my-team {
+            border: 2px solid var(--primary-color);
+            background: color-mix(in srgb, var(--primary-color) 12%, var(--secondary-background-color));
+        }
+        .standings-mobile-main {
+            display: grid;
+            grid-template-columns: 58px minmax(0, 1fr) auto;
+            align-items: center;
+            gap: 10px;
+        }
+        .standings-mobile-rank {
+            text-align: center;
+            font-size: 1.55rem;
+            font-weight: 900;
+            line-height: 1;
+        }
+        .standings-mobile-rank-label,
+        .standings-mobile-points-label,
+        .standings-mobile-prob-label {
+            display: block;
+            margin-bottom: 4px;
+            color: color-mix(in srgb, var(--text-color) 58%, transparent);
+            font-size: .62rem;
+            font-weight: 750;
+        }
+        .standings-mobile-team {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            min-width: 0;
+        }
+        .standings-mobile-team-name {
+            font-size: .9rem;
+            font-weight: 850;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+        .standings-mobile-points {
+            min-width: 58px;
+            text-align: right;
+            font-size: 1.05rem;
+            font-weight: 900;
+        }
+        .standings-mobile-context {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(128, 128, 128, 0.2);
+        }
+        .standings-mobile-chip {
+            border-radius: 999px;
+            padding: 4px 8px;
+            background: var(--background-color);
+            color: color-mix(in srgb, var(--text-color) 78%, transparent);
+            font-size: .68rem;
+            font-weight: 750;
+        }
+        .standings-mobile-probs {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 7px;
+            margin-top: 9px;
+        }
+        .standings-mobile-prob {
+            border-radius: 8px;
+            padding: 8px 5px;
+            background: var(--background-color);
+            text-align: center;
+            font-size: .8rem;
+            font-weight: 850;
+        }
         @media (max-width: 640px) {
             .block-container { padding-left: 1rem; padding-right: 1rem; }
             .score { font-size: 1.45rem; }
@@ -554,38 +640,8 @@ def inject_css() -> None:
             .header-meta, .summary-grid { grid-template-columns: 1fr; }
             .score-row { align-items: flex-start; flex-direction: column; }
             .prob-line { text-align: left; }
-            .standings-header { display: none; }
-            .standings-row {
-                grid-template-columns: 34px repeat(5, minmax(0, 1fr)) 64px;
-                gap: 7px;
-                padding: 12px 10px;
-            }
-            .standings-rank { grid-column: 1; grid-row: 1 / span 2; }
-            .standings-team { grid-column: 2 / 7; grid-row: 1; }
-            .standings-points { grid-column: 7; grid-row: 1; }
-            .standings-points::before {
-                content: "期待勝点";
-                display: block;
-                margin-bottom: 2px;
-                color: color-mix(in srgb, var(--text-color) 58%, transparent);
-                font-size: .58rem;
-                font-weight: 700;
-            }
-            .standings-row .standings-metric {
-                color: color-mix(in srgb, var(--text-color) 75%, transparent);
-                font-size: .68rem;
-                font-weight: 750;
-            }
-            .standings-current { grid-column: 2; grid-row: 2; }
-            .standings-change { grid-column: 3; grid-row: 2; }
-            .standings-champion { grid-column: 4; grid-row: 2; }
-            .standings-top3 { grid-column: 5; grid-row: 2; }
-            .standings-bottom3 { grid-column: 6 / 8; grid-row: 2; }
-            .standings-current::before { content: "現在 "; }
-            .standings-change::before { content: "変動 "; }
-            .standings-champion::before { content: "優勝 "; }
-            .standings-top3::before { content: "Top3 "; }
-            .standings-bottom3::before { content: "下位3 "; }
+            .standings-table--desktop { display: none; }
+            .standings-mobile { display: grid; gap: 10px; }
         }
         </style>
         """,
@@ -1127,21 +1183,25 @@ def render_standings_forecast(forecasts: list[dict[str, Any]]) -> None:
         )
 
     rows = []
+    mobile_rows = []
     for team in teams:
         name = str(team.get("team_name") or display_team(team.get("team")))
         logo = team_logo_html(team.get("team"), name)
+        predicted_rank = safe_int(team.get("predicted_rank")) or 0
         current_rank = safe_int(team.get("current_rank"))
         current_text = str(current_rank) if current_rank is not None else "-"
+        current_label = f"現在 {current_rank}位" if current_rank is not None else "現在 -"
         change_text, change_class = _format_rank_change(team.get("rank_change"))
         points = safe_float(team.get("expected_points"))
         points_text = f"{points:.1f}" if points is not None else "-"
         low = safe_int(team.get("likely_rank_low"))
         high = safe_int(team.get("likely_rank_high"))
         range_text = f"想定 {low}〜{high}位" if low is not None and high is not None else ""
-        row_class = "standings-row standings-row--my-team" if is_my_team(team.get("team") or name) else "standings-row"
+        team_is_my_team = is_my_team(team.get("team") or name)
+        row_class = "standings-row standings-row--my-team" if team_is_my_team else "standings-row"
         rows.append(
             f'<div class="{row_class}">'
-            f'<div class="standings-rank">{int(team.get("predicted_rank") or 0)}</div>'
+            f'<div class="standings-rank">{predicted_rank}</div>'
             f'<div class="standings-team">{logo}'
             f'<span class="standings-team-copy"><span class="standings-team-name">{escape(name)}</span>'
             f'<span class="standings-range">{escape(range_text)}</span></span></div>'
@@ -1152,15 +1212,42 @@ def render_standings_forecast(forecasts: list[dict[str, Any]]) -> None:
             f'<div class="standings-metric standings-bottom3">{escape(format_percent(team.get("bottom3_probability")))}</div>'
             f'<div class="standings-points">{escape(points_text)}</div></div>'
         )
+        mobile_classes = ["standings-mobile-card"]
+        if predicted_rank <= 3:
+            mobile_classes.append("standings-mobile-card--top3")
+        if team_is_my_team:
+            mobile_classes.append("standings-mobile-card--my-team")
+        mobile_rows.append(
+            f'<div class="{" ".join(mobile_classes)}">'
+            f'<div class="standings-mobile-main">'
+            f'<div class="standings-mobile-rank"><span class="standings-mobile-rank-label">予測順位</span>{predicted_rank}</div>'
+            f'<div class="standings-mobile-team">{logo}'
+            f'<span class="standings-mobile-team-name">{escape(name)}</span></div>'
+            f'<div class="standings-mobile-points"><span class="standings-mobile-points-label">期待勝点</span>{escape(points_text)}</div>'
+            f'</div>'
+            f'<div class="standings-mobile-context">'
+            f'<span class="standings-mobile-chip">{escape(current_label)}</span>'
+            f'<span class="standings-mobile-chip {change_class}">変動 {escape(change_text)}</span>'
+            f'<span class="standings-mobile-chip">{escape(range_text or "想定 -")}</span>'
+            f'</div>'
+            f'<div class="standings-mobile-probs">'
+            f'<div class="standings-mobile-prob"><span class="standings-mobile-prob-label">優勝</span>{escape(format_percent(team.get("champion_probability")))}</div>'
+            f'<div class="standings-mobile-prob"><span class="standings-mobile-prob-label">Top 3</span>{escape(format_percent(team.get("top3_probability")))}</div>'
+            f'<div class="standings-mobile-prob"><span class="standings-mobile-prob-label">下位3</span>{escape(format_percent(team.get("bottom3_probability")))}</div>'
+            f'</div></div>'
+        )
 
     st.markdown(
-        '<div class="standings-table"><div class="standings-header">'
+        '<div class="standings-table standings-table--desktop"><div class="standings-header">'
         '<div>予測</div><div>クラブ</div><div>現在</div><div>変動</div>'
         '<div>期待勝点</div><div>優勝</div><div>Top 3</div><div>下位3</div></div>'
         + "".join(rows)
+        + '</div><div class="standings-mobile">'
+        + "".join(mobile_rows)
         + "</div>",
         unsafe_allow_html=True,
     )
+
 
 def _standings_snapshot_label(forecast: dict[str, Any]) -> str:
     generated = format_datetime_jp(forecast.get("generated_at"))
