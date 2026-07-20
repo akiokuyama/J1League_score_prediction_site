@@ -1,3 +1,4 @@
+from app.utils.display_labels import get_display_confidence_label, get_display_insight_label
 from app.utils.evaluation import build_score_probability_explanation, get_confidence_label, get_match_insight_label
 
 
@@ -18,6 +19,16 @@ def test_confidence_label_thresholds() -> None:
     assert get_confidence_label(0.45)["label"] == "やや優勢"
     assert get_confidence_label(0.44)["label"] == "拮抗"
     assert get_confidence_label(0.46, {"home_win": 0.46, "draw": 0.41, "away_win": 0.13})["label"] == "拮抗"
+
+
+def test_display_labels_use_stable_confidence_api() -> None:
+    probabilities = {"home_win": 0.46, "draw": 0.41, "away_win": 0.13}
+    assert get_display_insight_label(probabilities) == "拮抗（ホーム寄り）"
+    assert get_display_confidence_label(0.46, probabilities)["label"] == "拮抗"
+    assert get_display_confidence_label(
+        0.61,
+        {"home_win": 0.61, "draw": 0.22, "away_win": 0.17},
+    )["label"] == "確度高め"
 
 
 def test_score_probability_explanation() -> None:

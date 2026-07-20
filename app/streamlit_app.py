@@ -19,11 +19,13 @@ if str(PROJECT_ROOT) not in sys.path:
 from app.utils.evaluation import (  # noqa: E402
     build_score_probability_explanation,
     evaluate_prediction,
-    get_confidence_label,
-    get_match_insight_label,
     get_score_outcome,
     get_strongest_outcome,
     outcome_label,
+)
+from app.utils.display_labels import (  # noqa: E402
+    get_display_confidence_label,
+    get_display_insight_label,
 )
 from app.utils.formatters import (  # noqa: E402
     format_accuracy,
@@ -542,8 +544,8 @@ def filter_future_matches(matches: list[dict[str, Any]]) -> list[dict[str, Any]]
 def render_match_card(match: dict[str, Any]) -> None:
     probabilities = match.get("result_probabilities")
     strongest = get_strongest_outcome(probabilities)
-    confidence = get_confidence_label(strongest.get("value"), probabilities)
-    insight = get_match_insight_label(probabilities)
+    confidence = get_display_confidence_label(strongest.get("value"), probabilities)
+    insight = get_display_insight_label(probabilities)
     match_id = str(match.get("match_id") or id(match))
     home = display_team(match.get("home_team"))
     away = display_team(match.get("away_team"))
@@ -603,7 +605,7 @@ def render_match_detail(match: dict[str, Any]) -> None:
     matchup = team_matchup_html(match.get("home_team"), match.get("away_team"), home, away)
     probabilities = match.get("result_probabilities")
     strongest = get_strongest_outcome(probabilities)
-    insight = get_match_insight_label(probabilities)
+    insight = get_display_insight_label(probabilities)
     predicted_score = match.get("predicted_score")
     score_text = format_score(predicted_score)
 
@@ -622,7 +624,10 @@ def render_match_detail(match: dict[str, Any]) -> None:
 
 def render_conclusion(match: dict[str, Any], strongest: dict[str, Any], insight: str | None) -> None:
     score_text = format_score(match.get("predicted_score"))
-    confidence = get_confidence_label(strongest.get("value"), match.get("result_probabilities"))
+    confidence = get_display_confidence_label(
+        strongest.get("value"),
+        match.get("result_probabilities"),
+    )
     trend = f'試合傾向は「{insight}」です。' if insight else ""
     explanation = build_score_probability_explanation(match.get("predicted_score"), match.get("result_probabilities"))
     message = (
