@@ -1,9 +1,9 @@
 {
-  "updated_at": "2026-07-20T12:55:20+09:00",
+  "updated_at": "2026-07-22T07:58:11+09:00",
   "competition_key": "2026_27_j1",
   "season": "2026_27",
   "category": "j1",
-  "use_cache": true,
+  "use_cache": false,
   "scope": "all",
   "matches": {
     "url": "https://www.jleague.jp/match/search/j1/all/",
@@ -11,23 +11,27 @@
       "J.League Data Siteから試合行を抽出できませんでした。jleague.jp側にフォールバックします。"
     ],
     "competition_key": "2026_27_j1",
-    "fallback_cache_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/html_cache/6fff6e076538d642cd5f.html",
-    "fallback_from_cache": true,
+    "fallback_cache_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/html_cache/6fff6e076538d642cd5f.html",
+    "fallback_from_cache": false,
     "rows": 379,
-    "raw_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/matches/schedule_2026_27_j1_j1.csv",
-    "processed_path": "/Users/akihirookuyama/Soccer_Score_App/Data/processed/matches_2026_27_j1_clean.csv"
+    "raw_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/matches/schedule_2026_27_j1_j1.csv",
+    "processed_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/processed/matches_2026_27_j1_clean.csv"
   },
   "market_values": {
     "url": "https://www.transfermarkt.com/j1-league/startseite/wettbewerb/JAP1",
-    "manual_path": "/Users/akihirookuyama/Soccer_Score_App/Data/manual/market_values_2026_27_j1.csv",
-    "warnings": [],
-    "cache_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/html_cache/8f00a990ab23036f133c.html",
-    "from_cache": true,
-    "source": "transfermarkt",
-    "snapshot_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/market_values/market_values_2026_27_j1_asof_20260720.csv",
+    "manual_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/manual/market_values_2026_27_j1.csv",
+    "warnings": [
+      "no text parsed from document (line 0)",
+      "取得結果が空のため、直前の市場価値スナップショットを保持しました。"
+    ],
+    "cache_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/html_cache/8f00a990ab23036f133c.html",
+    "from_cache": false,
+    "source": "empty",
+    "used_existing": true,
+    "snapshot_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/market_values/market_values_2026_27_j1_asof_20260720.csv",
     "rows": 20,
-    "raw_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/market_values/market_values_2026_27_j1.csv",
-    "processed_path": "/Users/akihirookuyama/Soccer_Score_App/Data/processed/market_values_2026_27_j1_clean.csv"
+    "raw_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/market_values/market_values_2026_27_j1.csv",
+    "processed_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/processed/market_values_2026_27_j1_clean.csv"
   },
   "football_lab": {
     "urls": {
