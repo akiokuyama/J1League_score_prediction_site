@@ -41,3 +41,30 @@ def load_all_unplayed_predictions(path: str | Path = "outputs/all_unplayed_predi
 def load_past_prediction_results(path: str | Path = "outputs/past_prediction_results.json") -> dict[str, Any]:
     """過去予測結果を読み込む。存在しなければ空のmatchesを返す。"""
     return _with_matches(load_json_file(path))
+
+
+def load_past_prediction_seasons(
+    index_path: str | Path = "outputs/past_prediction_results/index.json",
+) -> dict[str, Any]:
+    """シーズン一覧と各シーズンの過去予測結果を読み込む。"""
+    target = Path(index_path)
+    if not target.is_absolute():
+        target = PROJECT_ROOT / target
+    index = load_json_file(target)
+    metadata = [
+        season
+        for season in index.get("seasons", [])
+        if isinstance(season, dict) and season.get("key") and season.get("data_file")
+    ]
+    results: dict[str, dict[str, Any]] = {}
+    for season in metadata:
+        results[str(season["key"])] = _with_matches(load_json_file(target.parent / str(season["data_file"])))
+
+    default_season = str(index.get("default_season") or "")
+    if default_season not in results and results:
+        default_season = next(iter(results))
+    return {
+        "default_season": default_season,
+        "metadata": metadata,
+        "results": results,
+    }

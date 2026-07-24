@@ -25,7 +25,9 @@ Streamlitアプリは主に以下の出力ファイルを読み込みます。
 ```text
 outputs/all_unplayed_predictions.json   # 今後行われる未消化試合すべての予測
 outputs/latest_predictions.json         # 次節予測
-outputs/past_prediction_results.json    # 過去予測と実際の結果の照合
+outputs/past_prediction_results.json    # 現行シーズンの過去予測（Streamlit互換）
+outputs/past_prediction_results/        # PWA向けのシーズン別過去予測とシーズン一覧
+docs/app/data/past_prediction_results/ # PWA公開用に同期したシーズン別過去予測
 outputs/standings_forecast/latest.json  # 最新の最終順位予測
 outputs/standings_forecast/history/     # 予測日時ごとの順位予測履歴
 outputs/last_updated.txt                # 更新時刻
@@ -64,6 +66,33 @@ http://localhost:8501
 
 スマートフォンで確認する場合は、PCとスマートフォンを同じWi-Fiに接続し、Streamlit起動時に表示される `Network URL` をスマートフォンのブラウザで開きます。
 
+## スマートフォン向けPWA
+
+`docs/app/` には、既存の予測JSONを読み込むインストール可能なスマートフォン向けPWAがあります。
+
+主な機能:
+
+- マイチームの端末内保存
+- 今後の試合と過去結果のマイチーム絞り込み
+- スマートフォン向け最終順位予測カード
+- 試合詳細、勝敗確率、スコア候補、得点者候補
+- ホーム画面への追加
+- 前回取得データのオフライン表示
+
+ローカル確認:
+
+```bash
+python -m http.server 4173 --directory docs
+```
+
+ブラウザで以下を開きます。
+
+```text
+http://localhost:4173/app/
+```
+
+PWAはGitHub上の最新の公開予測JSONを読み込みます。Service Workerとインストール動作は、`localhost`またはHTTPS環境で確認してください。
+
 ## 公開ページとSEO
 
 検索流入用の静的ページとして `docs/index.html` を用意しています。GitHub Pagesでは、リポジトリ設定から `docs/` ディレクトリを公開元にすると、以下のようなURLで公開できます。
@@ -76,6 +105,12 @@ https://akiokuyama.github.io/J1League_score_prediction_site/
 
 ```text
 https://j1league-score-prediction.streamlit.app/
+```
+
+スマートフォン向けPWAはGitHub Pages上の以下のパスで公開する構成です。
+
+```text
+https://akiokuyama.github.io/J1League_score_prediction_site/app/
 ```
 
 Streamlitアプリ側では、ブラウザタブ用の `page_title` と画面見出しに「J1試合予想」「Jリーグスコア予測」「勝敗予想」「得点者候補」を自然に含めています。
@@ -122,6 +157,7 @@ python scripts/validate_past_prediction_results.py
 Data/processed/matches_2026_27_j1_clean.csv
 Data/processed/update_2026_27_j1_report.json
 outputs/past_prediction_results.json
+outputs/past_prediction_results/2026_27_j1.json
 ```
 
 このワークフローでは、予測ファイル本体は更新しません。
@@ -156,6 +192,7 @@ outputs/all_unplayed_predictions.csv
 outputs/prediction_history/
 outputs/standings_forecast/
 outputs/past_prediction_results.json
+outputs/past_prediction_results/
 outputs/last_updated.txt
 ```
 

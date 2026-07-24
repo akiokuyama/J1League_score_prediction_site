@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-07-20T15:36:10+09:00",
+  "default_forecast": "2026-07-20T15:36:10+09:00",
+  "forecasts": [
+    {
+      "generated_at": "2026-07-20T15:36:10+09:00",
+      "data_file": "history/standings_forecast_20260720_153610.json",
+      "data_as_of": {
+        "label": "開幕前",
+        "completed_matches": 0
+      }
+    }
+  ]
+}

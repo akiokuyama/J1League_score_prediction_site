@@ -123,7 +123,46 @@ def test_write_validate_and_load_forecast_history(tmp_path: Path) -> None:
     )
 
     assert history is not None and history.exists()
+    index_path = latest.parent / "index.json"
+    index = json.loads(index_path.read_text(encoding="utf-8"))
+    assert index["default_forecast"] == "2026-07-20T10:00:00+09:00"
+    assert index["forecasts"] == [
+        {
+            "generated_at": "2026-07-20T10:00:00+09:00",
+            "data_file": "history/standings_forecast_20260720_100000.json",
+            "data_as_of": {"label": "開幕前", "completed_matches": 0},
+        }
+    ]
     assert validate_standings_forecast(latest)["simulation_count"] == 300
     loaded = load_standings_forecasts(latest, history.parent)
     assert len(loaded) == 1
     assert loaded[0]["generated_at"] == "2026-07-20T10:00:00+09:00"
+
+
+def test_standings_forecast_index_keeps_snapshots_newest_first(tmp_path: Path) -> None:
+    matches_path, predictions_path = _write_inputs(tmp_path)
+    forecast = build_standings_forecast(
+        matches_path,
+        predictions_path,
+        simulations=300,
+        seed=3,
+        generated_at=datetime(2026, 7, 20, 10, 0, tzinfo=ZoneInfo("Asia/Tokyo")),
+        expected_team_count=4,
+    )
+    latest_path = tmp_path / "standings" / "latest.json"
+    history_dir = tmp_path / "standings" / "history"
+    write_standings_forecast(forecast, latest_path, history_dir)
+
+    newer = {**forecast, "generated_at": "2026-07-27T10:00:00+09:00"}
+    write_standings_forecast(newer, latest_path, history_dir)
+
+    index = json.loads((latest_path.parent / "index.json").read_text(encoding="utf-8"))
+    assert index["default_forecast"] == "2026-07-27T10:00:00+09:00"
+    assert [item["generated_at"] for item in index["forecasts"]] == [
+        "2026-07-27T10:00:00+09:00",
+        "2026-07-20T10:00:00+09:00",
+    ]
+    assert [item["data_file"] for item in index["forecasts"]] == [
+        "history/standings_forecast_20260727_100000.json",
+        "history/standings_forecast_20260720_100000.json",
+    ]

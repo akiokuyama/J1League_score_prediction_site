@@ -183,7 +183,54 @@ def write_standings_forecast(
         timestamp = generated.astimezone(JST).strftime("%Y%m%d_%H%M%S")
         history_path = directory / f"standings_forecast_{timestamp}.json"
         history_path.write_text(serialized, encoding="utf-8")
+    _write_standings_forecast_index(latest, Path(history_dir) if history_dir is not None else None)
     return latest, history_path
+
+
+def _write_standings_forecast_index(latest: Path, history_dir: Path | None) -> Path:
+    """Write the snapshot manifest used by browser clients."""
+
+    candidates = sorted(history_dir.glob("standings_forecast_*.json"), reverse=True) if history_dir else []
+    if not candidates:
+        candidates = [latest]
+
+    entries: list[dict[str, Any]] = []
+    seen: set[str] = set()
+    for path in candidates:
+        try:
+            snapshot = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        generated_at = str(snapshot.get("generated_at") or "")
+        if not generated_at or generated_at in seen:
+            continue
+        seen.add(generated_at)
+        data_as_of = snapshot.get("data_as_of") if isinstance(snapshot.get("data_as_of"), dict) else {}
+        try:
+            data_file = path.relative_to(latest.parent).as_posix()
+        except ValueError:
+            data_file = path.as_posix()
+        entries.append(
+            {
+                "generated_at": generated_at,
+                "data_file": data_file,
+                "data_as_of": {
+                    "label": data_as_of.get("label"),
+                    "completed_matches": int(data_as_of.get("completed_matches") or 0),
+                },
+            }
+        )
+
+    entries.sort(key=lambda item: item["generated_at"], reverse=True)
+    index = {
+        "schema_version": 1,
+        "generated_at": entries[0]["generated_at"] if entries else None,
+        "default_forecast": entries[0]["generated_at"] if entries else None,
+        "forecasts": entries,
+    }
+    index_path = latest.parent / "index.json"
+    index_path.write_text(json.dumps(index, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    return index_path
 
 
 def _load_matches(path: Path) -> pd.DataFrame:

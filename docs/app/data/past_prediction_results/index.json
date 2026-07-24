@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "default_season": "2026_27_j1",
+  "seasons": [
+    {
+      "key": "2026_27_j1",
+      "label": "2026/27 明治安田J1リーグ",
+      "short_label": "2026/27 J1リーグ",
+      "data_file": "2026_27_j1.json",
+      "status": "active"
+    },
+    {
+      "key": "2026_special",
+      "label": "2026 J1百年構想リーグ（終盤の49試合）",
+      "short_label": "2026 百年構想リーグ（終盤49試合）",
+      "data_file": "2026_special.json",
+      "status": "partial_archive",
+      "coverage": {
+        "match_count": 49,
+        "start_date": "2026-05-10",
+        "end_date": "2026-06-06",
+        "primary_start_section": 16,
+        "note": "2026年5月10日（第16節）以降を中心に、延期された第12節の2試合とプレーオフを含む、6月6日までの予測照合可能な49試合のみを掲載しています。大会全体の結果ではありません。"
+      }
+    }
+  ]
+}

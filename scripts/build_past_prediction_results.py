@@ -22,6 +22,16 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--history-dir", default="outputs/prediction_history")
     parser.add_argument("--matches", default="Data/processed/matches_2026_special_clean.csv")
     parser.add_argument("--output", default="outputs/past_prediction_results.json")
+    parser.add_argument(
+        "--season-output-dir",
+        default="outputs/past_prediction_results",
+        help="シーズン別の過去予測結果JSONを保存するディレクトリ",
+    )
+    parser.add_argument(
+        "--pwa-season-output-dir",
+        default="docs/app/data/past_prediction_results",
+        help="PWAから配信するシーズン別の過去予測結果JSONを保存するディレクトリ",
+    )
     parser.add_argument("--allow-empty", action="store_true", help="生成件数が0件でも出力ファイルを上書きします")
     return parser.parse_args()
 
@@ -46,7 +56,30 @@ def main() -> int:
         )
         return 0
     output_path = write_past_prediction_results(data, args.output)
-    print(json.dumps({"output": str(output_path), "match_count": len(data.get("matches", [])), "diagnostics": diagnostics, "updated": True}, ensure_ascii=False, indent=2))
+    season = str(data.get("season") or "unknown")
+    season_key = "2026_27_j1" if season == "2026_27" else season
+    season_output_path = write_past_prediction_results(
+        data,
+        Path(args.season_output_dir) / f"{season_key}.json",
+    )
+    pwa_season_output_path = write_past_prediction_results(
+        data,
+        Path(args.pwa_season_output_dir) / f"{season_key}.json",
+    )
+    print(
+        json.dumps(
+            {
+                "output": str(output_path),
+                "season_output": str(season_output_path),
+                "pwa_season_output": str(pwa_season_output_path),
+                "match_count": len(data.get("matches", [])),
+                "diagnostics": diagnostics,
+                "updated": True,
+            },
+            ensure_ascii=False,
+            indent=2,
+        )
+    )
     return 0
 
 

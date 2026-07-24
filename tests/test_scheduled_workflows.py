@@ -22,6 +22,9 @@ def test_results_after_matches_workflow_is_results_only() -> None:
     assert "group: j1-2026-27-data-update" in text
     assert "python scripts/build_past_prediction_results.py" in text
     assert "python scripts/validate_past_prediction_results.py" in text
+    assert "outputs/past_prediction_results/2026_27_j1.json" in text
+    assert "outputs/past_prediction_results" in text
+    assert "docs/app/data/past_prediction_results" in text
     assert "run_competition_pipeline.py" not in text
     assert "run_prediction.py --mode all_unplayed" not in text
     assert "Data/features" not in text
@@ -49,6 +52,9 @@ def test_scheduled_prediction_workflow_updates_predictions() -> None:
     assert "python scripts/build_past_prediction_results.py" in text
     assert "python scripts/validate_prediction_outputs.py" in text
     assert "python scripts/validate_past_prediction_results.py" in text
+    assert "outputs/past_prediction_results/2026_27_j1.json" in text
+    assert "outputs/past_prediction_results" in text
+    assert "docs/app/data/past_prediction_results" in text
     assert "python scripts/build_standings_forecast.py" in text
     assert "python scripts/validate_standings_forecast.py" in text
     assert "outputs/standings_forecast" in text
@@ -72,6 +78,9 @@ def test_manual_workflow_remains_manual_only() -> None:
     assert "python scripts/build_model_metrics.py" not in text
     assert "python scripts/validate_prediction_outputs.py" in text
     assert "python scripts/validate_past_prediction_results.py" in text
+    assert "outputs/past_prediction_results/2026_27_j1.json" in text
+    assert "outputs/past_prediction_results" in text
+    assert "docs/app/data/past_prediction_results" in text
     assert "python scripts/build_standings_forecast.py" in text
     assert "python scripts/validate_standings_forecast.py" in text
     assert "outputs/standings_forecast" in text

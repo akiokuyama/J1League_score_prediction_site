@@ -64,6 +64,8 @@ jobs:
           echo "::group::Validate prediction outputs"
           python scripts/validate_prediction_outputs.py
           python scripts/validate_past_prediction_results.py
+          python scripts/validate_past_prediction_results.py --path outputs/past_prediction_results/2026_27_j1.json
+          python scripts/validate_past_prediction_results.py --path docs/app/data/past_prediction_results/2026_27_j1.json
           python scripts/validate_standings_forecast.py
           if [ -e outputs/local/model_metrics.json ]; then
             echo "outputs/local/model_metrics.json must not be generated in Actions"
@@ -92,6 +94,8 @@ jobs:
             outputs/prediction_history \
             outputs/standings_forecast \
             outputs/past_prediction_results.json \
+            outputs/past_prediction_results \
+            docs/app/data/past_prediction_results \
             outputs/last_updated.txt
           do
             if [ -e "$target" ]; then
@@ -121,6 +125,8 @@ jobs:
             outputs/prediction_history \
             outputs/standings_forecast \
             outputs/past_prediction_results.json \
+            outputs/past_prediction_results \
+            docs/app/data/past_prediction_results \
             outputs/last_updated.txt
           do
             if [ -e "$target" ]; then

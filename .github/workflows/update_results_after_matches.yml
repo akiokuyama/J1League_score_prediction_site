@@ -57,6 +57,8 @@ jobs:
           python scripts/build_past_prediction_results.py \
             --matches Data/processed/matches_2026_27_j1_clean.csv
           python scripts/validate_past_prediction_results.py
+          python scripts/validate_past_prediction_results.py --path outputs/past_prediction_results/2026_27_j1.json
+          python scripts/validate_past_prediction_results.py --path docs/app/data/past_prediction_results/2026_27_j1.json
           python - <<'PY'
           import hashlib
           import os
@@ -84,14 +86,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           tmp_dir="$(mktemp -d)"
-          for target in Data/processed/matches_2026_27_j1_clean.csv Data/processed/update_2026_27_j1_report.json outputs/past_prediction_results.json; do
+          for target in Data/processed/matches_2026_27_j1_clean.csv Data/processed/update_2026_27_j1_report.json outputs/past_prediction_results.json outputs/past_prediction_results docs/app/data/past_prediction_results; do
             [ -e "$target" ] && mkdir -p "$tmp_dir/$(dirname "$target")" && cp -a "$target" "$tmp_dir/$target"
           done
           git fetch origin main
           git reset --hard origin/main
           git clean -fd
           (cd "$tmp_dir" && tar -cf - .) | tar -xf -
-          git add Data/processed/matches_2026_27_j1_clean.csv Data/processed/update_2026_27_j1_report.json outputs/past_prediction_results.json
+          git add Data/processed/matches_2026_27_j1_clean.csv Data/processed/update_2026_27_j1_report.json outputs/past_prediction_results.json outputs/past_prediction_results docs/app/data/past_prediction_results
           if git diff --cached --quiet; then
             echo "No changes to commit"
           else

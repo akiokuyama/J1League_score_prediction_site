@@ -39,6 +39,7 @@ from app.utils.load_predictions import (  # noqa: E402
     load_all_unplayed_predictions,
     load_latest_predictions,
     load_past_prediction_results,
+    load_past_prediction_seasons,
 )
 from app.utils.standings_loader import load_standings_forecasts  # noqa: E402
 from app.utils.team_preferences import (  # noqa: E402
@@ -61,7 +62,9 @@ def main() -> None:
     inject_css()
     latest = load_latest_predictions()
     all_unplayed = load_all_unplayed_predictions()
-    past = load_past_prediction_results()
+    past_seasons = load_past_prediction_seasons()
+    default_past_season = past_seasons.get("default_season")
+    past = past_seasons.get("results", {}).get(default_past_season) or load_past_prediction_results()
     standings_forecasts = load_standings_forecasts()
 
     initialize_state()
@@ -86,7 +89,7 @@ def main() -> None:
             render_prediction_logic_summary(latest)
         render_future_matches(latest, all_unplayed)
     elif tab == "過去の予測結果":
-        render_past_predictions(past)
+        render_past_predictions(past_seasons)
     else:
         render_standings_forecast(standings_forecasts)
 
@@ -1112,11 +1115,42 @@ def render_team_scorers(team: str, scorers: Any, team_expected_goals: float | No
         st.write(f"{index}. " + " / ".join(parts))
 
 
-def render_past_predictions(data: dict[str, Any]) -> None:
+def render_past_predictions(archive: dict[str, Any]) -> None:
     st.markdown('<div class="section-title">過去の予測結果</div>', unsafe_allow_html=True)
+    metadata = [
+        season
+        for season in archive.get("metadata", [])
+        if isinstance(season, dict) and season.get("key")
+    ]
+    results = archive.get("results") if isinstance(archive.get("results"), dict) else {}
+    metadata_by_key = {str(season["key"]): season for season in metadata}
+    season_keys = [key for key in metadata_by_key if key in results]
+    if not season_keys:
+        st.info("表示できるシーズン別の過去予測結果がありません。")
+        return
+
+    default_season = str(archive.get("default_season") or season_keys[0])
+    if st.session_state.get("past_season_filter") not in season_keys:
+        st.session_state.past_season_filter = default_season if default_season in season_keys else season_keys[0]
+    selected_season = st.selectbox(
+        "シーズン",
+        season_keys,
+        format_func=lambda key: str(
+            metadata_by_key[key].get("short_label")
+            or metadata_by_key[key].get("label")
+            or key
+        ),
+        key="past_season_filter",
+    )
+    season_meta = metadata_by_key[selected_season]
+    data = results.get(selected_season) if isinstance(results.get(selected_season), dict) else {}
+    coverage = season_meta.get("coverage") if isinstance(season_meta.get("coverage"), dict) else {}
+    if coverage.get("note"):
+        st.warning(f"掲載範囲について：{coverage['note']}")
+
     matches = safe_matches(data)
     if not matches:
-        st.info("まだ評価対象の過去予測結果がありません。試合結果が反映されると、ここに的中率が表示されます。")
+        st.info("今シーズンの試合結果はまだありません。試合終了後に結果データが更新されると、予測との比較をここに表示します。")
         return
 
     st.caption("判定の見方：「勝敗」は勝ち・引き分け・負けの方向性で判定し、「スコア」は点数まで完全一致したかで判定します。")

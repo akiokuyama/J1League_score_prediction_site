@@ -33,3 +33,12 @@ def test_streamlit_uses_separate_mobile_standings_cards() -> None:
     assert "standings-mobile-card" in app_text
     assert "standings-mobile-card--my-team" in app_text
     assert "使用モデル：" not in app_text
+
+
+def test_streamlit_exposes_seasonal_past_results_with_coverage_note() -> None:
+    app_text = Path("app/streamlit_app.py").read_text(encoding="utf-8")
+
+    assert "load_past_prediction_seasons" in app_text
+    assert '"シーズン"' in app_text
+    assert "掲載範囲について" in app_text
+    assert "今シーズンの試合結果はまだありません" in app_text
