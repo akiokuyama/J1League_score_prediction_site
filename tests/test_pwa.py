@@ -43,6 +43,15 @@ def test_pwa_shell_registers_required_mobile_capabilities() -> None:
     assert "serviceWorker.register" in javascript
     assert "j1_prediction_my_team_v1" in javascript
     assert "j1_prediction_theme_v1" in javascript
+    assert 'id="install-dialog"' in html
+    assert 'id="install-dialog-action"' in html
+    assert "requestAppInstall" in javascript
+    assert "isInstalledApp" in javascript
+    assert 'get("install") === "1"' in javascript
+    assert "window.history.replaceState" in javascript
+    assert 'window.navigator.standalone === true' in javascript
+    assert "ホーム画面に追加済み" in javascript
+    assert "Safariでこのページを開く" in javascript
     assert 'input[name="theme"]' in javascript
     assert 'applyTheme(state.theme, { persist: false })' in javascript
     assert "document.documentElement.dataset.theme = theme" in html
@@ -59,11 +68,11 @@ def test_pwa_shell_registers_required_mobile_capabilities() -> None:
     assert "表示する順位予測の日時" in javascript
     assert "formatForecastDateTime" in javascript
     assert "./manifest.webmanifest" in service_worker
-    assert 'href="./styles.css?v=4"' in html
-    assert 'src="./app.js?v=6"' in html
-    assert 'APP_CACHE = "j1-prediction-app-v8"' in service_worker
-    assert '"./app.js?v=6"' in service_worker
-    assert '"./styles.css?v=4"' in service_worker
+    assert 'href="./styles.css?v=5"' in html
+    assert 'src="./app.js?v=8"' in html
+    assert 'APP_CACHE = "j1-prediction-app-v10"' in service_worker
+    assert '"./app.js?v=8"' in service_worker
+    assert '"./styles.css?v=5"' in service_worker
     assert "raw.githubusercontent.com" in service_worker
     assert "./data/past_prediction_results/index.json" in service_worker
     assert "./data/past_prediction_results/2026_27_j1.json" in service_worker
@@ -74,15 +83,21 @@ def test_pwa_shell_registers_required_mobile_capabilities() -> None:
     assert ':root[data-theme="dark"]' in stylesheet
     assert ':root[data-theme="light"]' in stylesheet
     assert ".theme-options" in stylesheet
+    assert ".install-steps" in stylesheet
     assert 'state.teamFilter === "all" || !state.myTeam' not in javascript
     assert 'teamFilter: initialMyTeam ? "my-team" : "all"' in javascript
 
 
 def test_landing_page_links_to_pwa() -> None:
     html = Path("docs/index.html").read_text(encoding="utf-8")
+    qr_svg = Path("docs/app-install-qr.svg").read_text(encoding="utf-8")
 
     assert 'href="./app/"' in html
+    assert 'href="./app/?install=1"' in html
+    assert 'src="./app-install-qr.svg"' in html
+    assert "ホーム画面に追加して、すぐ予測を見る" in html
     assert "2026/27 明治安田J1リーグ対応" in html
+    assert "https://akiokuyama.github.io/J1League_score_prediction_site/app/?install=1" in qr_svg
 
 
 def test_past_results_are_split_by_season_with_partial_archive_note() -> None:

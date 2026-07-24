@@ -117,10 +117,102 @@
         font-size: 0.95rem;
       }
 
+      .install-card {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 210px;
+        gap: 30px;
+        align-items: center;
+        border: 0;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #102c3a, #164b52);
+        color: #fff;
+        box-shadow: 0 16px 38px rgba(16, 44, 58, 0.18);
+      }
+
+      .install-kicker {
+        margin: 0 0 8px;
+        color: #68e0cf;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+      }
+
+      .install-copy p {
+        margin: 0 0 18px;
+        color: #d6e5eb;
+      }
+
+      .install-cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 48px;
+        padding: 0 20px;
+        border-radius: 10px;
+        background: #18a58f;
+        color: #fff;
+        font-weight: 800;
+        text-decoration: none;
+      }
+
+      .install-note {
+        display: block;
+        margin-top: 10px;
+        color: #abc2cc;
+        font-size: 0.82rem;
+      }
+
+      .qr-panel {
+        padding: 15px;
+        border-radius: 14px;
+        background: #fff;
+        color: var(--text);
+        text-align: center;
+      }
+
+      .qr-panel img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1;
+        margin-bottom: 8px;
+      }
+
+      .qr-panel strong,
+      .qr-panel span {
+        display: block;
+      }
+
+      .qr-panel span {
+        margin-top: 2px;
+        color: var(--muted);
+        font-size: 0.76rem;
+        line-height: 1.45;
+      }
+
       .app-url-placeholder {
         word-break: break-all;
         color: var(--muted);
         font-size: 0.9rem;
+      }
+
+      @media (max-width: 719px) {
+        .hero-inner {
+          padding: 46px 0 42px;
+        }
+
+        .install-card {
+          grid-template-columns: 1fr;
+          padding: 24px;
+        }
+
+        .install-cta {
+          width: 100%;
+          text-align: center;
+        }
+
+        .qr-panel {
+          display: none;
+        }
       }
     </style>
   </head>
@@ -139,6 +231,24 @@
     </header>
 
     <main>
+      <section class="install-card" aria-labelledby="install-heading">
+        <div class="install-copy">
+          <p class="install-kicker">スマートフォン向け</p>
+          <h2 id="install-heading">ホーム画面に追加して、すぐ予測を見る</h2>
+          <p>
+            アプリ版なら、マイチームの試合を最初に表示できます。ブラウザのままでも利用でき、
+            ホーム画面への追加方法はアプリ内でいつでも確認できます。
+          </p>
+          <a class="install-cta" href="./app/?install=1">アプリ版を開いてホーム画面に追加</a>
+          <span class="install-note">iPhone・Android対応 / App Storeへの移動は不要です</span>
+        </div>
+        <div class="qr-panel">
+          <img src="./app-install-qr.svg" alt="J1試合予想AIのアプリ版を開くQRコード" width="180" height="180">
+          <strong>スマホで読み取る</strong>
+          <span>アプリ版の追加案内を開きます</span>
+        </div>
+      </section>
+
       <section>
         <h2>このアプリで確認できること</h2>
         <ul>

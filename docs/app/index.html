@@ -25,7 +25,7 @@
         }
       })();
     </script>
-    <link rel="stylesheet" href="./styles.css?v=4">
+    <link rel="stylesheet" href="./styles.css?v=5">
   </head>
   <body>
     <div class="app-shell">
@@ -105,6 +105,23 @@
       </form>
     </dialog>
 
+    <dialog id="install-dialog" class="app-dialog install-dialog">
+      <form method="dialog">
+        <div class="dialog-heading">
+          <div>
+            <p class="eyebrow">アプリとして利用</p>
+            <h2>ホーム画面に追加</h2>
+          </div>
+          <button class="icon-button" type="submit" value="cancel" aria-label="閉じる">×</button>
+        </div>
+        <div id="install-instructions"></div>
+        <button id="install-dialog-action" class="primary-button full-width" type="button" hidden>
+          ホーム画面に追加
+        </button>
+        <button class="secondary-button full-width" type="submit">閉じる</button>
+      </form>
+    </dialog>
+
     <template id="empty-state-template">
       <section class="empty-state">
         <div class="empty-icon">⚽</div>
@@ -113,6 +130,6 @@
       </section>
     </template>
 
-    <script type="module" src="./app.js?v=6"></script>
+    <script type="module" src="./app.js?v=8"></script>
   </body>
 </html>

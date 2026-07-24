@@ -68,6 +68,7 @@ const TEAM_EMBLEM_CELLS = {
 
 const initialMyTeam = readStoredTeam();
 const initialTheme = readStoredTheme();
+const installIntent = new URLSearchParams(window.location.search).get("install") === "1";
 
 const state = {
   view: "upcoming",
@@ -86,6 +87,8 @@ const state = {
   standingsSnapshot: null,
   theme: initialTheme,
   installPrompt: null,
+  installCompleted: false,
+  installIntent,
 };
 
 const content = document.querySelector("#app-content");
@@ -99,6 +102,9 @@ const teamDialog = document.querySelector("#team-dialog");
 const teamOptions = document.querySelector("#team-options");
 const matchDialog = document.querySelector("#match-dialog");
 const matchDetail = document.querySelector("#match-detail");
+const installDialog = document.querySelector("#install-dialog");
+const installInstructions = document.querySelector("#install-instructions");
+const installDialogAction = document.querySelector("#install-dialog-action");
 const installButton = document.querySelector("#install-button");
 const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
 
@@ -126,28 +132,25 @@ document.querySelectorAll(".nav-item").forEach((button) => {
 
 document.querySelector("#change-team-button").addEventListener("click", openTeamDialog);
 
-installButton.addEventListener("click", async () => {
-  if (state.installPrompt) {
-    state.installPrompt.prompt();
-    await state.installPrompt.userChoice;
-    state.installPrompt = null;
-    installButton.hidden = true;
-    return;
-  }
-  state.view = "settings";
-  selectNavigation("settings");
-  render();
+installButton.addEventListener("click", requestAppInstall);
+installDialogAction.addEventListener("click", async () => {
+  closeDialog(installDialog);
+  await requestAppInstall();
 });
 
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   state.installPrompt = event;
   installButton.hidden = false;
+  if (state.view === "settings") renderSettings();
+  if (state.installIntent && installDialog.open) showInstallInstructions();
 });
 
 window.addEventListener("appinstalled", () => {
   state.installPrompt = null;
+  state.installCompleted = true;
   installButton.hidden = true;
+  if (state.view === "settings") renderSettings();
 });
 
 window.addEventListener("online", updateConnectionState);
@@ -222,7 +225,13 @@ async function initialize() {
     renderMyTeamBanner();
     render();
 
-    if (!state.myTeam) {
+    if (state.installIntent) {
+      state.view = "settings";
+      selectNavigation("settings");
+      render();
+      window.history.replaceState({}, "", window.location.pathname);
+      window.setTimeout(showInstallInstructions, 300);
+    } else if (!state.myTeam) {
       openTeamDialog();
     }
   } catch (error) {
@@ -464,13 +473,16 @@ function renderStandings() {
 }
 
 function renderSettings() {
-  const isStandalone = window.matchMedia("(display-mode: standalone)").matches;
+  const isStandalone = isInstalledApp();
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
   const installText = isStandalone
-    ? "この端末にはインストール済みです。"
-    : ios
-      ? "Safariの共有ボタンから「ホーム画面に追加」を選択してください。"
-      : "インストールボタンが表示されたら、ホーム画面に追加できます。";
+    ? "このアプリはホーム画面から起動しています。"
+    : state.installPrompt
+      ? "ホーム画面に追加すると、次回からアプリのようにすぐ起動できます。"
+      : ios
+        ? "ボタンを押すと、iPhoneでホーム画面に追加する手順を確認できます。"
+        : "ボタンを押すと、この端末で利用できる追加方法を確認できます。";
+  const installButtonLabel = isStandalone ? "ホーム画面に追加済み" : "ホーム画面に追加";
 
   content.innerHTML = `
     <div class="view-heading">
@@ -497,7 +509,9 @@ function renderSettings() {
       <div class="settings-section">
         <h3>ホーム画面に追加</h3>
         <p>${escapeHtml(installText)}</p>
-        <button id="settings-install-button" class="secondary-button full-width" type="button">インストール方法を確認</button>
+        <button id="settings-install-button" class="${isStandalone ? "secondary-button" : "primary-button"} full-width" type="button" ${isStandalone ? "disabled" : ""}>
+          ${installButtonLabel}
+        </button>
       </div>
       <div class="settings-section">
         <h3>保存データ</h3>
@@ -514,7 +528,7 @@ function renderSettings() {
   `;
 
   document.querySelector("#settings-team-button").addEventListener("click", openTeamDialog);
-  document.querySelector("#settings-install-button").addEventListener("click", showInstallInstructions);
+  document.querySelector("#settings-install-button")?.addEventListener("click", requestAppInstall);
   document.querySelector("#clear-team-button")?.addEventListener("click", clearMyTeam);
   document.querySelectorAll('input[name="theme"]').forEach((input) => {
     input.addEventListener("change", (event) => applyTheme(event.target.value));
@@ -1009,12 +1023,63 @@ function renderError(error) {
   `;
 }
 
+async function requestAppInstall() {
+  if (isInstalledApp()) return;
+  if (state.installPrompt) {
+    const prompt = state.installPrompt;
+    await prompt.prompt();
+    const choice = await prompt.userChoice;
+    state.installPrompt = null;
+    installButton.hidden = true;
+    if (choice.outcome === "accepted") {
+      state.installCompleted = true;
+    }
+    if (state.view === "settings") renderSettings();
+    return;
+  }
+  showInstallInstructions();
+}
+
+function isInstalledApp() {
+  return (
+    state.installCompleted ||
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  );
+}
+
 function showInstallInstructions() {
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const message = ios
-    ? "Safari下部の共有ボタンを押し、「ホーム画面に追加」を選択してください。"
-    : "ブラウザのメニューから「アプリをインストール」または「ホーム画面に追加」を選択してください。";
-  window.alert(message);
+  if (state.installPrompt) {
+    installInstructions.innerHTML = `
+        <p class="dialog-copy">この端末では、下のボタンからアプリをホーム画面に追加できます。</p>
+        <ol class="install-steps">
+          <li><strong>「ホーム画面に追加」を押す</strong><span>ブラウザの確認画面が表示されます。</span></li>
+          <li><strong>インストールを確定する</strong><span>追加後はホーム画面のアイコンから起動できます。</span></li>
+        </ol>
+      `;
+    installDialogAction.hidden = false;
+  } else if (ios) {
+    installInstructions.innerHTML = `
+        <p class="dialog-copy">iPhoneでは、Safariの共有メニューから追加します。</p>
+        <ol class="install-steps">
+          <li><strong>Safariでこのページを開く</strong><span>Safari以外で開いている場合は、URLをSafariで開き直してください。</span></li>
+          <li><strong>共有ボタンを押す</strong><span>画面下部またはメニュー内の共有アイコンを選びます。</span></li>
+          <li><strong>「ホーム画面に追加」を選ぶ</strong><span>「Webアプリとして開く」を有効にして「追加」を押します。</span></li>
+        </ol>
+      `;
+    installDialogAction.hidden = true;
+  } else {
+    installInstructions.innerHTML = `
+        <p class="dialog-copy">ブラウザのインストール機能がまだ利用できないため、メニューから追加してください。</p>
+        <ol class="install-steps">
+          <li><strong>ブラウザのメニューを開く</strong><span>Chromeでは画面右上のメニューを押します。</span></li>
+          <li><strong>「アプリをインストール」を選ぶ</strong><span>表示されない場合は「ホーム画面に追加」を選択してください。</span></li>
+        </ol>
+      `;
+    installDialogAction.hidden = true;
+  }
+  showDialog(installDialog);
 }
 
 function showDialog(dialog) {

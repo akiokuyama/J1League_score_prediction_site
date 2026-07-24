@@ -1,11 +1,11 @@
-const APP_CACHE = "j1-prediction-app-v8";
+const APP_CACHE = "j1-prediction-app-v10";
 const DATA_CACHE = "j1-prediction-data-v1";
 
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css?v=4",
-  "./app.js?v=6",
+  "./styles.css?v=5",
+  "./app.js?v=8",
   "./manifest.webmanifest",
   "./data/past_prediction_results/index.json",
   "./data/past_prediction_results/2026_27_j1.json",
