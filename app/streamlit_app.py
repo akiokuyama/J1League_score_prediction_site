@@ -37,9 +37,9 @@ from app.utils.formatters import (  # noqa: E402
 )
 from app.utils.load_predictions import (  # noqa: E402
     load_all_unplayed_predictions,
+    load_json_file,
     load_latest_predictions,
     load_past_prediction_results,
-    load_past_prediction_seasons,
 )
 from app.utils.standings_loader import load_standings_forecasts  # noqa: E402
 from app.utils.team_preferences import (  # noqa: E402
@@ -56,6 +56,42 @@ st.set_page_config(
     layout="centered",
     initial_sidebar_state="collapsed",
 )
+
+
+def load_past_prediction_seasons(
+    index_path: str | Path = "outputs/past_prediction_results/index.json",
+) -> dict[str, Any]:
+    """Load seasonal past-results files without depending on hot-reloaded helper APIs.
+
+    Streamlit can keep a previously imported utility module alive while it reloads
+    this page. Keeping this small adapter here prevents a newly added utility
+    function from causing an ImportError during that transition.
+    """
+
+    target = Path(index_path)
+    if not target.is_absolute():
+        target = PROJECT_ROOT / target
+    index = load_json_file(target)
+    metadata = [
+        season
+        for season in index.get("seasons", [])
+        if isinstance(season, dict) and season.get("key") and season.get("data_file")
+    ]
+    results: dict[str, dict[str, Any]] = {}
+    for season in metadata:
+        data = load_json_file(target.parent / str(season["data_file"]))
+        if not isinstance(data.get("matches"), list):
+            data = {**data, "matches": []}
+        results[str(season["key"])] = data
+
+    default_season = str(index.get("default_season") or "")
+    if default_season not in results and results:
+        default_season = next(iter(results))
+    return {
+        "default_season": default_season,
+        "metadata": metadata,
+        "results": results,
+    }
 
 
 def main() -> None:

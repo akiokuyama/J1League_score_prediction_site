@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 from pathlib import Path
 
 
@@ -42,3 +43,16 @@ def test_streamlit_exposes_seasonal_past_results_with_coverage_note() -> None:
     assert '"シーズン"' in app_text
     assert "掲載範囲について" in app_text
     assert "今シーズンの試合結果はまだありません" in app_text
+
+
+def test_streamlit_does_not_import_new_season_loader_during_hot_reload() -> None:
+    tree = ast.parse(Path("app/streamlit_app.py").read_text(encoding="utf-8"))
+    imported_names = {
+        alias.name
+        for node in ast.walk(tree)
+        if isinstance(node, ast.ImportFrom) and node.module == "app.utils.load_predictions"
+        for alias in node.names
+    }
+
+    assert "load_past_prediction_seasons" not in imported_names
+    assert "load_json_file" in imported_names
