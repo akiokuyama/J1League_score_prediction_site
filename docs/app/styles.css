@@ -590,6 +590,77 @@ h3 {
   outline-offset: 2px;
 }
 
+.analytics-consent-banner {
+  position: fixed;
+  z-index: 100;
+  right: 12px;
+  bottom: calc(80px + var(--safe-bottom));
+  left: 12px;
+  display: grid;
+  width: min(720px, calc(100% - 24px));
+  margin: 0 auto;
+  padding: 16px;
+  gap: 13px;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--surface);
+  box-shadow: 0 18px 46px rgba(8, 23, 32, 0.3);
+  color: var(--text);
+}
+
+.analytics-consent-banner[hidden] {
+  display: none;
+}
+
+.analytics-consent-copy strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.analytics-consent-copy p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.analytics-consent-actions,
+.analytics-setting-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.analytics-consent-button {
+  min-height: 44px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.analytics-consent-allow {
+  border-color: transparent;
+  background: var(--navy);
+  color: white;
+}
+
+.analytics-setting-actions button[aria-pressed="true"] {
+  border-color: var(--teal);
+  background: color-mix(in srgb, var(--teal) 13%, var(--surface));
+  box-shadow: inset 0 0 0 1px var(--teal);
+}
+
+.privacy-note {
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
 .primary-button,
 .secondary-button {
   display: inline-flex;

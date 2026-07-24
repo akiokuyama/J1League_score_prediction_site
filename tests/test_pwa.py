@@ -68,11 +68,13 @@ def test_pwa_shell_registers_required_mobile_capabilities() -> None:
     assert "表示する順位予測の日時" in javascript
     assert "formatForecastDateTime" in javascript
     assert "./manifest.webmanifest" in service_worker
-    assert 'href="./styles.css?v=5"' in html
-    assert 'src="./app.js?v=8"' in html
-    assert 'APP_CACHE = "j1-prediction-app-v10"' in service_worker
-    assert '"./app.js?v=8"' in service_worker
-    assert '"./styles.css?v=5"' in service_worker
+    assert 'src="../analytics.js"' in html
+    assert 'href="./styles.css?v=6"' in html
+    assert 'src="./app.js?v=9"' in html
+    assert 'APP_CACHE = "j1-prediction-app-v11"' in service_worker
+    assert '"../analytics.js"' in service_worker
+    assert '"./app.js?v=9"' in service_worker
+    assert '"./styles.css?v=6"' in service_worker
     assert "raw.githubusercontent.com" in service_worker
     assert "./data/past_prediction_results/index.json" in service_worker
     assert "./data/past_prediction_results/2026_27_j1.json" in service_worker
@@ -83,6 +85,7 @@ def test_pwa_shell_registers_required_mobile_capabilities() -> None:
     assert ':root[data-theme="dark"]' in stylesheet
     assert ':root[data-theme="light"]' in stylesheet
     assert ".theme-options" in stylesheet
+    assert ".analytics-consent-banner" in stylesheet
     assert ".install-steps" in stylesheet
     assert 'state.teamFilter === "all" || !state.myTeam' not in javascript
     assert 'teamFilter: initialMyTeam ? "my-team" : "all"' in javascript
@@ -100,6 +103,9 @@ def test_landing_page_links_to_pwa() -> None:
     assert 'src="./app-install-qr.svg"' in html
     assert "ホーム画面に追加して、すぐ予測を見る" in html
     assert "2026/27 明治安田J1リーグ対応" in html
+    assert 'src="./analytics.js"' in html
+    assert 'data-analytics-event="select_app_surface"' in html
+    assert "プライバシーと利用状況データ" in html
     assert "https://akiokuyama.github.io/J1League_score_prediction_site/app/?install=1" in qr_svg
 
 

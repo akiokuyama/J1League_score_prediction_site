@@ -18,6 +18,7 @@
     <meta property="og:site_name" content="J1試合予想AI">
     <meta name="twitter:card" content="summary">
     <link rel="canonical" href="https://akiokuyama.github.io/J1League_score_prediction_site/">
+    <script src="./analytics.js"></script>
     <style>
       :root {
         color-scheme: light;
@@ -210,6 +211,86 @@
         font-size: 0.9rem;
       }
 
+      .privacy-controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 14px;
+      }
+
+      .privacy-status {
+        color: var(--muted);
+        font-size: 0.9rem;
+      }
+
+      .privacy-button,
+      .analytics-consent-button {
+        min-height: 42px;
+        padding: 0 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--text);
+        cursor: pointer;
+        font: inherit;
+        font-weight: 750;
+      }
+
+      .privacy-button[aria-pressed="true"] {
+        border-color: var(--blue);
+        background: #e9efff;
+        color: var(--blue-dark);
+      }
+
+      .analytics-consent-banner {
+        position: fixed;
+        z-index: 1000;
+        right: 18px;
+        bottom: 18px;
+        left: 18px;
+        display: flex;
+        width: min(760px, calc(100% - 36px));
+        margin: 0 auto;
+        padding: 18px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        border: 1px solid #bfcbe0;
+        border-radius: 14px;
+        background: #fff;
+        box-shadow: 0 16px 42px rgba(23, 32, 51, 0.22);
+        color: var(--text);
+      }
+
+      .analytics-consent-banner[hidden] {
+        display: none;
+      }
+
+      .analytics-consent-copy strong {
+        display: block;
+        margin-bottom: 3px;
+      }
+
+      .analytics-consent-copy p {
+        margin: 0;
+        color: var(--muted);
+        font-size: 0.88rem;
+        line-height: 1.55;
+      }
+
+      .analytics-consent-actions {
+        display: flex;
+        flex: 0 0 auto;
+        gap: 8px;
+      }
+
+      .analytics-consent-allow {
+        border-color: var(--blue);
+        background: var(--blue);
+        color: #fff;
+      }
+
       @media (max-width: 719px) {
         .hero-inner {
           padding: 46px 0 42px;
@@ -233,6 +314,21 @@
         .qr-panel {
           display: none;
         }
+
+        .analytics-consent-banner {
+          display: block;
+          right: 10px;
+          bottom: 10px;
+          left: 10px;
+          width: auto;
+          padding: 16px;
+        }
+
+        .analytics-consent-actions {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          margin-top: 14px;
+        }
       }
     </style>
   </head>
@@ -246,8 +342,20 @@
           今後行われるJ1の試合予想を、チームや節で絞り込みながら確認できます。
         </p>
         <div class="hero-actions">
-          <a class="cta" href="https://j1league-score-prediction.streamlit.app/">ウェブ版で予測を見る</a>
-          <a class="cta cta-app" href="./app/">スマホアプリ版を開く</a>
+          <a
+            class="cta"
+            href="https://j1league-score-prediction.streamlit.app/"
+            data-analytics-event="select_app_surface"
+            data-analytics-param-target="streamlit"
+            data-analytics-param-position="hero"
+          >ウェブ版で予測を見る</a>
+          <a
+            class="cta cta-app"
+            href="./app/"
+            data-analytics-event="select_app_surface"
+            data-analytics-param-target="pwa"
+            data-analytics-param-position="hero"
+          >スマホアプリ版を開く</a>
         </div>
         <p class="app-url-placeholder">
           スマホアプリ版はホーム画面に追加して、アプリのように利用できます。
@@ -264,7 +372,13 @@
             アプリ版なら、マイチームの試合を最初に表示できます。ブラウザのままでも利用でき、
             ホーム画面への追加方法はアプリ内でいつでも確認できます。
           </p>
-          <a class="install-cta" href="./app/?install=1">アプリ版を開いてホーム画面に追加</a>
+          <a
+            class="install-cta"
+            href="./app/?install=1"
+            data-analytics-event="select_app_surface"
+            data-analytics-param-target="pwa_install"
+            data-analytics-param-position="install_card"
+          >アプリ版を開いてホーム画面に追加</a>
           <span class="install-note">iPhone・Android対応 / App Storeへの移動は不要です</span>
         </div>
         <div class="qr-panel">
@@ -299,6 +413,22 @@
         <p class="notice">
           本アプリの予測結果は参考情報です。実際の試合結果、出場選手、得点者、勝敗を保証するものではありません。
         </p>
+      </section>
+
+      <section id="privacy">
+        <h2>プライバシーと利用状況データ</h2>
+        <p class="notice">
+          サービス改善のため、許可いただいた場合のみGoogle Analyticsを使用して、閲覧画面、フィルター操作、
+          マイチーム設定、アプリのインストール操作などを計測します。氏名、メールアドレス、自由入力内容など、
+          個人を直接特定する情報は送信しません。選択はこの端末に保存され、いつでも変更できます。
+        </p>
+        <div class="privacy-controls" aria-label="利用状況データの送信設定">
+          <span class="privacy-status">
+            現在の設定：<strong data-analytics-consent-status>未選択</strong>
+          </span>
+          <button class="privacy-button" type="button" data-analytics-consent="granted">送信を許可</button>
+          <button class="privacy-button" type="button" data-analytics-consent="denied">送信を停止</button>
+        </div>
       </section>
     </main>
   </body>

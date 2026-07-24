@@ -9,6 +9,7 @@ docs/
 │   ├── season_2026_27_model_preparation.md  # 新シーズン開始時の正本
 │   ├── score_distribution_model_update_2026_27.md  # スコア分布・校正・モデル比較の確定記録
 │   ├── final_standings_forecast_2026_27.md  # 最終順位予測・UI・週次履歴の実装記録
+│   ├── ga4_usage_analytics_2026_27.md  # GA4・同意管理・イベント計測の実装記録
 │   ├── week1/
 │   ├── week2/
 │   ├── week3/
@@ -28,3 +29,5 @@ docs/
 期待得点からのスコア分布、L2/Poisson比較、温度スケーリング、UI表示変更の詳細は `docs/reports/score_distribution_model_update_2026_27.md` を参照します。
 
 10,000回シミュレーションによる最終順位予測、履歴保存、日程不足時の扱いは `docs/reports/final_standings_forecast_2026_27.md` を参照します。
+
+Google Analytics 4の測定ID、同意管理、イベント一覧、クロスドメイン測定、確認方法は `docs/reports/ga4_usage_analytics_2026_27.md` を参照します。

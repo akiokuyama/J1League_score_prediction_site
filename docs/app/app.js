@@ -14,6 +14,45 @@ const DATA_URLS = {
 const TEAM_STORAGE_KEY = "j1_prediction_my_team_v1";
 const THEME_STORAGE_KEY = "j1_prediction_theme_v1";
 
+function trackAnalytics(eventName, parameters = {}) {
+  window.J1Analytics?.track(eventName, {
+    app_surface: "pwa",
+    ...parameters,
+  });
+}
+
+function trackAnalyticsOnce(eventName, parameters = {}, eventKey = eventName) {
+  window.J1Analytics?.trackOnce(
+    eventName,
+    {
+      app_surface: "pwa",
+      ...parameters,
+    },
+    `pwa:${eventKey}`,
+  );
+}
+
+function currentDisplayMode() {
+  if (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+  ) {
+    return "standalone";
+  }
+  return "browser";
+}
+
+function trackAppOpen() {
+  trackAnalyticsOnce(
+    "app_open",
+    {
+      display_mode: currentDisplayMode(),
+      has_my_team: Boolean(state.myTeam),
+    },
+    "app_open",
+  );
+}
+
 const TEAM_NAMES = {
   kasm: "鹿島アントラーズ",
   mito: "水戸ホーリーホック",
@@ -121,6 +160,7 @@ if (typeof systemTheme.addEventListener === "function") {
 document.querySelectorAll(".nav-item").forEach((button) => {
   button.addEventListener("click", () => {
     state.view = button.dataset.view;
+    trackAnalytics("view_app_section", { section_name: state.view });
     document.querySelectorAll(".nav-item").forEach((item) => {
       item.classList.toggle("is-active", item === button);
     });
@@ -141,6 +181,7 @@ installDialogAction.addEventListener("click", async () => {
 window.addEventListener("beforeinstallprompt", (event) => {
   event.preventDefault();
   state.installPrompt = event;
+  trackAnalyticsOnce("install_prompt_available", {}, "install_prompt_available");
   installButton.hidden = false;
   if (state.view === "settings") renderSettings();
   if (state.installIntent && installDialog.open) showInstallInstructions();
@@ -149,18 +190,21 @@ window.addEventListener("beforeinstallprompt", (event) => {
 window.addEventListener("appinstalled", () => {
   state.installPrompt = null;
   state.installCompleted = true;
+  trackAnalytics("app_installed", { display_mode: "standalone" });
   installButton.hidden = true;
   if (state.view === "settings") renderSettings();
 });
 
 window.addEventListener("online", updateConnectionState);
 window.addEventListener("offline", updateConnectionState);
+window.addEventListener("j1analyticsconsentchange", trackAppOpen);
 
 initialize();
 
 async function initialize() {
   updateConnectionState();
   registerServiceWorker();
+  trackAppOpen();
 
   try {
     const dataEntries = Object.entries(DATA_URLS);
@@ -224,6 +268,7 @@ async function initialize() {
     setReadyStatus(failures.length > 0);
     renderMyTeamBanner();
     render();
+    trackAnalyticsOnce("view_app_section", { section_name: state.view }, `initial_view:${state.view}`);
 
     if (state.installIntent) {
       state.view = "settings";
@@ -317,6 +362,7 @@ function setErrorStatus(error) {
   statusCard.classList.add("is-error");
   statusTitle.textContent = "予測データを取得できません";
   statusDetail.textContent = error instanceof Error ? error.message : String(error);
+  trackAnalytics("data_load_error", { error_area: "initial_data" });
 }
 
 function updateConnectionState() {
@@ -468,6 +514,9 @@ function renderStandings() {
 
   document.querySelector("#standings-snapshot-filter")?.addEventListener("change", (event) => {
     state.standingsSnapshot = event.target.value;
+    trackAnalytics("select_standings_snapshot", {
+      snapshot_date: String(event.target.value).slice(0, 10),
+    });
     renderStandings();
   });
 }
@@ -515,10 +564,25 @@ function renderSettings() {
       </div>
       <div class="settings-section">
         <h3>保存データ</h3>
-        <p>マイチームと表示テーマの設定はこの端末のブラウザ内だけに保存され、外部へ送信されません。</p>
+        <p>マイチームと表示テーマの設定値は、この端末のブラウザ内に保存されます。</p>
         <button id="clear-team-button" class="secondary-button danger-button full-width" type="button" ${state.myTeam ? "" : "disabled"}>
           マイチーム設定を解除
         </button>
+      </div>
+      <div class="settings-section">
+        <h3>利用状況データ</h3>
+        <p>
+          現在は<strong data-analytics-consent-status>未選択</strong>です。
+          許可した場合のみ、サービス改善のため画面表示や操作をGoogle Analyticsへ送信します。
+        </p>
+        <div class="analytics-setting-actions" aria-label="利用状況データの送信設定">
+          <button class="secondary-button" type="button" data-analytics-consent="granted">送信を許可</button>
+          <button class="secondary-button" type="button" data-analytics-consent="denied">送信を停止</button>
+        </div>
+        <div class="privacy-note">
+          氏名やメールアドレスなど、個人を直接特定する情報は送信しません。
+          マイチームを変更した場合は、クラブ識別コードと操作種別のみを送信します。
+        </div>
       </div>
       <div class="settings-section">
         <h3>この予測について</h3>
@@ -533,6 +597,8 @@ function renderSettings() {
   document.querySelectorAll('input[name="theme"]').forEach((input) => {
     input.addEventListener("change", (event) => applyTheme(event.target.value));
   });
+  window.J1Analytics?.bindConsentControls(content);
+  window.J1Analytics?.updateConsentUi();
 }
 
 function renderThemeOption(value, label) {
@@ -558,6 +624,7 @@ function applyTheme(theme, { persist = true } = {}) {
     } catch {
       // 保存できない環境でも、現在の画面には選択を反映します。
     }
+    trackAnalytics("theme_changed", { theme: selected });
   }
   updateThemeColor();
 }
@@ -705,6 +772,12 @@ function openMatchDialog(match) {
   const expected = match.expected_goals || {};
   const scoreCandidates = Array.isArray(match.score_candidates) ? match.score_candidates.slice(0, 5) : [];
   const scorers = match.scorer_candidates || {};
+  trackAnalytics("view_match_detail", {
+    match_id: String(match.match_id || "").slice(0, 100),
+    match_status: match.actual_score ? "completed" : "upcoming",
+    home_team_code: home,
+    away_team_code: away,
+  });
 
   matchDetail.innerHTML = `
     <div class="dialog-heading">
@@ -808,6 +881,7 @@ function buildPastSeasonOptions() {
 function bindPastSeasonFilter() {
   document.querySelector("#past-season-filter")?.addEventListener("change", (event) => {
     state.pastSeason = event.target.value;
+    trackAnalytics("select_past_season", { season_key: state.pastSeason });
     renderPast();
   });
 }
@@ -826,6 +900,10 @@ function renderPastCoverageNotice(season) {
 function bindTeamFilter(selector) {
   document.querySelector(selector)?.addEventListener("change", (event) => {
     state.teamFilter = event.target.value;
+    trackAnalytics("select_team_filter", {
+      filter_area: selector.includes("past") ? "past" : "upcoming",
+      team_filter: state.teamFilter,
+    });
     render();
   });
 }
@@ -852,15 +930,18 @@ function saveMyTeam(team) {
   state.myTeam = team;
   state.teamFilter = "my-team";
   localStorage.setItem(TEAM_STORAGE_KEY, team);
+  trackAnalytics("set_my_team", { team_code: team });
   closeDialog(teamDialog);
   renderMyTeamBanner();
   render();
 }
 
 function clearMyTeam() {
+  const previousTeam = state.myTeam;
   state.myTeam = null;
   state.teamFilter = "all";
   localStorage.removeItem(TEAM_STORAGE_KEY);
+  trackAnalytics("clear_my_team", { previous_team_code: previousTeam || "none" });
   renderMyTeamBanner();
   render();
 }
@@ -1025,6 +1106,9 @@ function renderError(error) {
 
 async function requestAppInstall() {
   if (isInstalledApp()) return;
+  trackAnalytics("install_attempt", {
+    install_method: state.installPrompt ? "browser_prompt" : "manual_instructions",
+  });
   if (state.installPrompt) {
     const prompt = state.installPrompt;
     await prompt.prompt();
@@ -1034,6 +1118,7 @@ async function requestAppInstall() {
     if (choice.outcome === "accepted") {
       state.installCompleted = true;
     }
+    trackAnalytics("install_prompt_result", { outcome: choice.outcome });
     if (state.view === "settings") renderSettings();
     return;
   }
@@ -1050,6 +1135,10 @@ function isInstalledApp() {
 
 function showInstallInstructions() {
   const ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  trackAnalytics("install_instructions_open", {
+    platform: ios ? "ios" : "other",
+    prompt_available: Boolean(state.installPrompt),
+  });
   if (state.installPrompt) {
     installInstructions.innerHTML = `
         <p class="dialog-copy">この端末では、下のボタンからアプリをホーム画面に追加できます。</p>

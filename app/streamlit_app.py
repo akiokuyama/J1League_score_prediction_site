@@ -23,6 +23,13 @@ from app.utils.evaluation import (  # noqa: E402
     get_strongest_outcome,
     outcome_label,
 )
+from app.utils.analytics import (  # noqa: E402
+    AnalyticsSnapshot,
+    flush_analytics_events,
+    queue_analytics_event,
+    sync_analytics,
+    track_state_change,
+)
 from app.utils.display_labels import (  # noqa: E402
     get_display_confidence_label,
     get_display_insight_label,
@@ -104,11 +111,24 @@ def main() -> None:
     standings_forecasts = load_standings_forecasts()
 
     initialize_state()
+    consent_action = st.session_state.pop("_analytics_consent_action", "read")
+    analytics_snapshot = sync_analytics(
+        component_key="analytics_consent_bridge",
+        consent_action=consent_action,
+    )
+    if (
+        analytics_snapshot.consent == "granted"
+        and not st.session_state.get("_analytics_app_open_queued")
+    ):
+        queue_analytics_event("app_open", {"display_mode": "browser"})
+        st.session_state._analytics_app_open_queued = True
     available_teams = collect_available_team_codes(latest, all_unplayed, past, standings_forecasts)
     if not initialize_my_team_preference(available_teams):
         st.caption("マイチーム設定を読み込んでいます…")
+        flush_analytics_events()
         return
     render_header(latest, past, all_unplayed)
+    render_analytics_privacy_controls(analytics_snapshot)
     render_my_team_settings(available_teams)
 
     tab = "これからの試合"
@@ -118,6 +138,13 @@ def main() -> None:
             ["これからの試合", "過去の予測結果", "最終順位予測"],
             horizontal=True,
             label_visibility="collapsed",
+            key="main_view_tab",
+        )
+        track_state_change(
+            "main_view_tab",
+            tab,
+            "view_app_section",
+            {"section_name": tab},
         )
 
     if tab == "これからの試合":
@@ -128,6 +155,7 @@ def main() -> None:
         render_past_predictions(past_seasons)
     else:
         render_standings_forecast(standings_forecasts)
+    flush_analytics_events()
 
 
 def initialize_state() -> None:
@@ -142,6 +170,48 @@ def initialize_state() -> None:
     elif query_params.get("view") == "list":
         st.session_state.view = "list"
         st.session_state.selected_match_id = None
+
+
+def render_analytics_privacy_controls(snapshot: AnalyticsSnapshot) -> None:
+    """Show initial consent and an always-available privacy setting."""
+
+    if not snapshot.loaded:
+        st.caption("利用状況データの設定を確認しています…")
+        return
+    if snapshot.storage_error:
+        st.warning("このブラウザでは利用状況データの選択を保存できません。")
+
+    title = "利用状況データ：未選択"
+    if snapshot.consent == "granted":
+        title = "利用状況データ：送信を許可中"
+    elif snapshot.consent == "denied":
+        title = "利用状況データ：送信を停止中"
+
+    with st.expander(title, expanded=snapshot.consent is None):
+        st.write(
+            "サービス改善のため、許可いただいた場合のみGoogle Analyticsで"
+            "閲覧画面やフィルターなどの操作を計測します。"
+            "氏名、メールアドレス、自由入力内容など、個人を直接特定する情報は送信しません。"
+        )
+        allow_col, deny_col = st.columns(2)
+        if allow_col.button(
+            "送信を許可",
+            type="primary" if snapshot.consent != "granted" else "secondary",
+            disabled=snapshot.consent == "granted",
+            use_container_width=True,
+            key="analytics_consent_grant",
+        ):
+            st.session_state._analytics_consent_action = "granted"
+            st.session_state._analytics_app_open_queued = False
+            st.rerun()
+        if deny_col.button(
+            "送信を停止",
+            disabled=snapshot.consent == "denied",
+            use_container_width=True,
+            key="analytics_consent_deny",
+        ):
+            st.session_state._analytics_consent_action = "denied"
+            st.rerun()
 
 
 def initialize_my_team_preference(available_teams: list[str]) -> bool:
@@ -857,6 +927,7 @@ def set_my_team_preference(team_code: str) -> None:
     st.session_state._future_team_filter_initialized = True
     st.session_state._past_team_filter_initialized = True
     st.session_state._my_team_filters_initialized = True
+    queue_analytics_event("set_my_team", {"team_code": team_code})
     if st.session_state.view != "detail":
         set_query_params_if_changed(
             {
@@ -871,6 +942,7 @@ def set_my_team_preference(team_code: str) -> None:
 def clear_my_team_preference() -> None:
     """Queue removal of the saved team and reset both team filters."""
 
+    previous_team = st.session_state.get("my_team_code")
     st.session_state._my_team_storage_action = {"action": "clear"}
     st.session_state.my_team_code = None
     st.session_state.future_team_filter = "すべてのチーム"
@@ -878,6 +950,10 @@ def clear_my_team_preference() -> None:
     st.session_state._future_team_filter_initialized = True
     st.session_state._past_team_filter_initialized = True
     st.session_state._my_team_filters_initialized = True
+    queue_analytics_event(
+        "clear_my_team",
+        {"previous_team_code": str(previous_team or "none")},
+    )
     if st.session_state.view != "detail":
         set_query_params_if_changed(
             {
@@ -898,6 +974,8 @@ def render_future_matches(latest: dict[str, Any], all_unplayed: dict[str, Any]) 
             return
         st.session_state.view = "list"
         st.session_state.selected_match_id = None
+    else:
+        st.session_state._analytics_previous_detail_match = None
 
     st.markdown('<div class="section-title">試合一覧</div>', unsafe_allow_html=True)
     if not matches:
@@ -944,6 +1022,18 @@ def filter_future_matches(matches: list[dict[str, Any]]) -> list[dict[str, Any]]
         "試合が行われる節",
         section_options,
         key="future_section_filter",
+    )
+    track_state_change(
+        "future_team_filter",
+        team,
+        "select_team_filter",
+        {"filter_area": "upcoming", "team_filter": str(team)},
+    )
+    track_state_change(
+        "future_section_filter",
+        section,
+        "select_matchweek_filter",
+        {"filter_area": "upcoming", "matchweek_filter": str(section)},
     )
     update_future_filter_query_params(team, section)
 
@@ -1006,6 +1096,18 @@ def render_match_card(match: dict[str, Any]) -> None:
 
 
 def render_match_detail(match: dict[str, Any]) -> None:
+    match_id = str(match.get("match_id") or "")
+    if st.session_state.get("_analytics_previous_detail_match") != match_id:
+        queue_analytics_event(
+            "view_match_detail",
+            {
+                "match_id": match_id,
+                "match_status": "upcoming",
+                "home_team_code": str(to_dataset_code(match.get("home_team")) or ""),
+                "away_team_code": str(to_dataset_code(match.get("away_team")) or ""),
+            },
+        )
+        st.session_state._analytics_previous_detail_match = match_id
     if st.button("← 試合一覧に戻る", use_container_width=True):
         st.session_state.view = "list"
         st.session_state.selected_match_id = None
@@ -1178,6 +1280,12 @@ def render_past_predictions(archive: dict[str, Any]) -> None:
         ),
         key="past_season_filter",
     )
+    track_state_change(
+        "past_season_filter",
+        selected_season,
+        "select_past_season",
+        {"season_key": str(selected_season)},
+    )
     season_meta = metadata_by_key[selected_season]
     data = results.get(selected_season) if isinstance(results.get(selected_season), dict) else {}
     coverage = season_meta.get("coverage") if isinstance(season_meta.get("coverage"), dict) else {}
@@ -1212,6 +1320,12 @@ def render_standings_forecast(forecasts: list[dict[str, Any]]) -> None:
         key="standings_snapshot",
     )
     forecast = forecasts[int(selected_index)]
+    track_state_change(
+        "standings_snapshot",
+        selected_index,
+        "select_standings_snapshot",
+        {"snapshot_date": str(forecast.get("generated_at") or "")[:10]},
+    )
     teams = [team for team in forecast.get("teams", []) if isinstance(team, dict)]
     if not teams:
         st.info("選択した時点の順位予測データがありません。")
@@ -1352,6 +1466,24 @@ def filter_past_matches(matches: list[dict[str, Any]]) -> list[dict[str, Any]]:
     team = st.selectbox("チーム", ["すべてのチーム", *teams], key="past_team_filter")
     section = st.selectbox("試合が行われた節", ["すべての節", *sections], key="past_section_filter")
     judgment = st.selectbox("予測結果に対する判定", result_options, key="past_judgment_filter")
+    track_state_change(
+        "past_team_filter",
+        team,
+        "select_team_filter",
+        {"filter_area": "past", "team_filter": str(team)},
+    )
+    track_state_change(
+        "past_section_filter",
+        section,
+        "select_matchweek_filter",
+        {"filter_area": "past", "matchweek_filter": str(section)},
+    )
+    track_state_change(
+        "past_judgment_filter",
+        judgment,
+        "select_result_filter",
+        {"result_filter": str(judgment)},
+    )
 
     filtered: list[dict[str, Any]] = []
     for match in matches:
