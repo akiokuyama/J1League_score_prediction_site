@@ -93,6 +93,9 @@ def test_landing_page_links_to_pwa() -> None:
     qr_svg = Path("docs/app-install-qr.svg").read_text(encoding="utf-8")
 
     assert 'href="./app/"' in html
+    assert 'href="https://j1league-score-prediction.streamlit.app/"' in html
+    assert "ウェブ版で予測を見る" in html
+    assert "スマホアプリ版を開く" in html
     assert 'href="./app/?install=1"' in html
     assert 'src="./app-install-qr.svg"' in html
     assert "ホーム画面に追加して、すぐ予測を見る" in html

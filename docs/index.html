@@ -80,13 +80,27 @@
       .cta {
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         min-height: 48px;
         padding: 0 20px;
+        border: 1px solid transparent;
         border-radius: 8px;
         background: #fff;
         color: var(--blue-dark);
         font-weight: 800;
         text-decoration: none;
+      }
+
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .cta-app {
+        border-color: rgba(255, 255, 255, 0.72);
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
       }
 
       main {
@@ -190,8 +204,9 @@
       }
 
       .app-url-placeholder {
+        margin: 12px 0 0;
         word-break: break-all;
-        color: var(--muted);
+        color: rgba(255, 255, 255, 0.92);
         font-size: 0.9rem;
       }
 
@@ -210,6 +225,11 @@
           text-align: center;
         }
 
+        .hero-actions,
+        .cta {
+          width: 100%;
+        }
+
         .qr-panel {
           display: none;
         }
@@ -225,8 +245,13 @@
           Jリーグの試合スコア、勝敗確率、得点者候補をAIで予測するWebアプリです。
           今後行われるJ1の試合予想を、チームや節で絞り込みながら確認できます。
         </p>
-        <a class="cta" href="./app/">スマホ版で最新の予測を見る</a>
-        <p class="app-url-placeholder">ホーム画面に追加して、アプリのように利用できます。</p>
+        <div class="hero-actions">
+          <a class="cta" href="https://j1league-score-prediction.streamlit.app/">ウェブ版で予測を見る</a>
+          <a class="cta cta-app" href="./app/">スマホアプリ版を開く</a>
+        </div>
+        <p class="app-url-placeholder">
+          スマホアプリ版はホーム画面に追加して、アプリのように利用できます。
+        </p>
       </div>
     </header>
 
