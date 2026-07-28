@@ -1,10 +1,10 @@
 {
-  "updated_at": "2026-07-27T07:53:58+09:00",
+  "updated_at": "2026-07-29T08:00:15+09:00",
   "competition_key": "2026_27_j1",
   "season": "2026_27",
   "category": "j1",
   "use_cache": false,
-  "scope": "results",
+  "scope": "all",
   "matches": {
     "url": "https://www.jleague.jp/match/search/j1/all/",
     "warnings": [
@@ -16,5 +16,54 @@
     "rows": 379,
     "raw_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/matches/schedule_2026_27_j1_j1.csv",
     "processed_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/processed/matches_2026_27_j1_clean.csv"
+  },
+  "market_values": {
+    "url": "https://www.transfermarkt.com/j1-league/startseite/wettbewerb/JAP1",
+    "manual_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/manual/market_values_2026_27_j1.csv",
+    "warnings": [
+      "no text parsed from document (line 0)",
+      "取得結果が空のため、直前の市場価値スナップショットを保持しました。"
+    ],
+    "cache_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/html_cache/8f00a990ab23036f133c.html",
+    "from_cache": false,
+    "source": "empty",
+    "used_existing": true,
+    "snapshot_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/market_values/market_values_2026_27_j1_asof_20260720.csv",
+    "rows": 20,
+    "raw_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/market_values/market_values_2026_27_j1.csv",
+    "processed_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/processed/market_values_2026_27_j1_clean.csv"
+  },
+  "football_lab": {
+    "urls": {
+      "expected": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=expected",
+      "kagi": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=kagi",
+      "goal_patterns": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=goal",
+      "team_styles": "https://www.football-lab.jp/summary/team_style/j1/?year=2026&data=21"
+    },
+    "warnings": [],
+    "status": "not_published_before_season_start",
+    "available_from": "2026-08-08",
+    "expected_rows": 0,
+    "kagi_rows": 0,
+    "goal_patterns_rows": 0,
+    "team_styles_rows": 0
+  },
+  "formations": {
+    "warnings": [],
+    "available_from": "2026-08-08",
+    "rows": 0,
+    "status": "not_published_before_season_start"
+  },
+  "player_stats": {
+    "warnings": [],
+    "available_from": "2026-08-08",
+    "rows": 0,
+    "status": "not_published_before_season_start"
+  },
+  "snapshot_readiness": {
+    "market_values": "actual",
+    "xg_agi_kagi": "fallback_until_current_season_source_is_published",
+    "formations": "fallback_until_current_season_matches_exist",
+    "player_stats": "fallback_to_latest_completed_season"
   }
 }
