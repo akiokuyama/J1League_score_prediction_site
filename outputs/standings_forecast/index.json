@@ -1,8 +1,16 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-07-29T08:02:30+09:00",
-  "default_forecast": "2026-07-29T08:02:30+09:00",
+  "generated_at": "2026-08-05T08:05:57+09:00",
+  "default_forecast": "2026-08-05T08:05:57+09:00",
   "forecasts": [
+    {
+      "generated_at": "2026-08-05T08:05:57+09:00",
+      "data_file": "history/standings_forecast_20260805_080557.json",
+      "data_as_of": {
+        "label": "開幕前",
+        "completed_matches": 0
+      }
+    },
     {
       "generated_at": "2026-07-29T08:02:30+09:00",
       "data_file": "history/standings_forecast_20260729_080230.json",
