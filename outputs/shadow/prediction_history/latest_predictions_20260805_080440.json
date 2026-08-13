@@ -1,0 +1,2389 @@
+{
+  "last_updated": "2026-08-05T08:04:40+09:00",
+  "season": "2026_27",
+  "league": "J1",
+  "competition": "明治安田J1リーグ",
+  "category": "j1",
+  "matchweek": 1,
+  "model_version": "reviewed_point_in_time_normal_v1",
+  "feature_policy": {
+    "exclude_weather": true
+  },
+  "matches": [
+    {
+      "match_id": "2026_27-j1-1-y-fm-vs-kasm",
+      "date": "2026-08-07",
+      "home_team": "y-fm",
+      "away_team": "kasm",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "expected_goals": {
+        "home": 1.5163525854404225,
+        "away": 1.1699703945452307
+      },
+      "result_probabilities": {
+        "away_win": 0.29318859305572087,
+        "draw": 0.25444519188058873,
+        "home_win": 0.45236621506369035
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.1208744848513364,
+          "probability": 0.12087448485133637,
+          "combined_score": 0.12087448485133637
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.10331413975506662,
+          "probability": 0.1033141397550666,
+          "combined_score": 0.1033141397550666
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.09164416880905156,
+          "probability": 0.09164416880905155,
+          "combined_score": 0.09164416880905155
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.07971397022825571,
+          "probability": 0.0797139702282557,
+          "combined_score": 0.0797139702282557
+        },
+        {
+          "score": "2-0",
+          "home_goals": 2,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.0783303314650742,
+          "probability": 0.0783303314650742,
+          "combined_score": 0.0783303314650742
+        }
+      ],
+      "predicted_goal_diff": 0.34638219089519184,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "谷村　海那",
+            "team": "y-fm",
+            "position": "FW",
+            "score": 0.9205333333333334,
+            "probability": 0.3186451217971764,
+            "source": "football_lab_player_stats",
+            "goals": 10,
+            "assists": 2,
+            "cbp_90": 0.78,
+            "played_games": 18,
+            "scorer_score": 0.9205333333333334
+          },
+          {
+            "rank": 2,
+            "player": "天野　純",
+            "team": "y-fm",
+            "position": "MF",
+            "score": 0.6193333333333333,
+            "probability": 0.21438392102373757,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 4,
+            "cbp_90": 1.43,
+            "played_games": 18,
+            "scorer_score": 0.6193333333333333
+          },
+          {
+            "rank": 3,
+            "player": "ジョルディ　クルークス",
+            "team": "y-fm",
+            "position": "FW",
+            "score": 0.5690526315789473,
+            "probability": 0.1969791190959705,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 5,
+            "cbp_90": 1.45,
+            "played_games": 19,
+            "scorer_score": 0.5690526315789473
+          },
+          {
+            "rank": 4,
+            "player": "近藤　友喜",
+            "team": "y-fm",
+            "position": "FW",
+            "score": 0.44039999999999996,
+            "probability": 0.15244566009502802,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.21,
+            "played_games": 16,
+            "scorer_score": 0.44039999999999996
+          },
+          {
+            "rank": 5,
+            "player": "山根　陸",
+            "team": "y-fm",
+            "position": "MF",
+            "score": 0.3395789473684211,
+            "probability": 0.1175461779880875,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 1.04,
+            "played_games": 19,
+            "scorer_score": 0.3395789473684211
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "鈴木　優磨",
+            "team": "kasm",
+            "position": "FW",
+            "score": 0.9568421052631577,
+            "probability": 0.2957830833273427,
+            "source": "football_lab_player_stats",
+            "goals": 6,
+            "assists": 5,
+            "cbp_90": 1.75,
+            "played_games": 19,
+            "scorer_score": 0.9568421052631577
+          },
+          {
+            "rank": 2,
+            "player": "レオ　セアラ",
+            "team": "kasm",
+            "position": "FW",
+            "score": 0.9491368421052631,
+            "probability": 0.29340119975203344,
+            "source": "football_lab_player_stats",
+            "goals": 10,
+            "assists": 2,
+            "cbp_90": 1.06,
+            "played_games": 19,
+            "scorer_score": 0.9491368421052631
+          },
+          {
+            "rank": 3,
+            "player": "荒木　遼太郎",
+            "team": "kasm",
+            "position": "MF",
+            "score": 0.47700000000000004,
+            "probability": 0.1474522598567496,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.76,
+            "played_games": 16,
+            "scorer_score": 0.47700000000000004
+          },
+          {
+            "rank": 4,
+            "player": "柴崎　岳",
+            "team": "kasm",
+            "position": "MF",
+            "score": 0.4631428571428572,
+            "probability": 0.14316868117867093,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 3,
+            "cbp_90": 1.78,
+            "played_games": 14,
+            "scorer_score": 0.4631428571428572
+          },
+          {
+            "rank": 5,
+            "player": "三竿　健斗",
+            "team": "kasm",
+            "position": "MF",
+            "score": 0.38882352941176473,
+            "probability": 0.12019477588520346,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 0,
+            "cbp_90": 1.65,
+            "played_games": 17,
+            "scorer_score": 0.38882352941176473
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-g-os-vs-uraw",
+      "date": "2026-08-07",
+      "home_team": "g-os",
+      "away_team": "uraw",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "expected_goals": {
+        "home": 1.204580043001413,
+        "away": 1.072942605340518
+      },
+      "result_probabilities": {
+        "away_win": 0.3250969973758584,
+        "draw": 0.2845572991304528,
+        "home_win": 0.39034570349368886
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.1325255678874243,
+          "probability": 0.13252556788742434,
+          "combined_score": 0.13252556788742434
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.12351598979086574,
+          "probability": 0.12351598979086578,
+          "combined_score": 0.12351598979086578
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.11001806700799611,
+          "probability": 0.11001806700799613,
+          "combined_score": 0.11001806700799613
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.10253863203901746,
+          "probability": 0.10253863203901749,
+          "combined_score": 0.10253863203901749
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.07981882713231013,
+          "probability": 0.07981882713231016,
+          "combined_score": 0.07981882713231016
+        }
+      ],
+      "predicted_goal_diff": 0.13163743766089508,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "イッサム　ジェバリ",
+            "team": "g-os",
+            "position": "FW",
+            "score": 0.6741818181818181,
+            "probability": 0.24948473978261201,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.9,
+            "played_games": 11,
+            "scorer_score": 0.6741818181818181
+          },
+          {
+            "rank": 2,
+            "player": "食野　亮太郎",
+            "team": "g-os",
+            "position": "FW",
+            "score": 0.6235764705882352,
+            "probability": 0.23075794882577133,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 0,
+            "cbp_90": 2.01,
+            "played_games": 17,
+            "scorer_score": 0.6235764705882352
+          },
+          {
+            "rank": 3,
+            "player": "山下　諒也",
+            "team": "g-os",
+            "position": "FW",
+            "score": 0.5413333333333333,
+            "probability": 0.2003234174522016,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.7,
+            "played_games": 18,
+            "scorer_score": 0.5413333333333333
+          },
+          {
+            "rank": 4,
+            "player": "安部　柊斗",
+            "team": "g-os",
+            "position": "MF",
+            "score": 0.47571428571428576,
+            "probability": 0.17604072311290414,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 1,
+            "cbp_90": 2.2,
+            "played_games": 14,
+            "scorer_score": 0.47571428571428576
+          },
+          {
+            "rank": 5,
+            "player": "岸本　武流",
+            "team": "g-os",
+            "position": "DF",
+            "score": 0.3874909090909091,
+            "probability": 0.143393170826511,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 1,
+            "cbp_90": 1.74,
+            "played_games": 11,
+            "scorer_score": 0.3874909090909091
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "中島　翔哉",
+            "team": "uraw",
+            "position": "MF",
+            "score": 0.7389090909090911,
+            "probability": 0.27693026926964126,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 2,
+            "cbp_90": 3.24,
+            "played_games": 11,
+            "scorer_score": 0.7389090909090911
+          },
+          {
+            "rank": 2,
+            "player": "マテウス　サヴィオ",
+            "team": "uraw",
+            "position": "MF",
+            "score": 0.6200000000000001,
+            "probability": 0.2323652111735917,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 5,
+            "cbp_90": 1.85,
+            "played_games": 18,
+            "scorer_score": 0.6200000000000001
+          },
+          {
+            "rank": 3,
+            "player": "金子　拓郎",
+            "team": "uraw",
+            "position": "MF",
+            "score": 0.535578947368421,
+            "probability": 0.2007256696861179,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 2.02,
+            "played_games": 19,
+            "scorer_score": 0.535578947368421
+          },
+          {
+            "rank": 4,
+            "player": "渡邊　凌磨",
+            "team": "uraw",
+            "position": "MF",
+            "score": 0.41666666666666663,
+            "probability": 0.15615941611128473,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 0,
+            "cbp_90": 1.25,
+            "played_games": 18,
+            "scorer_score": 0.41666666666666663
+          },
+          {
+            "rank": 5,
+            "player": "安居　海渡",
+            "team": "uraw",
+            "position": "MF",
+            "score": 0.35705882352941176,
+            "probability": 0.13381943375936448,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 1.05,
+            "played_games": 17,
+            "scorer_score": 0.35705882352941176
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-kasw-vs-mito",
+      "date": "2026-08-08",
+      "home_team": "kasw",
+      "away_team": "mito",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "expected_goals": {
+        "home": 1.3493047160781473,
+        "away": 1.044999449962884
+      },
+      "result_probabilities": {
+        "away_win": 0.2899234486324104,
+        "draw": 0.2730005456018043,
+        "home_win": 0.43707600576578526
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.12864680952542357,
+          "probability": 0.12864680952542354,
+          "combined_score": 0.12864680952542354
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.12310705955873258,
+          "probability": 0.12310705955873252,
+          "combined_score": 0.12310705955873252
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.09534303704158457,
+          "probability": 0.09534303704158453,
+          "combined_score": 0.09534303704158453
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.09123740404358197,
+          "probability": 0.09123740404358194,
+          "combined_score": 0.09123740404358194
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.08679187340053057,
+          "probability": 0.08679187340053053,
+          "combined_score": 0.08679187340053053
+        }
+      ],
+      "predicted_goal_diff": 0.3043052661152632,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "小泉　佳穂",
+            "team": "kasw",
+            "position": "MF",
+            "score": 0.7437777777777779,
+            "probability": 0.2529941181344046,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 4,
+            "cbp_90": 2.33,
+            "played_games": 18,
+            "scorer_score": 0.7437777777777779
+          },
+          {
+            "rank": 2,
+            "player": "久保　藤次郎",
+            "team": "kasw",
+            "position": "MF",
+            "score": 0.59825,
+            "probability": 0.20349321490367012,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 2.21,
+            "played_games": 16,
+            "scorer_score": 0.59825
+          },
+          {
+            "rank": 3,
+            "player": "瀬川　祐輔",
+            "team": "kasw",
+            "position": "MF",
+            "score": 0.5728421052631579,
+            "probability": 0.1948507841741523,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 1,
+            "cbp_90": 1.68,
+            "played_games": 19,
+            "scorer_score": 0.5728421052631579
+          },
+          {
+            "rank": 4,
+            "player": "細谷　真大",
+            "team": "kasw",
+            "position": "FW",
+            "score": 0.5594526315789473,
+            "probability": 0.19029638877779945,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 1,
+            "cbp_90": 1.41,
+            "played_games": 19,
+            "scorer_score": 0.5594526315789473
+          },
+          {
+            "rank": 5,
+            "player": "中川　敦瑛",
+            "team": "kasw",
+            "position": "MF",
+            "score": 0.4655789473684211,
+            "probability": 0.1583654940099735,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 1.67,
+            "played_games": 19,
+            "scorer_score": 0.4655789473684211
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "渡邉　新太",
+            "team": "mito",
+            "position": "FW",
+            "score": 0.6063,
+            "probability": 0.2457739181672967,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 1,
+            "cbp_90": 1.12,
+            "played_games": 16,
+            "scorer_score": 0.6063
+          },
+          {
+            "rank": 2,
+            "player": "新井　瑞希",
+            "team": "mito",
+            "position": "MF",
+            "score": 0.5840000000000001,
+            "probability": 0.2367342375221859,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 1,
+            "cbp_90": 2.67,
+            "played_games": 10,
+            "scorer_score": 0.5840000000000001
+          },
+          {
+            "rank": 3,
+            "player": "鳥海　芳樹",
+            "team": "mito",
+            "position": "MF",
+            "score": 0.4726666666666667,
+            "probability": 0.19160339543747693,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 0,
+            "cbp_90": 1.53,
+            "played_games": 12,
+            "scorer_score": 0.4726666666666667
+          },
+          {
+            "rank": 4,
+            "player": "山本　隼大",
+            "team": "mito",
+            "position": "MF",
+            "score": 0.40282352941176475,
+            "probability": 0.16329130323851018,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 0,
+            "cbp_90": 1.72,
+            "played_games": 17,
+            "scorer_score": 0.40282352941176475
+          },
+          {
+            "rank": 5,
+            "player": "仙波　大志",
+            "team": "mito",
+            "position": "MF",
+            "score": 0.4011111111111111,
+            "probability": 0.16259714563453023,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.45,
+            "played_games": 18,
+            "scorer_score": 0.4011111111111111
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-FCtk-vs-mcd",
+      "date": "2026-08-08",
+      "home_team": "FCtk",
+      "away_team": "mcd",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "expected_goals": {
+        "home": 1.2283413531043432,
+        "away": 1.0343464851124964
+      },
+      "result_probabilities": {
+        "away_win": 0.3094726143582679,
+        "draw": 0.2847205066052966,
+        "home_win": 0.40580687903643564
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.1322255720284762,
+          "probability": 0.13222557202847623,
+          "combined_score": 0.13222557202847623
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.12783489278652624,
+          "probability": 0.12783489278652627,
+          "combined_score": 0.12783489278652627
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.10764562447914601,
+          "probability": 0.10764562447914605,
+          "combined_score": 0.10764562447914605
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.10407114639872188,
+          "probability": 0.10407114639872189,
+          "combined_score": 0.10407114639872189
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.08120906903022714,
+          "probability": 0.08120906903022715,
+          "combined_score": 0.08120906903022715
+        }
+      ],
+      "predicted_goal_diff": 0.19399486799184684,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "マルセロ　ヒアン",
+            "team": "FCtk",
+            "position": "FW",
+            "score": 0.8719058823529412,
+            "probability": 0.28355066960382225,
+            "source": "football_lab_player_stats",
+            "goals": 6,
+            "assists": 4,
+            "cbp_90": 1.28,
+            "played_games": 17,
+            "scorer_score": 0.8719058823529412
+          },
+          {
+            "rank": 2,
+            "player": "佐藤　恵允",
+            "team": "FCtk",
+            "position": "FW",
+            "score": 0.6841263157894736,
+            "probability": 0.22248327355265818,
+            "source": "football_lab_player_stats",
+            "goals": 5,
+            "assists": 3,
+            "cbp_90": 1.14,
+            "played_games": 19,
+            "scorer_score": 0.6841263157894736
+          },
+          {
+            "rank": 3,
+            "player": "佐藤　龍之介",
+            "team": "FCtk",
+            "position": "MF",
+            "score": 0.6295555555555556,
+            "probability": 0.2047364319286978,
+            "source": "football_lab_player_stats",
+            "goals": 5,
+            "assists": 1,
+            "cbp_90": 1.62,
+            "played_games": 18,
+            "scorer_score": 0.6295555555555556
+          },
+          {
+            "rank": 4,
+            "player": "遠藤　渓太",
+            "team": "FCtk",
+            "position": "MF",
+            "score": 0.5158947368421053,
+            "probability": 0.16777303724790404,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 0,
+            "cbp_90": 1.79,
+            "played_games": 19,
+            "scorer_score": 0.5158947368421053
+          },
+          {
+            "rank": 5,
+            "player": "室屋　成",
+            "team": "FCtk",
+            "position": "DF",
+            "score": 0.3734736842105263,
+            "probability": 0.12145658766691765,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 1,
+            "cbp_90": 1.15,
+            "played_games": 19,
+            "scorer_score": 0.3734736842105263
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "相馬　勇紀",
+            "team": "mcd",
+            "position": "FW",
+            "score": 1.2096,
+            "probability": 0.3541121242879868,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 3,
+            "cbp_90": 2.54,
+            "played_games": 11,
+            "scorer_score": 1.2096
+          },
+          {
+            "rank": 2,
+            "player": "エリキ",
+            "team": "mcd",
+            "position": "FW",
+            "score": 0.9415058823529412,
+            "probability": 0.27562718917793927,
+            "source": "football_lab_player_stats",
+            "goals": 8,
+            "assists": 0,
+            "cbp_90": 1.57,
+            "played_games": 17,
+            "scorer_score": 0.9415058823529412
+          },
+          {
+            "rank": 3,
+            "player": "ナ　サンホ",
+            "team": "mcd",
+            "position": "FW",
+            "score": 0.6968470588235294,
+            "probability": 0.20400296982790644,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 3,
+            "cbp_90": 1.58,
+            "played_games": 17,
+            "scorer_score": 0.6968470588235294
+          },
+          {
+            "rank": 4,
+            "player": "中山　雄太",
+            "team": "mcd",
+            "position": "DF",
+            "score": 0.2942,
+            "probability": 0.08612746938287509,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 1,
+            "cbp_90": 1.37,
+            "played_games": 16,
+            "scorer_score": 0.2942
+          },
+          {
+            "rank": 5,
+            "player": "ネタ　ラヴィ",
+            "team": "mcd",
+            "position": "MF",
+            "score": 0.2737142857142857,
+            "probability": 0.08013024732329253,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 1,
+            "cbp_90": 1.19,
+            "played_games": 14,
+            "scorer_score": 0.2737142857142857
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-nago-vs-shim",
+      "date": "2026-08-08",
+      "home_team": "nago",
+      "away_team": "shim",
+      "predicted_score": {
+        "home": 1,
+        "away": 0
+      },
+      "expected_goals": {
+        "home": 1.293766458480136,
+        "away": 0.9539343251747209
+      },
+      "result_probabilities": {
+        "away_win": 0.27458114088786323,
+        "draw": 0.282215658627388,
+        "home_win": 0.4432032004847488
+      },
+      "score_candidates": [
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.13667717525372156,
+          "probability": 0.1366771752537216,
+          "combined_score": 0.1366771752537216
+        },
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.13038104894244593,
+          "probability": 0.13038104894244595,
+          "combined_score": 0.13038104894244595
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.10564284949409208,
+          "probability": 0.1056428494940921,
+          "combined_score": 0.1056428494940921
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.10077634034168133,
+          "probability": 0.10077634034168134,
+          "combined_score": 0.10077634034168134
+        },
+        {
+          "score": "2-0",
+          "home_goals": 2,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.08841417249153811,
+          "probability": 0.08841417249153814,
+          "combined_score": 0.08841417249153814
+        }
+      ],
+      "predicted_goal_diff": 0.3398321333054152,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "木村　勇大",
+            "team": "nago",
+            "position": "FW",
+            "score": 0.8835789473684211,
+            "probability": 0.30124914542507786,
+            "source": "football_lab_player_stats",
+            "goals": 9,
+            "assists": 2,
+            "cbp_90": 1.05,
+            "played_games": 19,
+            "scorer_score": 0.8835789473684211
+          },
+          {
+            "rank": 2,
+            "player": "中山　克広",
+            "team": "nago",
+            "position": "MF",
+            "score": 0.5784444444444444,
+            "probability": 0.19721598741545646,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 7,
+            "cbp_90": 1.92,
+            "played_games": 18,
+            "scorer_score": 0.5784444444444444
+          },
+          {
+            "rank": 3,
+            "player": "甲田　英將",
+            "team": "nago",
+            "position": "MF",
+            "score": 0.5510588235294118,
+            "probability": 0.1878790799187811,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 2.02,
+            "played_games": 17,
+            "scorer_score": 0.5510588235294118
+          },
+          {
+            "rank": 4,
+            "player": "高嶺　朋樹",
+            "team": "nago",
+            "position": "MF",
+            "score": 0.46111111111111114,
+            "probability": 0.15721212980678917,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.75,
+            "played_games": 18,
+            "scorer_score": 0.46111111111111114
+          },
+          {
+            "rank": 5,
+            "player": "浅野　雄也",
+            "team": "nago",
+            "position": "MF",
+            "score": 0.4588571428571429,
+            "probability": 0.1564436574338954,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 0,
+            "cbp_90": 1.58,
+            "played_games": 14,
+            "scorer_score": 0.4588571428571429
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "オ　セフン",
+            "team": "shim",
+            "position": "FW",
+            "score": 0.7736000000000001,
+            "probability": 0.28298572083802187,
+            "source": "football_lab_player_stats",
+            "goals": 7,
+            "assists": 1,
+            "cbp_90": 1.14,
+            "played_games": 18,
+            "scorer_score": 0.7736000000000001
+          },
+          {
+            "rank": 2,
+            "player": "北川　航也",
+            "team": "shim",
+            "position": "FW",
+            "score": 0.7586666666666667,
+            "probability": 0.2775230526660366,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 0,
+            "cbp_90": 2.05,
+            "played_games": 9,
+            "scorer_score": 0.7586666666666667
+          },
+          {
+            "rank": 3,
+            "player": "マテウス　ブエノ",
+            "team": "shim",
+            "position": "MF",
+            "score": 0.42155555555555557,
+            "probability": 0.1542065702716671,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 0,
+            "cbp_90": 1.83,
+            "played_games": 18,
+            "scorer_score": 0.42155555555555557
+          },
+          {
+            "rank": 4,
+            "player": "カピシャーバ",
+            "team": "shim",
+            "position": "MF",
+            "score": 0.41138461538461535,
+            "probability": 0.15048600300709378,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 1,
+            "cbp_90": 1.48,
+            "played_games": 13,
+            "scorer_score": 0.41138461538461535
+          },
+          {
+            "rank": 5,
+            "player": "小塚　和季",
+            "team": "shim",
+            "position": "MF",
+            "score": 0.36850000000000005,
+            "probability": 0.1347986532171808,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 0,
+            "cbp_90": 1.53,
+            "played_games": 16,
+            "scorer_score": 0.36850000000000005
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-c-os-vs-okay",
+      "date": "2026-08-08",
+      "home_team": "c-os",
+      "away_team": "okay",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "expected_goals": {
+        "home": 1.5011865791863535,
+        "away": 1.0258772911252767
+      },
+      "result_probabilities": {
+        "away_win": 0.25873688724976524,
+        "draw": 0.2592460882728198,
+        "home_win": 0.4820170244774149
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.12304186777829007,
+          "probability": 0.12304186777829007,
+          "combined_score": 0.12304186777829007
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.11993819226013515,
+          "probability": 0.11993819226013515,
+          "combined_score": 0.11993819226013515
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.09235440029339545,
+          "probability": 0.09235440029339545,
+          "combined_score": 0.09235440029339545
+        },
+        {
+          "score": "2-0",
+          "home_goals": 2,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.09002480227639374,
+          "probability": 0.09002480227639374,
+          "combined_score": 0.09002480227639374
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.08196307473317477,
+          "probability": 0.08196307473317478,
+          "combined_score": 0.08196307473317478
+        }
+      ],
+      "predicted_goal_diff": 0.47530928806107675,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "柴山　昌也",
+            "team": "c-os",
+            "position": "MF",
+            "score": 0.7244444444444444,
+            "probability": 0.22641106658108323,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 5,
+            "cbp_90": 2.65,
+            "played_games": 18,
+            "scorer_score": 0.7244444444444444
+          },
+          {
+            "rank": 2,
+            "player": "横山　夢樹",
+            "team": "c-os",
+            "position": "MF",
+            "score": 0.722,
+            "probability": 0.2256471028594906,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 1,
+            "cbp_90": 2.36,
+            "played_games": 18,
+            "scorer_score": 0.722
+          },
+          {
+            "rank": 3,
+            "player": "チアゴ　アンドラーデ",
+            "team": "c-os",
+            "position": "FW",
+            "score": 0.6903999999999999,
+            "probability": 0.21577113547672064,
+            "source": "football_lab_player_stats",
+            "goals": 6,
+            "assists": 0,
+            "cbp_90": 1.21,
+            "played_games": 18,
+            "scorer_score": 0.6903999999999999
+          },
+          {
+            "rank": 4,
+            "player": "香川　真司",
+            "team": "c-os",
+            "position": "MF",
+            "score": 0.584,
+            "probability": 0.18251787821321677,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 1,
+            "cbp_90": 2.42,
+            "played_games": 15,
+            "scorer_score": 0.584
+          },
+          {
+            "rank": 5,
+            "player": "田中　駿汰",
+            "team": "c-os",
+            "position": "MF",
+            "score": 0.47884210526315785,
+            "probability": 0.14965281686948867,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 1,
+            "cbp_90": 1.21,
+            "played_games": 19,
+            "scorer_score": 0.47884210526315785
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "ウェリック　ポポ",
+            "team": "okay",
+            "position": "FW",
+            "score": 0.6960000000000001,
+            "probability": 0.26107727240632217,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 3,
+            "cbp_90": 1.4,
+            "played_games": 15,
+            "scorer_score": 0.6960000000000001
+          },
+          {
+            "rank": 2,
+            "player": "山根　永遠",
+            "team": "okay",
+            "position": "MF",
+            "score": 0.5224705882352941,
+            "probability": 0.19598447713936384,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 2,
+            "cbp_90": 1.73,
+            "played_games": 17,
+            "scorer_score": 0.5224705882352941
+          },
+          {
+            "rank": 3,
+            "player": "ルカオ",
+            "team": "okay",
+            "position": "FW",
+            "score": 0.5045647058823529,
+            "probability": 0.18926778328198685,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 2,
+            "cbp_90": 1.22,
+            "played_games": 17,
+            "scorer_score": 0.5045647058823529
+          },
+          {
+            "rank": 4,
+            "player": "江坂　任",
+            "team": "okay",
+            "position": "MF",
+            "score": 0.48684210526315785,
+            "probability": 0.1826198404233575,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 3,
+            "cbp_90": 1.25,
+            "played_games": 19,
+            "scorer_score": 0.48684210526315785
+          },
+          {
+            "rank": 5,
+            "player": "木村　太哉",
+            "team": "okay",
+            "position": "MF",
+            "score": 0.456,
+            "probability": 0.17105062674896968,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 1,
+            "cbp_90": 1.03,
+            "played_games": 18,
+            "scorer_score": 0.456
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-fuku-vs-kobe",
+      "date": "2026-08-08",
+      "home_team": "fuku",
+      "away_team": "kobe",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "expected_goals": {
+        "home": 1.030234104708324,
+        "away": 1.2297042658380866
+      },
+      "result_probabilities": {
+        "away_win": 0.4071344150196987,
+        "draw": 0.28482553336050564,
+        "home_win": 0.3080400516197957
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.13220900033260363,
+          "probability": 0.13220900033260366,
+          "combined_score": 0.13220900033260366
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.12832908532962434,
+          "probability": 0.12832908532962436,
+          "combined_score": 0.12832908532962436
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.10751284191284688,
+          "probability": 0.10751284191284691,
+          "combined_score": 0.10751284191284691
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.10435768086253125,
+          "probability": 0.10435768086253128,
+          "combined_score": 0.10435768086253128
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.08128898584559585,
+          "probability": 0.08128898584559587,
+          "combined_score": 0.08128898584559587
+        }
+      ],
+      "predicted_goal_diff": -0.19947016112976246,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "見木　友哉",
+            "team": "fuku",
+            "position": "MF",
+            "score": 0.5235000000000001,
+            "probability": 0.26190568838142675,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 2,
+            "cbp_90": 1.68,
+            "played_games": 16,
+            "scorer_score": 0.5235000000000001
+          },
+          {
+            "rank": 2,
+            "player": "藤本　一輝",
+            "team": "fuku",
+            "position": "FW",
+            "score": 0.423,
+            "probability": 0.2116257997809809,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 0,
+            "cbp_90": 1.45,
+            "played_games": 16,
+            "scorer_score": 0.423
+          },
+          {
+            "rank": 3,
+            "player": "橋本　悠",
+            "team": "fuku",
+            "position": "DF",
+            "score": 0.39680000000000004,
+            "probability": 0.19851800792693433,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 2,
+            "cbp_90": 1.23,
+            "played_games": 16,
+            "scorer_score": 0.39680000000000004
+          },
+          {
+            "rank": 4,
+            "player": "北島　祐二",
+            "team": "fuku",
+            "position": "MF",
+            "score": 0.33177777777777784,
+            "probability": 0.16598755927134465,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 1,
+            "cbp_90": 1.52,
+            "played_games": 18,
+            "scorer_score": 0.33177777777777784
+          },
+          {
+            "rank": 5,
+            "player": "辻岡　佑真",
+            "team": "fuku",
+            "position": "DF",
+            "score": 0.3237333333333333,
+            "probability": 0.16196294463931335,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 1.19,
+            "played_games": 15,
+            "scorer_score": 0.3237333333333333
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "武藤　嘉紀",
+            "team": "kobe",
+            "position": "FW",
+            "score": 0.8893714285714285,
+            "probability": 0.2719848392470884,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 2,
+            "cbp_90": 1.92,
+            "played_games": 14,
+            "scorer_score": 0.8893714285714285
+          },
+          {
+            "rank": 2,
+            "player": "大迫　勇也",
+            "team": "kobe",
+            "position": "FW",
+            "score": 0.7961142857142858,
+            "probability": 0.24346522618802596,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 1,
+            "cbp_90": 1.71,
+            "played_games": 14,
+            "scorer_score": 0.7961142857142858
+          },
+          {
+            "rank": 3,
+            "player": "佐々木　大樹",
+            "team": "kobe",
+            "position": "FW",
+            "score": 0.7632,
+            "probability": 0.2333994804024745,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 3,
+            "cbp_90": 1.93,
+            "played_games": 14,
+            "scorer_score": 0.7632
+          },
+          {
+            "rank": 4,
+            "player": "井手口　陽介",
+            "team": "kobe",
+            "position": "MF",
+            "score": 0.4128888888888889,
+            "probability": 0.12626841212083556,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 3,
+            "cbp_90": 1.37,
+            "played_games": 18,
+            "scorer_score": 0.4128888888888889
+          },
+          {
+            "rank": 5,
+            "player": "永戸　勝也",
+            "team": "kobe",
+            "position": "DF",
+            "score": 0.4083555555555556,
+            "probability": 0.12488204204157557,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 1,
+            "cbp_90": 1.58,
+            "played_games": 18,
+            "scorer_score": 0.4083555555555556
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-hiro-vs-chib",
+      "date": "2026-08-08",
+      "home_team": "hiro",
+      "away_team": "chib",
+      "predicted_score": {
+        "home": 1,
+        "away": 0
+      },
+      "expected_goals": {
+        "home": 1.6749141909989738,
+        "away": 0.9313365331189768
+      },
+      "result_probabilities": {
+        "away_win": 0.20879623697772628,
+        "draw": 0.24245635535585078,
+        "home_win": 0.5487474076664229
+      },
+      "score_candidates": [
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.1236346970715174,
+          "probability": 0.12363469707151742,
+          "combined_score": 0.12363469707151742
+        },
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.11514551014380194,
+          "probability": 0.11514551014380194,
+          "combined_score": 0.11514551014380194
+        },
+        {
+          "score": "2-0",
+          "home_goals": 2,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.10353875431247186,
+          "probability": 0.10353875431247189,
+          "combined_score": 0.10353875431247189
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.09642942448483505,
+          "probability": 0.09642942448483506,
+          "combined_score": 0.09642942448483506
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.07381554096080445,
+          "probability": 0.07381554096080445,
+          "combined_score": 0.07381554096080445
+        }
+      ],
+      "predicted_goal_diff": 0.743577657879997,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "中村　草太",
+            "team": "hiro",
+            "position": "FW",
+            "score": 0.84,
+            "probability": 0.2275645294567404,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 1,
+            "cbp_90": 2.0,
+            "played_games": 15,
+            "scorer_score": 0.84
+          },
+          {
+            "rank": 2,
+            "player": "東　俊希",
+            "team": "hiro",
+            "position": "MF",
+            "score": 0.8263529411764706,
+            "probability": 0.22386740264763932,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 7,
+            "cbp_90": 2.22,
+            "played_games": 17,
+            "scorer_score": 0.8263529411764706
+          },
+          {
+            "rank": 3,
+            "player": "鈴木　章斗",
+            "team": "hiro",
+            "position": "FW",
+            "score": 0.8120842105263156,
+            "probability": 0.22000185862817803,
+            "source": "football_lab_player_stats",
+            "goals": 5,
+            "assists": 5,
+            "cbp_90": 1.41,
+            "played_games": 19,
+            "scorer_score": 0.8120842105263156
+          },
+          {
+            "rank": 4,
+            "player": "加藤　陸次樹",
+            "team": "hiro",
+            "position": "FW",
+            "score": 0.6889411764705882,
+            "probability": 0.18664116029393163,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 2,
+            "cbp_90": 1.4,
+            "played_games": 17,
+            "scorer_score": 0.6889411764705882
+          },
+          {
+            "rank": 5,
+            "player": "川辺　駿",
+            "team": "hiro",
+            "position": "MF",
+            "score": 0.5238823529411765,
+            "probability": 0.14192504897351052,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 3,
+            "cbp_90": 1.59,
+            "played_games": 17,
+            "scorer_score": 0.5238823529411765
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "石川　大地",
+            "team": "chib",
+            "position": "FW",
+            "score": 0.45930000000000004,
+            "probability": 0.2369489228490905,
+            "source": "football_lab_player_stats",
+            "goals": 3,
+            "assists": 1,
+            "cbp_90": 0.82,
+            "played_games": 16,
+            "scorer_score": 0.45930000000000004
+          },
+          {
+            "rank": 2,
+            "player": "津久井　匠海",
+            "team": "chib",
+            "position": "MF",
+            "score": 0.45888888888888896,
+            "probability": 0.23673683415989158,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 1.6,
+            "played_games": 18,
+            "scorer_score": 0.45888888888888896
+          },
+          {
+            "rank": 3,
+            "player": "イサカ　ゼイン",
+            "team": "chib",
+            "position": "MF",
+            "score": 0.3771111111111111,
+            "probability": 0.19454838138950895,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.33,
+            "played_games": 18,
+            "scorer_score": 0.3771111111111111
+          },
+          {
+            "rank": 4,
+            "player": "日高　大",
+            "team": "chib",
+            "position": "MF",
+            "score": 0.34285714285714286,
+            "probability": 0.176877053540424,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 0,
+            "cbp_90": 1.0,
+            "played_games": 14,
+            "scorer_score": 0.34285714285714286
+          },
+          {
+            "rank": 5,
+            "player": "髙橋　壱晟",
+            "team": "chib",
+            "position": "MF",
+            "score": 0.30023529411764704,
+            "probability": 0.154888808061085,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 1,
+            "cbp_90": 1.06,
+            "played_games": 17,
+            "scorer_score": 0.30023529411764704
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-tk-v-vs-ka-f",
+      "date": "2026-08-09",
+      "home_team": "tk-v",
+      "away_team": "ka-f",
+      "predicted_score": {
+        "home": 0,
+        "away": 1
+      },
+      "expected_goals": {
+        "home": 0.9601276739944937,
+        "away": 1.4001638603624103
+      },
+      "result_probabilities": {
+        "away_win": 0.4711229384955924,
+        "draw": 0.2708758200486467,
+        "home_win": 0.2580012414557609
+      },
+      "score_candidates": [
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.13216750952963002,
+          "probability": 0.13216750952963,
+          "combined_score": 0.13216750952963
+        },
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.12689768350232877,
+          "probability": 0.12689768350232875,
+          "combined_score": 0.12689768350232875
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.09439431574488756,
+          "probability": 0.09439431574488755,
+          "combined_score": 0.09439431574488755
+        },
+        {
+          "score": "0-2",
+          "home_goals": 0,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.09252808517874621,
+          "probability": 0.0925280851787462,
+          "combined_score": 0.0925280851787462
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.09063059481444072,
+          "probability": 0.0906305948144407,
+          "combined_score": 0.0906305948144407
+        }
+      ],
+      "predicted_goal_diff": -0.4400361863679165,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "染野　唯月",
+            "team": "tk-v",
+            "position": "FW",
+            "score": 0.5665411764705882,
+            "probability": 0.28078901988876015,
+            "source": "football_lab_player_stats",
+            "goals": 4,
+            "assists": 2,
+            "cbp_90": 0.89,
+            "played_games": 17,
+            "scorer_score": 0.5665411764705882
+          },
+          {
+            "rank": 2,
+            "player": "森田　晃樹",
+            "team": "tk-v",
+            "position": "MF",
+            "score": 0.373578947368421,
+            "probability": 0.1851531200894086,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 3,
+            "cbp_90": 1.21,
+            "played_games": 19,
+            "scorer_score": 0.373578947368421
+          },
+          {
+            "rank": 3,
+            "player": "齋藤　功佑",
+            "team": "tk-v",
+            "position": "MF",
+            "score": 0.36955555555555564,
+            "probability": 0.18315904747706852,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 0,
+            "cbp_90": 1.57,
+            "played_games": 18,
+            "scorer_score": 0.36955555555555564
+          },
+          {
+            "rank": 4,
+            "player": "新井　悠太",
+            "team": "tk-v",
+            "position": "MF",
+            "score": 0.365,
+            "probability": 0.1809012239814101,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.2,
+            "played_games": 16,
+            "scorer_score": 0.365
+          },
+          {
+            "rank": 5,
+            "player": "松橋　優安",
+            "team": "tk-v",
+            "position": "MF",
+            "score": 0.343,
+            "probability": 0.1699975885633525,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.09,
+            "played_games": 16,
+            "scorer_score": 0.343
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "エリソン",
+            "team": "ka-f",
+            "position": "FW",
+            "score": 0.8144000000000001,
+            "probability": 0.26456829338723653,
+            "source": "football_lab_player_stats",
+            "goals": 7,
+            "assists": 0,
+            "cbp_90": 1.06,
+            "played_games": 15,
+            "scorer_score": 0.8144000000000001
+          },
+          {
+            "rank": 2,
+            "player": "脇坂　泰斗",
+            "team": "ka-f",
+            "position": "MF",
+            "score": 0.6768888888888889,
+            "probability": 0.21989604389257866,
+            "source": "football_lab_player_stats",
+            "goals": 5,
+            "assists": 4,
+            "cbp_90": 1.44,
+            "played_games": 18,
+            "scorer_score": 0.6768888888888889
+          },
+          {
+            "rank": 3,
+            "player": "伊藤　達哉",
+            "team": "ka-f",
+            "position": "FW",
+            "score": 0.5773333333333334,
+            "probability": 0.1875541438059486,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.85,
+            "played_games": 18,
+            "scorer_score": 0.5773333333333334
+          },
+          {
+            "rank": 4,
+            "player": "山本　悠樹",
+            "team": "ka-f",
+            "position": "MF",
+            "score": 0.5332631578947369,
+            "probability": 0.17323738164353997,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 2.14,
+            "played_games": 19,
+            "scorer_score": 0.5332631578947369
+          },
+          {
+            "rank": 5,
+            "player": "マルシーニョ",
+            "team": "ka-f",
+            "position": "FW",
+            "score": 0.4763368421052632,
+            "probability": 0.15474413727069625,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 1,
+            "cbp_90": 1.59,
+            "played_games": 19,
+            "scorer_score": 0.4763368421052632
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    },
+    {
+      "match_id": "2026_27-j1-1-ngsk-vs-kyot",
+      "date": "2026-08-09",
+      "home_team": "ngsk",
+      "away_team": "kyot",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "expected_goals": {
+        "home": 1.4305902933242403,
+        "away": 1.2473442930237697
+      },
+      "result_probabilities": {
+        "away_win": 0.328610813012111,
+        "draw": 0.25814837998581125,
+        "home_win": 0.41324080700207777
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.12260286922058423,
+          "probability": 0.1226028692205842,
+          "combined_score": 0.1226028692205842
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.09829112130971836,
+          "probability": 0.09829112130971834,
+          "combined_score": 0.09829112130971834
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.08769723732033452,
+          "probability": 0.0876972373203345,
+          "combined_score": 0.0876972373203345
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.08570089549237318,
+          "probability": 0.08570089549237317,
+          "combined_score": 0.08570089549237317
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.07646399461531767,
+          "probability": 0.07646399461531765,
+          "combined_score": 0.07646399461531765
+        }
+      ],
+      "predicted_goal_diff": 0.18324600030047056,
+      "scorer_candidates": {
+        "home": [
+          {
+            "rank": 1,
+            "player": "マテウス　ジェズス",
+            "team": "ngsk",
+            "position": "MF",
+            "score": 0.8154117647058823,
+            "probability": 0.28653941381125575,
+            "source": "football_lab_player_stats",
+            "goals": 7,
+            "assists": 4,
+            "cbp_90": 1.43,
+            "played_games": 17,
+            "scorer_score": 0.8154117647058823
+          },
+          {
+            "rank": 2,
+            "player": "チアゴ　サンタナ",
+            "team": "ngsk",
+            "position": "FW",
+            "score": 0.6888000000000001,
+            "probability": 0.2420474621241005,
+            "source": "football_lab_player_stats",
+            "goals": 6,
+            "assists": 0,
+            "cbp_90": 0.87,
+            "played_games": 15,
+            "scorer_score": 0.6888000000000001
+          },
+          {
+            "rank": 3,
+            "player": "ノーマン　キャンベル",
+            "team": "ngsk",
+            "position": "FW",
+            "score": 0.6624,
+            "probability": 0.2327703816942569,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 2,
+            "cbp_90": 1.76,
+            "played_games": 15,
+            "scorer_score": 0.6624
+          },
+          {
+            "rank": 4,
+            "player": "長谷川　元希",
+            "team": "ngsk",
+            "position": "MF",
+            "score": 0.3811111111111111,
+            "probability": 0.13392418297291014,
+            "source": "football_lab_player_stats",
+            "goals": 1,
+            "assists": 2,
+            "cbp_90": 1.35,
+            "played_games": 18,
+            "scorer_score": 0.3811111111111111
+          },
+          {
+            "rank": 5,
+            "player": "ディエゴ　ピトゥカ",
+            "team": "ngsk",
+            "position": "MF",
+            "score": 0.298,
+            "probability": 0.10471855939747668,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 0,
+            "cbp_90": 1.49,
+            "played_games": 16,
+            "scorer_score": 0.298
+          }
+        ],
+        "away": [
+          {
+            "rank": 1,
+            "player": "ラファエル　エリアス",
+            "team": "kyot",
+            "position": "FW",
+            "score": 0.9380571428571428,
+            "probability": 0.2984014104403678,
+            "source": "football_lab_player_stats",
+            "goals": 6,
+            "assists": 3,
+            "cbp_90": 1.23,
+            "played_games": 14,
+            "scorer_score": 0.9380571428571428
+          },
+          {
+            "rank": 2,
+            "player": "マルコ　トゥーリオ",
+            "team": "kyot",
+            "position": "FW",
+            "score": 0.9084923076923078,
+            "probability": 0.2889966651326853,
+            "source": "football_lab_player_stats",
+            "goals": 5,
+            "assists": 1,
+            "cbp_90": 1.67,
+            "played_games": 13,
+            "scorer_score": 0.9084923076923078
+          },
+          {
+            "rank": 3,
+            "player": "ジョアン　ペドロ",
+            "team": "kyot",
+            "position": "MF",
+            "score": 0.47905882352941176,
+            "probability": 0.15239138650943562,
+            "source": "football_lab_player_stats",
+            "goals": 2,
+            "assists": 1,
+            "cbp_90": 1.66,
+            "played_games": 17,
+            "scorer_score": 0.47905882352941176
+          },
+          {
+            "rank": 4,
+            "player": "中野　瑠馬",
+            "team": "kyot",
+            "position": "MF",
+            "score": 0.41200000000000003,
+            "probability": 0.13105958633498122,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 0,
+            "cbp_90": 2.06,
+            "played_games": 13,
+            "scorer_score": 0.41200000000000003
+          },
+          {
+            "rank": 5,
+            "player": "平岡　大陽",
+            "team": "kyot",
+            "position": "MF",
+            "score": 0.40599999999999997,
+            "probability": 0.12915095158253004,
+            "source": "football_lab_player_stats",
+            "goals": 0,
+            "assists": 0,
+            "cbp_90": 2.03,
+            "played_games": 13,
+            "scorer_score": 0.40599999999999997
+          }
+        ]
+      },
+      "feature_source": {
+        "type": "feature_row",
+        "dataset_path": null,
+        "row_index": null,
+        "warnings": [],
+        "diagnostics": {
+          "missing_columns": [],
+          "missing_dummy_columns": [],
+          "missing_non_dummy_columns": [],
+          "extra_columns": [],
+          "non_numeric_columns": []
+        }
+      },
+      "model_info": {
+        "feature_count": 156,
+        "max_goals": 8,
+        "top_n_scores": 5,
+        "prediction_strategy": "legacy_three_model_combination",
+        "probability_calibration": {
+          "method": "temperature_scaling",
+          "temperature": 1.0
+        }
+      },
+      "section": 1
+    }
+  ],
+  "skipped_matches": [],
+  "warnings": [],
+  "data_sources": {
+    "features": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/features/upcoming_features_2026_27_j1.csv"
+  }
+}
