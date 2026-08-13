@@ -5,9 +5,11 @@ from __future__ import annotations
 import argparse
 import json
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 from zoneinfo import ZoneInfo
+
+import pandas as pd
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -30,6 +32,48 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def overdue_unplayed_matches(
+    matches: pd.DataFrame,
+    *,
+    now: datetime | None = None,
+    grace_hours: int = 6,
+) -> list[dict[str, object]]:
+    """Return fixtures that should have a result but are still unplayed.
+
+    A non-empty schedule is not sufficient proof that a refresh succeeded: a
+    partial upstream page can be merged into an old full schedule while all
+    completed matches remain stale.  This guard makes that state fail loudly.
+    """
+    now = now or datetime.now(ZoneInfo("Asia/Tokyo"))
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=ZoneInfo("Asia/Tokyo"))
+    cutoff = now - timedelta(hours=grace_hours)
+    overdue: list[dict[str, object]] = []
+    for _, match in matches.iterrows():
+        if str(match.get("status", "")) != "unplayed":
+            continue
+        date_text = str(match.get("match_date", "") or "")
+        time_text = str(match.get("kickoff_time", "") or "")
+        try:
+            kickoff = datetime.strptime(
+                f"{date_text} {time_text}", "%Y-%m-%d %H:%M"
+            ).replace(tzinfo=ZoneInfo("Asia/Tokyo"))
+        except ValueError:
+            continue
+        if kickoff > cutoff:
+            continue
+        overdue.append(
+            {
+                "match_id": str(match.get("match_id", "")),
+                "match_date": date_text,
+                "kickoff_time": time_text,
+                "home_team": str(match.get("home_team", "")),
+                "away_team": str(match.get("away_team", "")),
+            }
+        )
+    return overdue
+
+
 def main() -> int:
     args = parse_args()
     profile = get_competition(args.competition_key)
@@ -42,6 +86,9 @@ def main() -> int:
         "scope": args.scope,
     }
     matches, info = scrape_matches(profile.key, use_cache=args.use_cache)
+    overdue = overdue_unplayed_matches(matches)
+    info["overdue_unplayed_count"] = len(overdue)
+    info["overdue_unplayed_matches"] = overdue
     report["matches"] = info
     if args.scope == "all":
         market_values, market_info = scrape_market_values(profile.key, use_cache=args.use_cache)
@@ -67,6 +114,12 @@ def main() -> int:
     # could silently keep displaying stale predictions after an upstream change.
     if matches.empty:
         print("[ERROR] 公式日程から対象大会の試合を取得できませんでした。既存の予測は更新していません。")
+        return 1
+    if overdue:
+        print(
+            "[ERROR] キックオフから6時間以上経過した試合が未消化のままです。"
+            "結果取得元の更新失敗として処理を中止します。"
+        )
         return 1
     return 0
 

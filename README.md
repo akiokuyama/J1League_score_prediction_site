@@ -109,6 +109,15 @@ PWAはGitHub上の最新の公開予測JSONを読み込みます。Service Worke
 
 測定ID、イベント一覧、プライバシー方針、クロスドメイン設定は `docs/reports/ga4_usage_analytics_2026_27.md` を参照してください。
 
+Google Analytics Data APIを設定済みの場合は、次のコマンドでJ1アプリだけの直近28日レポートを生成できます。
+
+```bash
+python -m pip install -r requirements-analytics.txt
+python scripts/generate_ga4_usage_report.py --days 28
+```
+
+同じGA4プロパティにあるQiita用ストリームは、スクリプト内のストリームIDフィルタで除外されます。
+
 ## 公開ページとSEO
 
 検索流入用の静的ページとして `docs/index.html` を用意しています。GitHub Pagesでは、リポジトリ設定から `docs/` ディレクトリを公開元にすると、以下のようなURLで公開できます。

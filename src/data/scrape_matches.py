@@ -36,6 +36,7 @@ MATCH_COLUMNS = [
 
 
 DATA_SITE_URL = "https://data.j-league.or.jp/SFMS01/search?competition_years=20261&competition_frame_ids=35&tv_relay_station_name="
+REGULAR_J1_DATA_SITE_URL = "https://data.j-league.or.jp/SFMS01/search?competition_years=2026&competition_frame_ids=1&tv_relay_station_name="
 MATCH_SEARCH_URL = "https://www.jleague.jp/match/search/?category%5B%5D=100yj1&year=2026&section="
 REGULAR_J1_MATCH_SEARCH_URL = "https://www.jleague.jp/match/search/j1/all/"
 
@@ -392,17 +393,19 @@ def scrape_matches(
     raw_path = RAW_DATA_DIR / "matches" / f"schedule_{profile.key}_{profile.category}.csv"
     processed_path = PROCESSED_DATA_DIR / f"matches_{profile.key}_clean.csv"
     existing = pd.read_csv(processed_path) if processed_path.exists() and processed_path.stat().st_size > 0 else empty_frame(MATCH_COLUMNS)
-    use_data_site = profile.key == "2026_special"
-    schedule_url = MATCH_SEARCH_URL if use_data_site else REGULAR_J1_MATCH_SEARCH_URL
-    info: dict[str, Any] = {"url": schedule_url, "warnings": [], "competition_key": profile.key}
+    data_site_url = DATA_SITE_URL if profile.key == "2026_special" else REGULAR_J1_DATA_SITE_URL
+    schedule_url = MATCH_SEARCH_URL if profile.key == "2026_special" else REGULAR_J1_MATCH_SEARCH_URL
+    info: dict[str, Any] = {
+        "url": data_site_url,
+        "fallback_url": schedule_url,
+        "warnings": [],
+        "competition_key": profile.key,
+    }
     try:
-        if use_data_site:
-            fetched = fetch_html(DATA_SITE_URL, use_cache=use_cache)
-            info["cache_path"] = str(fetched.cache_path)
-            info["from_cache"] = fetched.from_cache
-            df = _parse_data_site_tables(fetched.html, DATA_SITE_URL, profile)
-        else:
-            df = empty_frame(MATCH_COLUMNS)
+        fetched = fetch_html(data_site_url, use_cache=use_cache)
+        info["cache_path"] = str(fetched.cache_path)
+        info["from_cache"] = fetched.from_cache
+        df = _parse_data_site_tables(fetched.html, data_site_url, profile)
         if df.empty:
             info["warnings"].append("J.League Data Siteから試合行を抽出できませんでした。jleague.jp側にフォールバックします。")
             fetched = fetch_html(schedule_url, use_cache=use_cache)
@@ -424,6 +427,7 @@ def scrape_matches(
 
     if not df.empty:
         df = _filter_profile_matches(df, profile)
+    info["source_rows"] = int(len(df))
     if df.empty and not existing.empty:
         info["warnings"].append("新規取得が空のため、直前の正常な日程データを保持しました。")
         info["used_existing"] = True
@@ -447,6 +451,8 @@ def scrape_matches(
     safe_write_csv(df, raw_path)
     safe_write_csv(df, processed_path)
     info["rows"] = int(len(df))
+    info["finished_rows"] = int((df["status"] == "finished").sum()) if not df.empty else 0
+    info["unplayed_rows"] = int((df["status"] == "unplayed").sum()) if not df.empty else 0
     info["raw_path"] = str(raw_path)
     info["processed_path"] = str(processed_path)
     return df, info

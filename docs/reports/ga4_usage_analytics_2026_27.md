@@ -103,3 +103,55 @@ GA4管理画面でも、対象ウェブデータストリームの「タグ設�
 
 `match_id` は値の種類が多いため、標準レポートの主要ディメンションにはせず、詳細調査時だけ利用する。
 
+## 継続的な確認方法
+
+### GA4の画面だけで確認する
+
+同じプロパティにQiita用ストリームがあるため、プロパティホームの総数をアプリ利用者数として扱わない。
+
+GA4の「探索」には `J1アプリ 週次利用状況` を作成済み。タブ `イベント別` で、過去28日間のイベント数と総ユーザー数を25件まで表示し、ストリーム名が `J1試合予測AI Web・PWA・Streamlit` と完全一致するデータだけに絞っている。通常の週次確認は、この探索を開いて期間を変更するだけでよい。
+
+1. GA4でプロパティ `489676180` を開く。
+2. 「探索」→ `J1アプリ 週次利用状況` → `イベント別` を開く。
+3. 必要に応じて期間を「過去7日間」または「過去28日間」に変更する。
+4. `app_open`、`view_match_detail`、`set_my_team`、`app_installed`、`data_load_error` のイベント数と総ユーザー数を確認する。
+5. ページ、流入元、デバイスまで調べる場合は標準レポートを開き、比較またはフィルタで同じストリーム名を指定する。
+
+週次では次の5点だけを見ればよい。
+
+- `app_open` のユーザー数
+- `app_open` のイベント数 ÷ ユーザー数
+- `view_match_detail` のユーザー数 ÷ `app_open` のユーザー数
+- `set_my_team` のユーザー数 ÷ `app_open` のユーザー数
+- `data_load_error` のイベント数
+
+### 1コマンドでレポートを作る
+
+Google Analytics Data APIを一度設定すれば、J1用ストリームだけを集計したMarkdownとJSONを生成できる。
+
+初回のみ:
+
+```bash
+python -m pip install -r requirements-analytics.txt
+gcloud auth application-default login \
+  --scopes="https://www.googleapis.com/auth/cloud-platform,https://www.googleapis.com/auth/analytics.readonly"
+```
+
+Google Cloud側でGoogle Analytics Data APIを有効にし、ログインするGoogleアカウントにGA4プロパティの閲覧権限を付与しておく。
+
+毎週の実行:
+
+```bash
+python scripts/generate_ga4_usage_report.py --days 28
+```
+
+出力先:
+
+```text
+outputs/local/analytics/ga4_usage_report_latest.md
+outputs/local/analytics/ga4_usage_report_latest.json
+```
+
+スクリプトはストリームID `15315638495` を全クエリに適用するため、Qiitaのデータを混ぜない。認証情報はリポジトリへ保存せず、Application Default Credentialsまたはリポジトリ外のサービスアカウント鍵を使用する。
+
+初回の簡易分析は `docs/reports/ga4_usage_analysis_2026-08-08.md` に記録する。

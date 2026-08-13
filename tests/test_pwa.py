@@ -121,7 +121,9 @@ def test_past_results_are_split_by_season_with_partial_archive_note() -> None:
 
     assert index["default_season"] == "2026_27_j1"
     assert current["season"] == "2026_27"
-    assert current["matches"] == []
+    assert current["matches"]
+    assert all(match["match_id"].startswith("2026_27-j1-") for match in current["matches"])
+    assert all(match["actual_score"] is not None for match in current["matches"])
     assert len(special["matches"]) == 49
     assert seasons["2026_special"]["coverage"]["start_date"] == "2026-05-10"
     assert seasons["2026_special"]["coverage"]["end_date"] == "2026-06-06"
