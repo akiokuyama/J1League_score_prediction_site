@@ -1,75 +1,24 @@
 {
-  "updated_at": "2026-08-13T18:01:10+09:00",
+  "updated_at": "2026-08-17T07:13:43+09:00",
   "competition_key": "2026_27_j1",
   "season": "2026_27",
   "category": "j1",
   "use_cache": false,
-  "scope": "all",
+  "scope": "results",
   "matches": {
     "url": "https://data.j-league.or.jp/SFMS01/search?competition_years=2026&competition_frame_ids=1&tv_relay_station_name=",
     "fallback_url": "https://www.jleague.jp/match/search/j1/all/",
     "warnings": [],
     "competition_key": "2026_27_j1",
-    "cache_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/html_cache/df5b643662a28b1a84c6.html",
+    "cache_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/html_cache/df5b643662a28b1a84c6.html",
     "from_cache": false,
     "source_rows": 379,
     "rows": 379,
-    "finished_rows": 10,
-    "unplayed_rows": 337,
-    "raw_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/matches/schedule_2026_27_j1_j1.csv",
-    "processed_path": "/Users/akihirookuyama/Soccer_Score_App/Data/processed/matches_2026_27_j1_clean.csv",
+    "finished_rows": 20,
+    "unplayed_rows": 327,
+    "raw_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/matches/schedule_2026_27_j1_j1.csv",
+    "processed_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/processed/matches_2026_27_j1_clean.csv",
     "overdue_unplayed_count": 0,
     "overdue_unplayed_matches": []
-  },
-  "market_values": {
-    "url": "https://www.transfermarkt.com/j1-league/startseite/wettbewerb/JAP1",
-    "manual_path": "/Users/akihirookuyama/Soccer_Score_App/Data/manual/market_values_2026_27_j1.csv",
-    "warnings": [],
-    "cache_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/html_cache/8f00a990ab23036f133c.html",
-    "from_cache": false,
-    "source": "transfermarkt",
-    "snapshot_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/market_values/market_values_2026_27_j1_asof_20260813.csv",
-    "rows": 20,
-    "raw_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/market_values/market_values_2026_27_j1.csv",
-    "processed_path": "/Users/akihirookuyama/Soccer_Score_App/Data/processed/market_values_2026_27_j1_clean.csv"
-  },
-  "football_lab": {
-    "urls": {
-      "expected": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=expected",
-      "kagi": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=kagi",
-      "goal_patterns": "https://www.football-lab.jp/summary/team_ranking/j1/?year=2026&data=goal",
-      "team_styles": "https://www.football-lab.jp/summary/team_style/j1/?year=2026&data=21"
-    },
-    "warnings": [
-      "team_styles: No tables found"
-    ],
-    "expected_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/football_lab/expected_2026_27_j1.csv",
-    "expected_rows": 40,
-    "kagi_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/football_lab/kagi_2026_27_j1.csv",
-    "kagi_rows": 40,
-    "goal_patterns_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/football_lab/goal_patterns/goal_patterns_2026_27_j1_asof_20260813.csv",
-    "goal_patterns_rows": 20,
-    "team_styles_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/football_lab/team_styles/team_styles_2026_27_j1_asof_20260813.csv",
-    "team_styles_rows": 0
-  },
-  "formations": {
-    "warnings": [],
-    "available_from": "2026-08-08",
-    "rows": 20,
-    "raw_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/formations/formations_2026_27_j1.csv",
-    "processed_path": "/Users/akihirookuyama/Soccer_Score_App/Data/processed/formations_2026_27_j1_clean.csv"
-  },
-  "player_stats": {
-    "warnings": [],
-    "available_from": "2026-08-08",
-    "rows": 200,
-    "raw_path": "/Users/akihirookuyama/Soccer_Score_App/Data/raw/player_stats/player_stats_2026_27_j1.csv",
-    "processed_path": "/Users/akihirookuyama/Soccer_Score_App/Data/processed/player_stats_2026_27_j1_clean.csv"
-  },
-  "snapshot_readiness": {
-    "market_values": "actual",
-    "xg_agi_kagi": "actual",
-    "formations": "actual",
-    "player_stats": "actual"
   }
 }
