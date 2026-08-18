@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-17T07:13:48+09:00",
+  "generated_at": "2026-08-19T07:27:34+09:00",
   "season": "2026_27",
   "league": "J1",
   "source": {
@@ -7,8 +7,8 @@
     "actual_matches": "Data/processed/matches_2026_27_j1_clean.csv"
   },
   "diagnostics": {
-    "prediction_history_files": 108,
-    "prediction_history_matches": 3835,
+    "prediction_history_files": 110,
+    "prediction_history_matches": 4204,
     "prediction_history_unique_matches": 428,
     "matches_rows": 379,
     "match_id_matched": 379,

@@ -1,14 +1,38 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-08-13T18:03:49+09:00",
-  "default_forecast": "2026-08-13T18:03:49+09:00",
+  "generated_at": "2026-08-19T07:27:35+09:00",
+  "default_forecast": "2026-08-19T07:27:35+09:00",
   "forecasts": [
+    {
+      "generated_at": "2026-08-19T07:27:35+09:00",
+      "data_file": "history/standings_forecast_20260819_072735.json",
+      "data_as_of": {
+        "label": "2026-08-15",
+        "completed_matches": 20
+      }
+    },
     {
       "generated_at": "2026-08-13T18:03:49+09:00",
       "data_file": "history/standings_forecast_20260813_180349.json",
       "data_as_of": {
         "label": "2026-08-09",
         "completed_matches": 10
+      }
+    },
+    {
+      "generated_at": "2026-08-12T07:44:49+09:00",
+      "data_file": "history/standings_forecast_20260812_074449.json",
+      "data_as_of": {
+        "label": "開幕前",
+        "completed_matches": 0
+      }
+    },
+    {
+      "generated_at": "2026-08-05T08:05:57+09:00",
+      "data_file": "history/standings_forecast_20260805_080557.json",
+      "data_as_of": {
+        "label": "開幕前",
+        "completed_matches": 0
       }
     },
     {
