@@ -27,6 +27,35 @@ PLAYER_COLUMN_MAP = {
     "アシスト": "assists",
 }
 
+# Football Lab occasionally returns the same eight-column table with a
+# partially corrupted character encoding in the header row.  The first three
+# headers may remain readable while the numeric headers become mojibake.  The
+# table's column order is stable, so normalize by position before concatenating
+# team tables; otherwise pandas creates duplicate columns and the numeric
+# fields for the affected team are silently lost.
+PLAYER_TABLE_COLUMNS = [
+    "順位",
+    "Unnamed: 1",
+    "Unnamed: 2",
+    "ポイントCBP",
+    "90分平均",
+    "出場試合出場",
+    "ゴール",
+    "アシスト",
+]
+
+
+def normalize_player_table_columns(table: pd.DataFrame) -> pd.DataFrame:
+    """Normalize a Football Lab ranking table, including mojibake headers."""
+    normalized = table.copy()
+    if len(normalized.columns) == len(PLAYER_TABLE_COLUMNS):
+        normalized.columns = PLAYER_TABLE_COLUMNS
+    else:
+        normalized = normalized.rename(
+            columns={col: PLAYER_COLUMN_MAP.get(str(col), str(col)) for col in normalized.columns}
+        )
+    return normalized
+
 
 def normalize_player_stats(df: pd.DataFrame) -> pd.DataFrame:
     if df.empty:
@@ -81,8 +110,7 @@ def scrape_player_stats_2026_special(*, use_cache: bool = False) -> tuple[pd.Dat
             fetched = fetch_html(url, use_cache=use_cache, delay_seconds=0.2, retries=1, timeout=10)
             tables = pd.read_html(StringIO(fetched.html))
             if tables:
-                table = tables[0].copy()
-                table.columns = [str(col) for col in table.columns]
+                table = normalize_player_table_columns(tables[0])
                 table["team"] = team_code
                 table["source_url"] = url
                 frames.append(table)
@@ -152,8 +180,7 @@ def scrape_player_stats(
                 continue
             tables = pd.read_html(StringIO(fetched.html))
             if tables:
-                table = tables[0].copy()
-                table.columns = [str(col) for col in table.columns]
+                table = normalize_player_table_columns(tables[0])
                 table["team"] = team_code
                 table["source_url"] = url
                 table["source_updated_at"] = updated.isoformat()

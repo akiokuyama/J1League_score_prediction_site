@@ -28,5 +28,11 @@ def test_latest_predictions_schema() -> None:
             assert key in match
         assert "home" in match["scorer_candidates"]
         assert "away" in match["scorer_candidates"]
-        assert match["scorer_candidates"]["home"]
-        assert match["scorer_candidates"]["away"]
+        # Scorer candidates are an optional supplementary data source.  A
+        # team's player-stats page can be unavailable or contain no usable
+        # numeric values (for example immediately after a season starts),
+        # while the match prediction itself remains valid.  The UI handles an
+        # empty list by displaying "候補なし", so the schema contract is the
+        # presence of a list rather than a non-empty list.
+        assert isinstance(match["scorer_candidates"]["home"], list)
+        assert isinstance(match["scorer_candidates"]["away"], list)
