@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-08-19T07:24:17+09:00",
+  "updated_at": "2026-08-24T21:44:09+09:00",
   "competition_key": "2026_27_j1",
   "steps": [
     "fixtures_updated",
@@ -7,6 +7,6 @@
     "next_section_predicted",
     "all_unplayed_predicted"
   ],
-  "upcoming_feature_rows": 359,
+  "upcoming_feature_rows": 351,
   "prediction_updated": true
 }
