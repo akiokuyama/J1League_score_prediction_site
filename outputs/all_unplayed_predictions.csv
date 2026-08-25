@@ -350,3 +350,13 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-38-okay-vs-fuku,2027-06-06,okay,fuku,1,0
 2026_27-j1-7-kyot-vs-kasw,2026-09-11,kyot,kasw,1,1
 2026_27-j1-7-kobe-vs-kasm,2026-09-11,kobe,kasm,1,1
+2026_27-j1-9-kasm-vs-g-os,2026-10-09,kasm,g-os,1,0
+2026_27-j1-10-okay-vs-kobe,2026-10-18,okay,kobe,1,1
+2026_27-j1-10-mcd-vs-fuku,2026-10-18,mcd,fuku,1,0
+2026_27-j1-13-mcd-vs-g-os,2026-11-01,mcd,g-os,1,0
+2026_27-j1-15-kasm-vs-shim,2026-11-20,kasm,shim,1,1
+2026_27-j1-15-kobe-vs-mito,2026-11-20,kobe,mito,1,1
+2026_27-j1-17-ka-f-vs-g-os,2026-11-29,ka-f,g-os,1,1
+2026_27-j1-17-mcd-vs-tk-v,2026-11-29,mcd,tk-v,1,0
+2026_27-j1-18-kasw-vs-fuku,2026-12-06,kasw,fuku,1,1
+2026_27-j1-16-kyot-vs-kobe,2027-04-14,kyot,kobe,1,1
