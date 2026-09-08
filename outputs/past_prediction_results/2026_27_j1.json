@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-07T08:23:26+09:00",
+  "generated_at": "2026-09-09T08:56:11+09:00",
   "season": "2026_27",
   "league": "J1",
   "source": {
@@ -7,17 +7,17 @@
     "actual_matches": "Data/processed/matches_2026_27_j1_clean.csv"
   },
   "diagnostics": {
-    "prediction_history_files": 116,
-    "prediction_history_matches": 5297,
-    "prediction_history_unique_matches": 428,
+    "prediction_history_files": 118,
+    "prediction_history_matches": 5641,
+    "prediction_history_unique_matches": 429,
     "matches_rows": 380,
-    "match_id_matched": 379,
+    "match_id_matched": 380,
     "finished_matched": 60,
     "score_complete_matched": 60,
     "evaluation_target_matches": 60,
     "unmatched_prediction_matches": 49,
-    "matched_but_unplayed": 319,
-    "matched_but_missing_score": 319
+    "matched_but_unplayed": 320,
+    "matched_but_missing_score": 320
   },
   "matches": [
     {

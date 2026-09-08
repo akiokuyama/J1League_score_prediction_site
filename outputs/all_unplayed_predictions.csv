@@ -1,24 +1,4 @@
 match_id,date,home_team,away_team,predicted_home,predicted_away
-2026_27-j1-5-mito-vs-kasm,2026-09-02,mito,kasm,1,1
-2026_27-j1-5-chib-vs-okay,2026-09-02,chib,okay,1,1
-2026_27-j1-5-tk-v-vs-kobe,2026-09-02,tk-v,kobe,1,1
-2026_27-j1-5-mcd-vs-ka-f,2026-09-02,mcd,ka-f,1,1
-2026_27-j1-5-y-fm-vs-kyot,2026-09-02,y-fm,kyot,1,0
-2026_27-j1-5-shim-vs-FCtk,2026-09-02,shim,FCtk,1,1
-2026_27-j1-5-c-os-vs-kasw,2026-09-02,c-os,kasw,1,1
-2026_27-j1-5-hiro-vs-nago,2026-09-02,hiro,nago,1,1
-2026_27-j1-5-fuku-vs-uraw,2026-09-02,fuku,uraw,1,1
-2026_27-j1-5-ngsk-vs-g-os,2026-09-02,ngsk,g-os,1,1
-2026_27-j1-6-fuku-vs-mito,2026-09-05,fuku,mito,1,1
-2026_27-j1-6-kasm-vs-uraw,2026-09-06,kasm,uraw,1,1
-2026_27-j1-6-chib-vs-g-os,2026-09-06,chib,g-os,1,1
-2026_27-j1-6-nago-vs-mcd,2026-09-06,nago,mcd,1,1
-2026_27-j1-6-okay-vs-hiro,2026-09-06,okay,hiro,1,1
-2026_27-j1-6-kasw-vs-y-fm,2026-09-06,kasw,y-fm,1,1
-2026_27-j1-6-ka-f-vs-shim,2026-09-06,ka-f,shim,1,1
-2026_27-j1-6-c-os-vs-tk-v,2026-09-06,c-os,tk-v,1,1
-2026_27-j1-6-kobe-vs-ngsk,2026-09-06,kobe,ngsk,1,0
-2026_27-j1-6-FCtk-vs-kyot,2026-09-06,FCtk,kyot,1,1
 2026_27-j1-7-kyot-vs-kasw,2026-09-12,kyot,kasw,1,1
 2026_27-j1-7-kobe-vs-kasm,2026-09-12,kobe,kasm,1,1
 2026_27-j1-7-mito-vs-ka-f,2026-09-12,mito,ka-f,1,1
@@ -36,7 +16,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-8-ngsk-vs-c-os,2026-09-19,ngsk,c-os,1,1
 2026_27-j1-8-FCtk-vs-nago,2026-09-19,FCtk,nago,1,1
 2026_27-j1-8-okay-vs-kyot,2026-09-19,okay,kyot,1,1
-2026_27-j1-8-y-fm-vs-mito,2026-09-19,y-fm,mito,1,1
+2026_27-j1-8-y-fm-vs-mito,2026-09-19,y-fm,mito,1,0
 2026_27-j1-8-mcd-vs-kasw,2026-09-20,mcd,kasw,1,1
 2026_27-j1-8-g-os-vs-kobe,2026-09-20,g-os,kobe,1,1
 2026_27-j1-9-kasw-vs-kobe,2026-10-09,kasw,kobe,1,1
@@ -68,7 +48,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-11-okay-vs-mito,2026-10-21,okay,mito,1,1
 2026_27-j1-11-fuku-vs-g-os,2026-10-21,fuku,g-os,1,1
 2026_27-j1-11-ngsk-vs-hiro,2026-10-21,ngsk,hiro,1,1
-2026_27-j1-11-uraw-vs-chib,2026-10-21,uraw,chib,2,1
+2026_27-j1-11-uraw-vs-chib,2026-10-21,uraw,chib,1,1
 2026_27-j1-12-kobe-vs-mcd,2026-10-24,kobe,mcd,1,1
 2026_27-j1-12-hiro-vs-shim,2026-10-24,hiro,shim,1,0
 2026_27-j1-12-kasm-vs-kasw,2026-10-24,kasm,kasw,1,0
@@ -102,7 +82,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-15-kasw-vs-chib,2026-11-20,kasw,chib,1,1
 2026_27-j1-15-kasm-vs-shim,2026-11-21,kasm,shim,1,0
 2026_27-j1-15-kyot-vs-uraw,2026-11-21,kyot,uraw,1,1
-2026_27-j1-15-kobe-vs-mito,2026-11-21,kobe,mito,1,1
+2026_27-j1-15-kobe-vs-mito,2026-11-21,kobe,mito,1,0
 2026_27-j1-15-tk-v-vs-nago,2026-11-21,tk-v,nago,1,1
 2026_27-j1-15-mcd-vs-ngsk,2026-11-21,mcd,ngsk,1,0
 2026_27-j1-15-hiro-vs-y-fm,2026-11-21,hiro,y-fm,1,1
@@ -144,7 +124,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-19-okay-vs-kasw,2026-12-13,okay,kasw,1,1
 2026_27-j1-19-hiro-vs-kasm,2026-12-13,hiro,kasm,1,1
 2026_27-j1-19-uraw-vs-ka-f,2026-12-13,uraw,ka-f,1,1
-2026_27-j1-19-nago-vs-mito,2026-12-13,nago,mito,1,1
+2026_27-j1-19-nago-vs-mito,2026-12-13,nago,mito,1,0
 2026_27-j1-19-fuku-vs-FCtk,2026-12-13,fuku,FCtk,1,1
 2026_27-j1-16-kyot-vs-kobe,2026-12-16,kyot,kobe,1,1
 2026_27-j1-16-kasm-vs-mcd,2026-12-16,kasm,mcd,1,1
@@ -158,7 +138,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-20-kobe-vs-y-fm,2026-12-19,kobe,y-fm,1,1
 2026_27-j1-20-ka-f-vs-kasw,2026-12-19,ka-f,kasw,1,1
 2026_27-j1-20-g-os-vs-mcd,2026-12-19,g-os,mcd,1,1
-2026_27-j1-21-kasm-vs-mito,2027-02-13,kasm,mito,1,1
+2026_27-j1-21-kasm-vs-mito,2027-02-13,kasm,mito,1,0
 2026_27-j1-21-kasw-vs-shim,2027-02-13,kasw,shim,1,1
 2026_27-j1-21-mcd-vs-chib,2027-02-13,mcd,chib,1,0
 2026_27-j1-21-nago-vs-FCtk,2027-02-13,nago,FCtk,1,1
@@ -219,7 +199,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-26-kobe-vs-shim,2027-03-13,kobe,shim,1,1
 2026_27-j1-26-chib-vs-uraw,2027-03-14,chib,uraw,1,1
 2026_27-j1-27-kasw-vs-tk-v,2027-03-20,kasw,tk-v,1,1
-2026_27-j1-27-mcd-vs-mito,2027-03-20,mcd,mito,1,1
+2026_27-j1-27-mcd-vs-mito,2027-03-20,mcd,mito,1,0
 2026_27-j1-27-ka-f-vs-FCtk,2027-03-20,ka-f,FCtk,1,1
 2026_27-j1-27-y-fm-vs-uraw,2027-03-20,y-fm,uraw,1,1
 2026_27-j1-27-nago-vs-kobe,2027-03-20,nago,kobe,1,1
@@ -284,7 +264,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-33-mcd-vs-kyot,2027-05-03,mcd,kyot,1,1
 2026_27-j1-33-nago-vs-chib,2027-05-03,nago,chib,1,0
 2026_27-j1-33-g-os-vs-kasm,2027-05-03,g-os,kasm,1,1
-2026_27-j1-33-kobe-vs-kasw,2027-05-03,kobe,kasw,1,1
+2026_27-j1-33-kobe-vs-kasw,2027-05-03,kobe,kasw,1,0
 2026_27-j1-33-okay-vs-ka-f,2027-05-03,okay,ka-f,1,1
 2026_27-j1-33-hiro-vs-uraw,2027-05-03,hiro,uraw,1,1
 2026_27-j1-33-ngsk-vs-y-fm,2027-05-03,ngsk,y-fm,1,1
@@ -311,7 +291,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-36-mito-vs-nago,2027-05-22,mito,nago,1,1
 2026_27-j1-36-uraw-vs-kyot,2027-05-22,uraw,kyot,1,1
 2026_27-j1-36-chib-vs-kobe,2027-05-22,chib,kobe,1,1
-2026_27-j1-36-FCtk-vs-g-os,2027-05-22,FCtk,g-os,1,0
+2026_27-j1-36-FCtk-vs-g-os,2027-05-22,FCtk,g-os,1,1
 2026_27-j1-36-tk-v-vs-ngsk,2027-05-22,tk-v,ngsk,1,1
 2026_27-j1-36-ka-f-vs-c-os,2027-05-22,ka-f,c-os,1,1
 2026_27-j1-36-y-fm-vs-shim,2027-05-22,y-fm,shim,1,0
@@ -325,7 +305,7 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-37-kyot-vs-nago,2027-05-29,kyot,nago,1,1
 2026_27-j1-37-g-os-vs-shim,2027-05-29,g-os,shim,1,1
 2026_27-j1-37-c-os-vs-uraw,2027-05-29,c-os,uraw,1,1
-2026_27-j1-37-hiro-vs-mito,2027-05-29,hiro,mito,1,1
+2026_27-j1-37-hiro-vs-mito,2027-05-29,hiro,mito,1,0
 2026_27-j1-37-fuku-vs-ka-f,2027-05-29,fuku,ka-f,1,1
 2026_27-j1-37-ngsk-vs-mcd,2027-05-29,ngsk,mcd,1,1
 2026_27-j1-38-kasm-vs-FCtk,2027-06-06,kasm,FCtk,1,1
@@ -345,8 +325,9 @@ match_id,date,home_team,away_team,predicted_home,predicted_away
 2026_27-j1-10-mcd-vs-fuku,2026-10-18,mcd,fuku,1,0
 2026_27-j1-13-mcd-vs-g-os,2026-11-01,mcd,g-os,1,0
 2026_27-j1-15-kasm-vs-shim,2026-11-20,kasm,shim,1,0
-2026_27-j1-15-kobe-vs-mito,2026-11-20,kobe,mito,1,1
+2026_27-j1-15-kobe-vs-mito,2026-11-20,kobe,mito,1,0
 2026_27-j1-17-ka-f-vs-g-os,2026-11-29,ka-f,g-os,1,1
 2026_27-j1-17-mcd-vs-tk-v,2026-11-29,mcd,tk-v,1,0
 2026_27-j1-18-kasw-vs-fuku,2026-12-06,kasw,fuku,1,1
 2026_27-j1-16-kyot-vs-kobe,2027-04-14,kyot,kobe,1,1
+2026_27-j1-20-kyot-vs-okay,2026-12-19,kyot,okay,1,1
