@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09T08:56:11+09:00",
+  "generated_at": "2026-09-14T08:50:18+09:00",
   "season": "2026_27",
   "league": "J1",
   "source": {
@@ -12,12 +12,12 @@
     "prediction_history_unique_matches": 429,
     "matches_rows": 380,
     "match_id_matched": 380,
-    "finished_matched": 60,
-    "score_complete_matched": 60,
-    "evaluation_target_matches": 60,
+    "finished_matched": 70,
+    "score_complete_matched": 70,
+    "evaluation_target_matches": 70,
     "unmatched_prediction_matches": 49,
-    "matched_but_unplayed": 320,
-    "matched_but_missing_score": 320
+    "matched_but_unplayed": 310,
+    "matched_but_missing_score": 310
   },
   "matches": [
     {
@@ -4397,6 +4397,736 @@
           "poisson_probability": 0.07004331283203886,
           "probability": 0.07004331283203881,
           "combined_score": 0.07004331283203881
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-kobe-vs-kasm",
+      "matchweek": 7,
+      "date": "2026-09-11",
+      "kickoff": "19:04",
+      "venue": "ノエスタ",
+      "home_team": "kobe",
+      "away_team": "kasm",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 2,
+        "away": 1
+      },
+      "predicted_result": "draw",
+      "actual_result": "home_win",
+      "is_result_correct": false,
+      "is_score_correct": false,
+      "result_probabilities": {
+        "away_win": 0.39988684737709085,
+        "draw": 0.2587335129892268,
+        "home_win": 0.34137963963368223
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.12286078326248162,
+          "probability": 0.12286078326248165,
+          "combined_score": 0.12286078326248165
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.09625889354152303,
+          "probability": 0.09625889354152305,
+          "combined_score": 0.09625889354152305
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.08757147641763843,
+          "probability": 0.08757147641763843,
+          "combined_score": 0.08757147641763843
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.08618543777817438,
+          "probability": 0.08618543777817439,
+          "combined_score": 0.08618543777817439
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.07840715547680319,
+          "probability": 0.07840715547680319,
+          "combined_score": 0.07840715547680319
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-kyot-vs-kasw",
+      "matchweek": 7,
+      "date": "2026-09-11",
+      "kickoff": "19:03",
+      "venue": "サンガＳ",
+      "home_team": "kyot",
+      "away_team": "kasw",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 2,
+        "away": 3
+      },
+      "predicted_result": "draw",
+      "actual_result": "away_win",
+      "is_result_correct": false,
+      "is_score_correct": false,
+      "result_probabilities": {
+        "away_win": 0.4004531545828228,
+        "draw": 0.27652981561541284,
+        "home_win": 0.3230170298017644
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.13036835290507592,
+          "probability": 0.130368352905076,
+          "combined_score": 0.130368352905076
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.11714340066157762,
+          "probability": 0.11714340066157766,
+          "combined_score": 0.11714340066157766
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.10246754133207826,
+          "probability": 0.10246754133207829,
+          "combined_score": 0.10246754133207829
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.09207293013673608,
+          "probability": 0.09207293013673613,
+          "combined_score": 0.09207293013673613
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.08293312798489934,
+          "probability": 0.08293312798489937,
+          "combined_score": 0.08293312798489937
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-g-os-vs-FCtk",
+      "matchweek": 7,
+      "date": "2026-09-12",
+      "kickoff": "19:04",
+      "venue": "パナスタ",
+      "home_team": "g-os",
+      "away_team": "FCtk",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 0,
+        "away": 2
+      },
+      "predicted_result": "draw",
+      "actual_result": "away_win",
+      "is_result_correct": false,
+      "is_score_correct": false,
+      "result_probabilities": {
+        "away_win": 0.3641870858664437,
+        "draw": 0.25967064831818865,
+        "home_win": 0.3761422658153676
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.12332063519834915,
+          "probability": 0.1233206351983491,
+          "combined_score": 0.1233206351983491
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.09317090593060401,
+          "probability": 0.09317090593060398,
+          "combined_score": 0.09317090593060398
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.09138750686393853,
+          "probability": 0.0913875068639385,
+          "combined_score": 0.0913875068639385
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.08320600696748723,
+          "probability": 0.0832060069674872,
+          "combined_score": 0.0832060069674872
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.0816133476100983,
+          "probability": 0.08161334761009828,
+          "combined_score": 0.08161334761009828
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-hiro-vs-c-os",
+      "matchweek": 7,
+      "date": "2026-09-12",
+      "kickoff": "19:05",
+      "venue": "Ｅピース",
+      "home_team": "hiro",
+      "away_team": "c-os",
+      "predicted_score": {
+        "home": 1,
+        "away": 0
+      },
+      "actual_score": {
+        "home": 6,
+        "away": 1
+      },
+      "predicted_result": "home_win",
+      "actual_result": "home_win",
+      "is_result_correct": true,
+      "is_score_correct": false,
+      "result_probabilities": {
+        "away_win": 0.23095716775694994,
+        "draw": 0.24866110584685874,
+        "home_win": 0.5203817263961913
+      },
+      "score_candidates": [
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.11983813260359223,
+          "probability": 0.11983813260359219,
+          "combined_score": 0.11983813260359219
+        },
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.11818459353394258,
+          "probability": 0.11818459353394253,
+          "combined_score": 0.11818459353394253
+        },
+        {
+          "score": "2-0",
+          "home_goals": 2,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.09673718233452447,
+          "probability": 0.09673718233452443,
+          "combined_score": 0.09673718233452443
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.09540239258936814,
+          "probability": 0.09540239258936811,
+          "combined_score": 0.09540239258936811
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.07422780816715396,
+          "probability": 0.07422780816715394,
+          "combined_score": 0.07422780816715394
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-mcd-vs-y-fm",
+      "matchweek": 7,
+      "date": "2026-09-12",
+      "kickoff": "19:05",
+      "venue": "MUFG国立",
+      "home_team": "mcd",
+      "away_team": "y-fm",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 1,
+        "away": 1
+      },
+      "predicted_result": "draw",
+      "actual_result": "draw",
+      "is_result_correct": true,
+      "is_score_correct": true,
+      "result_probabilities": {
+        "away_win": 0.3025600482166729,
+        "draw": 0.24430551072767662,
+        "home_win": 0.4531344410556505
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.11443447475501732,
+          "probability": 0.11443447475501735,
+          "combined_score": 0.11443447475501735
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.09238017742899561,
+          "probability": 0.09238017742899562,
+          "combined_score": 0.09238017742899562
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.0896674833131668,
+          "probability": 0.08966748331316682,
+          "combined_score": 0.08966748331316682
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.07302116959567767,
+          "probability": 0.07302116959567767,
+          "combined_score": 0.07302116959567767
+        },
+        {
+          "score": "2-0",
+          "home_goals": 2,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.0723863856221236,
+          "probability": 0.07238638562212361,
+          "combined_score": 0.07238638562212361
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-mito-vs-ka-f",
+      "matchweek": 7,
+      "date": "2026-09-12",
+      "kickoff": "18:04",
+      "venue": "水戸信ス",
+      "home_team": "mito",
+      "away_team": "ka-f",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 0,
+        "away": 1
+      },
+      "predicted_result": "draw",
+      "actual_result": "away_win",
+      "is_result_correct": false,
+      "is_score_correct": false,
+      "result_probabilities": {
+        "away_win": 0.4401086343564307,
+        "draw": 0.2520351825114469,
+        "home_win": 0.30785618313212243
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.11931217526369524,
+          "probability": 0.11931217526369527,
+          "combined_score": 0.11931217526369527
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.09677133005511994,
+          "probability": 0.09677133005511997,
+          "combined_score": 0.09677133005511997
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.09089006681336498,
+          "probability": 0.090890066813365,
+          "combined_score": 0.090890066813365
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.07831106118221864,
+          "probability": 0.07831106118221867,
+          "combined_score": 0.07831106118221867
+        },
+        {
+          "score": "0-2",
+          "home_goals": 0,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.07371881901313714,
+          "probability": 0.07371881901313715,
+          "combined_score": 0.07371881901313715
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-ngsk-vs-nago",
+      "matchweek": 7,
+      "date": "2026-09-12",
+      "kickoff": "19:03",
+      "venue": "ピースタ",
+      "home_team": "ngsk",
+      "away_team": "nago",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 2,
+        "away": 0
+      },
+      "predicted_result": "draw",
+      "actual_result": "home_win",
+      "is_result_correct": false,
+      "is_score_correct": false,
+      "result_probabilities": {
+        "away_win": 0.37727019945819035,
+        "draw": 0.2762919916937792,
+        "home_win": 0.34643780884803044
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.13049310565555247,
+          "probability": 0.1304931056555524,
+          "combined_score": 0.1304931056555524
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.11159382074991091,
+          "probability": 0.11159382074991084,
+          "combined_score": 0.11159382074991084
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.1058374615875224,
+          "probability": 0.10583746158752234,
+          "combined_score": 0.10583746158752234
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.0905090476442424,
+          "probability": 0.09050904764424235,
+          "combined_score": 0.09050904764424235
+        },
+        {
+          "score": "1-2",
+          "home_goals": 1,
+          "away_goals": 2,
+          "result": "away_win",
+          "poisson_probability": 0.08044623504858667,
+          "probability": 0.08044623504858663,
+          "combined_score": 0.08044623504858663
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-shim-vs-fuku",
+      "matchweek": 7,
+      "date": "2026-09-12",
+      "kickoff": "18:34",
+      "venue": "アイスタ",
+      "home_team": "shim",
+      "away_team": "fuku",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 1,
+        "away": 0
+      },
+      "predicted_result": "draw",
+      "actual_result": "home_win",
+      "is_result_correct": false,
+      "is_score_correct": false,
+      "result_probabilities": {
+        "away_win": 0.33529019863475473,
+        "draw": 0.26927149259866046,
+        "home_win": 0.39543830876658487
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.12788392739075916,
+          "probability": 0.12788392739075916,
+          "combined_score": 0.12788392739075916
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.10766598924325942,
+          "probability": 0.10766598924325943,
+          "combined_score": 0.10766598924325943
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.09731547174889497,
+          "probability": 0.09731547174889497,
+          "combined_score": 0.09731547174889497
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.08402722912901393,
+          "probability": 0.08402722912901395,
+          "combined_score": 0.08402722912901395
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.08193028434686896,
+          "probability": 0.08193028434686896,
+          "combined_score": 0.08193028434686896
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-tk-v-vs-chib",
+      "matchweek": 7,
+      "date": "2026-09-13",
+      "kickoff": "18:04",
+      "venue": "味スタ",
+      "home_team": "tk-v",
+      "away_team": "chib",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 1,
+        "away": 1
+      },
+      "predicted_result": "draw",
+      "actual_result": "draw",
+      "is_result_correct": true,
+      "is_score_correct": true,
+      "result_probabilities": {
+        "away_win": 0.32552536539717364,
+        "draw": 0.2758294894341375,
+        "home_win": 0.39864514516868876
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.13017917480341776,
+          "probability": 0.1301791748034177,
+          "combined_score": 0.1301791748034177
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.11590212764408532,
+          "probability": 0.11590212764408529,
+          "combined_score": 0.11590212764408529
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.10218165441693447,
+          "probability": 0.10218165441693444,
+          "combined_score": 0.10218165441693444
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.09097515920652786,
+          "probability": 0.09097515920652784,
+          "combined_score": 0.09097515920652784
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.0829239732376571,
+          "probability": 0.08292397323765707,
+          "combined_score": 0.08292397323765707
+        }
+      ]
+    },
+    {
+      "match_id": "2026_27-j1-7-uraw-vs-okay",
+      "matchweek": 7,
+      "date": "2026-09-13",
+      "kickoff": "18:33",
+      "venue": "埼玉",
+      "home_team": "uraw",
+      "away_team": "okay",
+      "predicted_score": {
+        "home": 1,
+        "away": 1
+      },
+      "actual_score": {
+        "home": 1,
+        "away": 2
+      },
+      "predicted_result": "draw",
+      "actual_result": "away_win",
+      "is_result_correct": false,
+      "is_score_correct": false,
+      "result_probabilities": {
+        "away_win": 0.28067921306608795,
+        "draw": 0.2690084196736642,
+        "home_win": 0.45031236726024776
+      },
+      "score_candidates": [
+        {
+          "score": "1-1",
+          "home_goals": 1,
+          "away_goals": 1,
+          "result": "draw",
+          "poisson_probability": 0.12712175217042984,
+          "probability": 0.1271217521704298,
+          "combined_score": 0.1271217521704298
+        },
+        {
+          "score": "1-0",
+          "home_goals": 1,
+          "away_goals": 0,
+          "result": "home_win",
+          "poisson_probability": 0.12220274830049298,
+          "probability": 0.12220274830049296,
+          "combined_score": 0.12220274830049296
+        },
+        {
+          "score": "0-1",
+          "home_goals": 0,
+          "away_goals": 1,
+          "result": "away_win",
+          "poisson_probability": 0.09118847502878231,
+          "probability": 0.09118847502878231,
+          "combined_score": 0.09118847502878231
+        },
+        {
+          "score": "2-1",
+          "home_goals": 2,
+          "away_goals": 1,
+          "result": "home_win",
+          "poisson_probability": 0.08860735893313017,
+          "probability": 0.08860735893313015,
+          "combined_score": 0.08860735893313015
+        },
+        {
+          "score": "0-0",
+          "home_goals": 0,
+          "away_goals": 0,
+          "result": "draw",
+          "poisson_probability": 0.08765991713918644,
+          "probability": 0.08765991713918643,
+          "combined_score": 0.08765991713918643
         }
       ]
     }
