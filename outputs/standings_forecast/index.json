@@ -1,8 +1,16 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-09-09T08:56:13+09:00",
-  "default_forecast": "2026-09-09T08:56:13+09:00",
+  "generated_at": "2026-09-16T09:01:47+09:00",
+  "default_forecast": "2026-09-16T09:01:47+09:00",
   "forecasts": [
+    {
+      "generated_at": "2026-09-16T09:01:47+09:00",
+      "data_file": "history/standings_forecast_20260916_090147.json",
+      "data_as_of": {
+        "label": "2026-09-13",
+        "completed_matches": 70
+      }
+    },
     {
       "generated_at": "2026-09-09T08:56:13+09:00",
       "data_file": "history/standings_forecast_20260909_085613.json",
