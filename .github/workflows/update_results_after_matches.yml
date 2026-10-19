@@ -3,7 +3,8 @@ name: Update 2026-27 J1 Results
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 22 * * 0"  # Mon 07:00 JST
+    # Allow the J.League data site time to publish every weekend result.
+    - cron: "0 1 * * 1"  # Mon 10:00 JST
 
 permissions:
   contents: write

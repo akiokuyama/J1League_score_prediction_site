@@ -10,7 +10,7 @@ def test_results_after_matches_workflow_is_results_only() -> None:
 
     assert "name: Update 2026-27 J1 Results" in text
     assert "workflow_dispatch:" in text
-    assert 'cron: "0 22 * * 0"' in text
+    assert 'cron: "0 1 * * 1"' in text
     assert "FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true" in text
     assert "python -m compileall app src scripts" in text
     assert "python -m pytest" in text
