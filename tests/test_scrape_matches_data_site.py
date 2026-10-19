@@ -133,3 +133,34 @@ def test_next_schedule_parser_merges_partial_refresh_with_full_schedule() -> Non
     assert len(merged) == 2
     assert merged.loc[merged["home_team"] == "y-fm", "kickoff_time"].iloc[0] == "19:25"
     assert merged.loc[merged["home_team"] == "kasw", "away_team"].iloc[0] == "mito"
+
+
+def test_merge_replaces_rescheduled_fixture_with_official_result() -> None:
+    existing = pd.DataFrame(
+        [
+            {
+                "section": 10,
+                "match_date": "2026-10-17",
+                "kickoff_time": "14:00",
+                "home_team": "mcd",
+                "away_team": "fuku",
+                "home_score": None,
+                "away_score": None,
+                "status": "unplayed",
+            }
+        ]
+    )
+    fresh = existing.copy()
+    fresh.loc[0, ["match_date", "kickoff_time", "home_score", "away_score", "status"]] = [
+        "2026-10-18",
+        "16:00",
+        2,
+        1,
+        "finished",
+    ]
+
+    merged = _merge_with_existing(fresh, existing)
+
+    assert len(merged) == 1
+    assert merged.iloc[0]["match_date"] == "2026-10-18"
+    assert merged.iloc[0]["status"] == "finished"

@@ -347,7 +347,11 @@ def _merge_with_existing(fresh: pd.DataFrame, existing: pd.DataFrame) -> pd.Data
         return fresh
     if fresh.empty:
         return existing.copy()
-    keys = ["match_date", "home_team", "away_team"]
+    # The J.League can reschedule a fixture while keeping its round and clubs.
+    # Matching on the date would retain the old fixture as an additional,
+    # permanently-unplayed row, so a refreshed result must instead replace it
+    # by its stable competition identity.
+    keys = ["section", "home_team", "away_team"]
     old = existing.copy()
     for col in fresh.columns:
         if col in old.columns and fresh[col].dtype == object and old[col].dtype != object:
