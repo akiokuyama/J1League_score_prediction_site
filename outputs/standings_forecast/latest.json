@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "generated_at": "2026-10-20T06:31:57+09:00",
+  "generated_at": "2026-10-21T09:27:40+09:00",
   "season": "2026_27",
   "league": "J1",
   "competition": "明治安田J1リーグ",
@@ -43,7 +43,7 @@
   "sources": {
     "matches": "Data/processed/matches_2026_27_j1_clean.csv",
     "predictions": "outputs/all_unplayed_predictions.json",
-    "predictions_updated_at": "2026-10-20T06:31:21+09:00"
+    "predictions_updated_at": "2026-10-21T09:27:04+09:00"
   },
   "warnings": [],
   "teams": [

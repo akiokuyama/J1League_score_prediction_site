@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-10-20T06:28:51+09:00",
+  "updated_at": "2026-10-21T09:24:37+09:00",
   "competition_key": "2026_27_j1",
   "season": "2026_27",
   "category": "j1",
@@ -49,9 +49,9 @@
     "expected_rows": 40,
     "kagi_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/football_lab/kagi_2026_27_j1.csv",
     "kagi_rows": 40,
-    "goal_patterns_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/football_lab/goal_patterns/goal_patterns_2026_27_j1_asof_20261020.csv",
+    "goal_patterns_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/football_lab/goal_patterns/goal_patterns_2026_27_j1_asof_20261021.csv",
     "goal_patterns_rows": 20,
-    "team_styles_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/football_lab/team_styles/team_styles_2026_27_j1_asof_20261020.csv",
+    "team_styles_path": "/home/runner/work/J1League_score_prediction_site/J1League_score_prediction_site/Data/raw/football_lab/team_styles/team_styles_2026_27_j1_asof_20261021.csv",
     "team_styles_rows": 100
   },
   "formations": {
